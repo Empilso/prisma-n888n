@@ -11,13 +11,13 @@ function App() {
     const [systemStatus, setSystemStatus] = useState<any>({});
     const [selectedCrew, setSelectedCrew] = useState('1');
     const [isStudioOpen, setIsStudioOpen] = useState(false);
-    const [studioLayer, setStudioLayer] = useState<'bronze' | 'prata' | 'ouro'>('prata');
+    const [studioLayer, setStudioLayer] = useState<'bronze' | 'prata' | 'kaka' | 'ouro'>('prata');
 
     // Poll system status
     useEffect(() => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch('http://localhost:8001/api/status');
+                const res = await fetch('http://localhost:8003/api/status');
                 const data = await res.json();
                 setSystemStatus(data);
             } catch (e) { /* silent */ }
@@ -26,17 +26,17 @@ function App() {
     }, []);
 
     const runCrew = async () => {
-        await fetch('http://localhost:8001/api/run-crew', { method: 'POST' });
+        await fetch('http://localhost:8003/api/run-crew', { method: 'POST' });
     };
 
     const stopCrew = async () => {
-        await fetch('http://localhost:8001/api/stop-crew', { method: 'POST' });
+        await fetch('http://localhost:8003/api/stop-crew', { method: 'POST' });
     };
 
-    // Mapeamento dos agentes ativos para as Crews correspondentes (ex: 'Crew 1', 'Crew 0')
+    // Mapeamento dos agentes ativos para as Crews correspondentes
     const activeAgents = systemStatus?.active_channels || [];
     const activeCrews = Array.from(new Set(activeAgents.map((a: string) => {
-        const agId = a.replace('agent_', ''); // Normalizar ID se necessário
+        const agId = a.replace('agent_', '');
         const crew = crewDefs.find(c => c.agents.some(ag => ag.id === agId || ag.id === a));
         return crew ? `Crew ${crew.id} (${crew.name.split(':')[0]})` : null;
     }).filter(Boolean)));
@@ -60,18 +60,20 @@ function App() {
             {/* ═══ CENTER — Canvas + Toolbar + Terminal ═══ */}
             <div className="flex-1 flex flex-col overflow-hidden relative">
 
-                {/* Floating Toolbar */}
-                <div className="absolute top-5 left-1/2 -translate-x-1/2 z-50">
-                    <div className="glass px-2 py-1.5 rounded-2xl flex items-center gap-1 shadow-2xl">
-                        <ToolBtn icon="▶" label="Rodar Tudo" accent onClick={runCrew} />
-                        <ToolBtn icon="⏸" label="Pausar" onClick={stopCrew} />
-                        <div className="w-px h-5 bg-white/[0.06] mx-1" />
-                        <ToolBtn icon="📊" label="Estúdio" onClick={() => setIsStudioOpen(true)} />
-                        <ToolBtn icon="⊞" label="Grade" />
+                {/* Floating Toolbar Minimalista */}
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50">
+                    <div className="glass px-2 py-1 rounded-full flex items-center gap-2 shadow-xl border border-white/5 bg-black/40 backdrop-blur-xl">
+                        <button 
+                            onClick={() => setIsStudioOpen(true)}
+                            className="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-white/10 transition-all font-mono-glass text-[10px] tracking-widest text-[#bf5af2] uppercase active:scale-95"
+                            title="Abrir o Data Studio Central"
+                        >
+                            <span className="text-sm">📊</span> Data Studio
+                        </button>
                     </div>
                 </div>
 
-                {/* Canvas */}
+                {/* Canvas — O AgentLayersPanel agora vive DENTRO do CrewFlow */}
                 <main className="flex-1 relative">
                     <CrewFlow
                         selectedCrewId={selectedCrew}
@@ -108,7 +110,7 @@ function App() {
                 onLayerChange={setStudioLayer}
             />
 
-            {/* Subtle noise overlay for texture */}
+            {/* Subtle noise overlay */}
             <div className="fixed inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.015] mix-blend-overlay z-[100]" />
         </div>
     );

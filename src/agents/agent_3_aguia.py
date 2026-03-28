@@ -1,4 +1,5 @@
 import os, sys, json, time
+from typing import Tuple, List
 from pathlib import Path
 import requests
 import concurrent.futures
@@ -7,7 +8,31 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def valida_link_nf(link: str, session: requests.Session) -> tuple[str, str]:
+__PRISMA_MANIFEST__ = {
+    "visao_geral": {
+        "missao": "Auditoria Forense de Dados Prata usando LLMs avançadas.",
+        "especialidade": "Score Heurístico + Refinamento LLM",
+        "protocolo_tecnico": "Python + CrewAI + LLaMA via Groq",
+        "camada_dados": "Prata (Dados Processados)",
+        "seguranca": "Validação de Entrada e Sanitização"
+    },
+    "diretrizes": [
+        "1. Calcula score de risco baseado em regras de negócio.",
+        "2. Valida links de PDFs com HEAD request.",
+        "3. Usa LLM para refinar comentários de auditoria.",
+        "4. Gera relatório final com métricas de risco.",
+        "5. Exporta camada Ouro em JSON padronizado."
+    ],
+    "apuracao": {
+        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        "saida_esperada": "data/saida/ouro/alba_{ano}_ouro_aguia_v2.json"
+    }
+}
+
+
+load_dotenv()
+
+def valida_link_nf(link: str, session: requests.Session) -> Tuple[str, str]:
     if not link or "fserver/:anexo:" in link:
         return "MÁXIMO", "Link ausente/Lista errada"
     if not link.startswith("http"):
@@ -20,7 +45,7 @@ def valida_link_nf(link: str, session: requests.Session) -> tuple[str, str]:
     except Exception:
         return "ALTO", "Falha validação link (Timeout/Erro)"
 
-def calcular_score(registro: dict, contagem_mes: dict, contagem_fornecedor: dict, session: requests.Session) -> tuple[float, list]:
+def calcular_score(registro: dict, contagem_mes: dict, contagem_fornecedor: dict, session: requests.Session) -> Tuple[float, List]:
     score = 0.0
     motivos = []
     

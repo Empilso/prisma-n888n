@@ -273,10 +273,9 @@ body {
     animation: subtle-float 4s ease-in-out infinite;
 }
 
-/* ═══ SCROLLBAR ═══ */
 ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 30px;
+    height: 30px;
 }
 
 ::-webkit-scrollbar-track {
@@ -284,12 +283,20 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 30px;
+    transition: all 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
+    border: 8px solid rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 /* ═══ TYPOGRAPHY ═══ */

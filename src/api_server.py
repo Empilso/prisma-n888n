@@ -7,7 +7,7 @@ import glob
 import multiprocessing
 import threading
 import subprocess
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -84,11 +84,16 @@ async def get_tokens_summary(layer: str):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
-# Filas de distribuição para os Navegadores conectados via SSE
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from routers_stage import router as stage_router
+app.include_router(stage_router)
+
+# ── LOGS EM TEMPO REAL via SSE (Server-Sent Events) ────────────────────────
 log_queues = []
 
 # Buffer de histórico — sobrevive a refresh do navegador
@@ -237,6 +242,64 @@ async def get_latest_results():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+@app.get("/api/studio/explorer")
+async def get_studio_explorer():
+    import glob
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    # Datalake Explorer Tree
+    crews = []
+    
+    # 1. ALBA Verbas (Crew 1)
+    alba_files = {"bronze": [], "prata": [], "kaka": [], "ouro": []}
+    saida_dir = os.path.join(base_dir, "data", "saida")
+    
+    for folder in ["bronze", "prata", "kaka", "ouro"]:
+        f_dir = os.path.join(saida_dir, folder)
+        if os.path.exists(f_dir):
+            files = [f for f in os.listdir(f_dir) if f.endswith(".json")]
+            alba_files[folder] = sorted(files, reverse=True)
+            
+    # Remapear para a estrutura do Frontend
+    crews.append({
+        "id": "alba",
+        "name": "ALBA Verbas",
+        "icon": "👽",
+        "layers": {
+            "bronze": alba_files["bronze"],
+            "prata": alba_files["prata"],
+            "kaka": alba_files["kaka"],
+            "ouro": alba_files["ouro"]
+        }
+    })
+    
+    # 2. Zidane Biografias (Crew 2)
+    zidane_files = {"parlamentares": []}
+    parlamentares_dir = os.path.join(saida_dir, "parlamentares")
+    raw_dir = os.path.join(parlamentares_dir, "raw")
+    
+    z_files = []
+    if os.path.exists(parlamentares_dir):
+        if os.path.exists(os.path.join(parlamentares_dir, "parlamentares_hub_normalized.json")):
+            z_files.append("parlamentares_hub_normalized.json")
+        if os.path.exists(os.path.join(parlamentares_dir, "parlamentares_hub.json")):
+            z_files.append("parlamentares_hub.json")
+            
+    if os.path.exists(raw_dir):
+        if os.path.exists(os.path.join(raw_dir, "_checkpoint_zidane.json")):
+            z_files.append("raw/_checkpoint_zidane.json")
+    
+    if z_files:
+        zidane_files["parlamentares"] = z_files
+        crews.append({
+            "id": "zidane",
+            "name": "Zidane Biografias",
+            "icon": "🕵️",
+            "layers": zidane_files
+        })
+        
+    return {"status": "ok", "crews": crews}
+
 @app.get("/api/bronze-summary")
 async def bronze_summary():
     # Procura qualquer arquivo checkpoint/bronze json na pasta data/
@@ -295,10 +358,43 @@ async def bronze_summary():
 @app.get("/api/agent-data/{layer}")
 async def get_agent_data(layer: str):
     try:
-        if layer not in ["bronze", "prata", "ouro", "quarentena"]:
-            return {"status": "error", "message": "Camada Medallion inválida."}
+        if layer not in ["bronze", "prata", "kaka", "ouro", "quarentena", "parlamentares"]:
+            return {"status": "error", "message": "Camada Medallion invalida."}
             
-        target_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "saida", layer)
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # ── Lógica Especial para Zidane (Parlamentares) ──────────────
+        if layer == "parlamentares":
+            p_dir = os.path.join(base_dir, "data", "saida", "parlamentares")
+            hub_path = os.path.join(p_dir, "parlamentares_hub_normalized.json")
+            
+            if os.path.exists(hub_path):
+                with open(hub_path, "r", encoding="utf-8") as f:
+                    hub_data = json.load(f)
+                    records = hub_data.get("parlamentares", [])
+                    # Enriquecimento ad-hoc para o Grid do Studio
+                    for r in records:
+                        r["biografia_resumo"] = (r.get("biografia_completa") or "")[:200] + "..."
+                        r["mandatos_count"] = len(r.get("mandatos", []))
+                    return {"status": "ok", "filename": "parlamentares_hub.json", "data": records, "type": "json"}
+            
+            # Se não tem hub, tenta ler os arquivos individuais na pasta raw
+            raw_dir = os.path.join(p_dir, "raw")
+            json_files = glob.glob(os.path.join(raw_dir, "parlamentar_*_oficial.json"))
+            if not json_files:
+                return {"status": "none", "data": "Nenhum perfil extraído ainda.", "type": "text"}
+            
+            all_records = []
+            for jf in sorted(json_files)[:63]: # Mostra todos os perfis brutos
+                with open(jf, "r", encoding="utf-8") as f:
+                    d = json.load(f)
+                    d["biografia_resumo"] = (d.get("biografia_completa") or "")[:200] + "..."
+                    d["mandatos_count"] = len(d.get("mandatos", []))
+                    all_records.append(d)
+            return {"status": "ok", "filename": f"Raw profiles ({len(json_files)})", "data": all_records, "type": "json"}
+
+        # ── Lógica Padrão Medallion ──────────────────────────────────
+        target_dir = os.path.join(base_dir, "data", "saida", layer)
         files = glob.glob(os.path.join(target_dir, "*.*"))
         
         if not files:
@@ -308,6 +404,8 @@ async def get_agent_data(layer: str):
         with open(latest_file, 'r', encoding='utf-8') as f:
             if latest_file.endswith('.json'):
                 data = json.load(f)
+                if isinstance(data, dict) and "records" in data:
+                    data = data["records"]
             else:
                 data = f.read()
                 
@@ -327,6 +425,7 @@ async def get_agent_source(layer: str):
         mapping = {
             "bronze": "agent_1_wrapper.py",
             "prata": "agent_2_chunker.py",
+            "kaka": "agent_kaka_pdf.py",
             "ouro": "agent_4_prisma_db.py",
             "analyst": "agent_3_aguia.py",
             "forensic": "agent_5_pdf_forensic.py",
@@ -353,6 +452,50 @@ async def get_agent_source(layer: str):
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+@app.get("/api/agent-manifest/{agent_id}")
+async def get_agent_manifest(agent_id: str):
+    """Extrai o __PRISMA_MANIFEST__ dinâmico do código-fonte do agente usando AST."""
+    import ast
+    try:
+        mapping = {
+            "1": "agent_1_wrapper.py",
+            "2": "agent_2_chunker.py",
+            "3": "agent_3_aguia.py",
+            "kaka": "agent_kaka_pdf.py",
+            "zidane_a": "agent_zidane_a_ids.py",
+            "zidane_b": "agent_zidane_b_scraper.py",
+            "zidane_c": "agent_zidane_c_brain.py",
+            "4": "agent_4_prisma_db.py",
+            "dunga": "agent_4_prisma_db.py",
+            "5": "agent_5_pdf_forensic.py",
+            "6": "agent_6_merge.py",
+            "ronaldo": "agent_6_merge.py"
+        }
+        
+        filename = mapping.get(agent_id.lower())
+        if not filename:
+            return {"status": "error", "message": "Agente não mapeado."}
+            
+        source_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "agents", filename)
+        if not os.path.exists(source_path):
+            return {"status": "error", "message": f"Arquivo {filename} não encontrado."}
+            
+        with open(source_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        # Parseia o código Python com AST para extrair o dicionário __PRISMA_MANIFEST__
+        tree = ast.parse(content)
+        for node in tree.body:
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == '__PRISMA_MANIFEST__':
+                        manifest = ast.literal_eval(node.value)
+                        return {"status": "ok", "manifest": manifest}
+                        
+        return {"status": "error", "message": "Manifesto não encontrado no código do agente."}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 async def stream_agent_subprocess(script_args: list[str], agent_id: str = None, env_vars: dict = None):
     """
     Padrão SSE universal para qualquer agent.
@@ -363,6 +506,7 @@ async def stream_agent_subprocess(script_args: list[str], agent_id: str = None, 
     env["NO_COLOR"] = "1"
     env["FORCE_COLOR"] = "0"
     env["TERM"] = "dumb"
+    env["PYTHONWARNINGS"] = "ignore:Unverified HTTPS request"
 
     if env_vars:
         env.update({k: str(v) for k, v in env_vars.items()})
@@ -378,64 +522,88 @@ async def stream_agent_subprocess(script_args: list[str], agent_id: str = None, 
         env=env,
         text=True,
         bufsize=1,
-        cwd=os.path.dirname(os.path.abspath(__file__))
+        cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     )
     
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    safra = "master"
+    for i, a in enumerate(script_args):
+         if a in ("--ano", "--year") and i+1 < len(script_args):
+              safra = script_args[i+1]
+
+    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "logs")
+    os.makedirs(log_dir, exist_ok=True)
+    log_file_path = os.path.join(log_dir, f"agent_{agent_id or 'SYS'}_{safra}_{timestamp}.log")
+
     try:
         from utils.terminal_sanitizer import strip_ansi
         import time
         start_time = time.time()
         
-        for raw_line in process.stdout:
-            clean = strip_ansi(raw_line).strip()
-            if clean:
-                # IMPORTANT: Injeta na fila global do terminal para o <TerminalPanel /> ver
-                mp_queue.put(f"[{agent_id if agent_id else 'SYS'}] {clean}") 
-                yield f"data: {json.dumps({'msg': clean})}\n\n"
-        
-        process.wait()
-        duration = time.time() - start_time
-        
-        if process.returncode == 0:
-            status = f"✅ Extração 100% Concluída! ⏱️ Tempo total: {duration:.2f}s"
-        else:
-            status = f"❌ Erro na extração (código {process.returncode}) | Parado em {duration:.2f}s"
+        with open(log_file_path, "a", encoding="utf-8") as log_f:
+            for raw_line in process.stdout:
+                clean = strip_ansi(raw_line).strip()
+                if clean:
+                    log_msg = f"[{agent_id if agent_id else 'SYS'}] {clean}"
+                    # IMPORTANT: Injeta na fila global do terminal para o <TerminalPanel /> ver
+                    mp_queue.put(log_msg) 
+                    log_f.write(log_msg + "\n")
+                    log_f.flush()
+                    yield f"data: {json.dumps({'msg': log_msg})}\n\n"
             
-        final_msg = f"[AGENT {agent_id if agent_id else 'SYS'} DONE] {status}"
-        mp_queue.put(final_msg)
-        yield f"data: {json.dumps({'msg': final_msg})}\n\n"
+            process.wait()
+            duration = time.time() - start_time
+            
+            if process.returncode == 0:
+                status = f"✅ Extração 100% Concluída! ⏱️ Tempo total: {duration:.2f}s"
+            else:
+                status = f"❌ Erro na extração (código {process.returncode}) | Parado em {duration:.2f}s"
+                
+            final_msg = f"[AGENT {agent_id if agent_id else 'SYS'} DONE] {status}"
+            log_f.write(final_msg + "\n")
+            mp_queue.put(final_msg)
+            yield f"data: {json.dumps({'msg': final_msg})}\n\n"
     
     except GeneratorExit:
         process.terminate()
 
 # ─── AGENT 2 ENDPOINTS ─────────────────────────────────────
-@app.get("/api/agent/{agent_id}/bronze-files")
-async def get_agent_2_bronze_files():
-    """Retorna lista de arquivos na pasta bronze para o seletor do Bebeto."""
+@app.get("/api/agent/{agent_id}/input-files")
+async def get_agent_input_files(agent_id: str, layer: str = "bronze"):
+    """Retorna lista de arquivos de entrada para um agente (ex: bronze para Bebeto, prata para Kaká)."""
     base_dir = Path(__file__).resolve().parent.parent
-    bronze_dir = base_dir / "data" / "saida" / "bronze"
+    input_dir = base_dir / "data" / "saida" / layer
     
-    if not bronze_dir.exists():
+    if not input_dir.exists():
         return {"files": []}
     
     files = []
-    for f in bronze_dir.glob("*.json"):
+    # Busca .json e limpa duplicatas de checkpoints se necessário (opcional)
+    for f in input_dir.glob("*.json"):
         stat = f.stat()
         files.append({
             "name": f.name,
+            "layer": layer,
             "size": f"{stat.st_size / 1024:.1f} KB",
             "modified": datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M")
         })
     
     return {"files": sorted(files, key=lambda x: x["name"], reverse=True)}
 
+@app.get("/api/agent/2/bronze-files")
+async def get_agent_2_bronze_files():
+    """Legado para Bebeto — chama o novo endpoint genérico."""
+    return await get_agent_input_files("2", "bronze")
+
 @app.get("/api/datalake/stats/{agent_id}")
 async def get_datalake_file_stats(agent_id: str, filename: str):
     """Retorna estatísticas reais e auditoria de um arquivo específico."""
     try:
         layer_map = {
-            "1": "bronze", "2": "prata", "3": "ouro", 
-            "4": "ouro", "5": "quarentena", "6": "ouro"
+            "1": "bronze", "2": "prata", "3": "kaka", 
+            "4": "ouro", "dunga": "ouro", "5": "quarentena", "6": "ouro",
+            "ronaldo": "ouro"
         }
         layer = layer_map.get(agent_id, "bronze")
         file_path = Path(__file__).resolve().parent.parent / "data" / "saida" / layer / filename
@@ -469,6 +637,14 @@ async def get_datalake_file_stats(agent_id: str, filename: str):
                 "Captura de links de PDF anexos",
                 "Deduplicação incremental via Checkpoint",
                 "Normalização básica de moeda (R$ -> Float)"
+            ]
+        elif agent_id == "ronaldo":
+            normalizations = [
+                "Associação de Foreign Key (parlamentar_id)",
+                "Mapeamento de Categorias Fiscais",
+                "Hash MD5 Inviolável (prisma_id)",
+                "Remoção de Mock Fields",
+                "Padronização Dicionário Ouro"
             ]
             
         # Estimativa de tokens (1 token ~ 4 chars)
@@ -521,17 +697,8 @@ async def stream_agent_2(filename: str = None, year: str = None):
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
     )
 
-# ─── AGENT 3 SSE (LLM) ──────────────────────────────────────
-@app.get("/api/agent/3/stream")
-async def stream_agent_3(max_tokens: int = 2000, retries: int = 3, provider: str = "groq", model: str = None):
-    env_vars = {
-        "MAX_TOKENS": max_tokens,
-        "MAX_RETRIES": retries,
-        "LLM_PROVIDER": provider,
-        "LLM_MODEL": model or ""
-    }
     return StreamingResponse(
-        stream_agent_subprocess(["agents/agent_3_aguia.py"], agent_id="3", env_vars=env_vars),
+        stream_agent_subprocess(["src/agents/agent_kaka_pdf.py", "--ano", ano or "2022"], agent_id="3"),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
     )
@@ -570,15 +737,28 @@ def agent1_worker(ano_alvo, q, max_pages=0, mes_alvo=0):
     import os, sys
     os.environ["PYTHONUNBUFFERED"] = "1"
     
-    # Redireciona o stdout/stderr deste subprocesso para a fila mp_queue
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "logs")
+    os.makedirs(log_dir, exist_ok=True)
+    log_file_path = os.path.join(log_dir, f"agent_1_{ano_alvo or 'master'}_{timestamp}.log")
+
+    # Redireciona o stdout/stderr deste subprocesso para a fila mp_queue e log
     class QueueWriter:
         def __init__(self, target_queue):
             self.queue = target_queue
+            self.f = open(log_file_path, "a", encoding="utf-8")
         def write(self, text):
             if text.strip():
-                self.queue.put(text)
+                clean = text.strip()
+                log_msg = f"[1] {clean}"
+                self.queue.put(log_msg)
+                self.f.write(log_msg + "\n")
+                self.f.flush()
         def flush(self):
             pass
+        def __del__(self):
+            self.f.close()
             
     sys.stdout = QueueWriter(q)
     sys.stderr = QueueWriter(q)
@@ -613,30 +793,47 @@ async def get_system_status():
     """Retorna o estado de todos os agentes e prontidão de dados detalhada."""
     global active_agent1_process
     
-    # 🔍 Datalake Scan Granular
-    def get_anos(directory, pattern="*.json"):
-        import re
-        files = glob.glob(os.path.join(directory, pattern))
+    CHECKPOINT_DIR = os.path.join(os.path.dirname(PRATA_DIR), "checkpoints")
+
+    # 🔍 Datalake Scan Granular com check_on_disk rigoroso
+    def check_on_disk(directory, prefix="verbas", suffix=""):
         anos_finais = set()
         anos_checkpoint = set()
-        for f in files:
-            fname = os.path.basename(f)
-            m = re.search(r"(20\d{2})", fname)
-            if m:
-                ano = m.group(1)
-                if "checkpoint" in fname.lower():
-                    anos_checkpoint.add(ano)
-                else:
-                    anos_finais.add(ano)
+        for y in range(2015, 2026):
+            ano_str = str(y)
+            # Final file check (ex: verbas_2023_gold.json)
+            final_file = f"{prefix}_{ano_str}{suffix}.json"
+            if os.path.exists(os.path.join(directory, final_file)):
+                anos_finais.add(ano_str)
+            
+            # Checkpoint file check
+            chk_file = f"{prefix}_{ano_str}_checkpoint.json"
+            
+            # Kaká usa timestamp nos checkpoints na pasta central
+            has_chk = False
+            if prefix == "kaka":
+                kaka_chks = glob.glob(os.path.join(CHECKPOINT_DIR, f"kaka_{ano_str}_checkpoint_*.json"))
+                has_chk = len(kaka_chks) > 0
+            else:
+                has_chk = os.path.exists(os.path.join(directory, chk_file)) or os.path.exists(os.path.join(CHECKPOINT_DIR, chk_file))
+
+            if has_chk:
+                anos_checkpoint.add(ano_str)
+
         return sorted(list(anos_finais)), sorted(list(anos_checkpoint))
 
-    bronze_finais, bronze_checkpoint = get_anos(BRONZE_DIR)
-    prata_finais, prata_checkpoint = get_anos(PRATA_DIR)
-    ouro_finais, ouro_checkpoint = get_anos(os.path.join(os.path.dirname(PRATA_DIR), "ouro"))
+    bronze_finais, bronze_checkpoint = check_on_disk(BRONZE_DIR, prefix="verbas", suffix="")
+    prata_finais, prata_checkpoint = check_on_disk(PRATA_DIR, prefix="verbas", suffix="_prata")
+    OURO_DIR = os.path.join(os.path.dirname(PRATA_DIR), "ouro")
+    ouro_finais, ouro_checkpoint = check_on_disk(OURO_DIR, prefix="verbas", suffix="_gold")
+
+    # Kaká Scan (Forense)
+    KAKA_DIR = os.path.join(os.path.dirname(PRATA_DIR), "kaka")
+    kaka_finais, kaka_checkpoint = check_on_disk(KAKA_DIR, prefix="kaka", suffix="")
     
     # Lógica Master: Um ano está 'extraído' se tiver bronze_final OU prata (qualquer camada refinada)
     # Isso garante que 2016 (tem prata mas não bronze_final) apareça como verde.
-    anos_pipeline_completos = sorted(list(set(bronze_finais) | set(prata_finais)))
+    anos_pipeline_completos = sorted(list(set(bronze_finais) | set(prata_finais) | set(ouro_finais)))
     # Um ano está 'em andamento' se tiver checkpoint mas ainda não entrou no pipeline
     anos_pipeline_checkpoint = sorted(list(set(bronze_checkpoint) - set(anos_pipeline_completos)))
     
@@ -650,6 +847,20 @@ async def get_system_status():
         "ouro_anos": ouro_finais
     }
 
+    
+    # Check audits
+    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "logs")
+    audit_gaps = {}
+    for y in [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]:
+        af = os.path.join(log_dir, f"audit_verbas_{y}.json")
+        if os.path.exists(af):
+            try:
+                with open(af, "r", encoding="utf-8") as jf:
+                    j = json.load(jf)
+                    if j.get("ausentes") and len(j["ausentes"]) > 0:
+                        audit_gaps[str(y)] = True
+            except: pass
+
     # Status Dinâmico por Agente
     status = {
         "1": {
@@ -658,6 +869,7 @@ async def get_system_status():
             "detail": "Pronto para Sourcing",
             "completed_years": anos_pipeline_completos,
             "checkpoint_years": anos_pipeline_checkpoint,
+            "audit_gaps": audit_gaps,
             "available_input_years": [],
             "usage": {"input": 0, "output": 0}
         },
@@ -673,39 +885,93 @@ async def get_system_status():
         "3": {
             "status": "idle", 
             "input_ready": data_presence["prata"],
-            "detail": f"{len(prata_finais)} anos em Prata" if prata_finais else "Aguardando Refinamento",
-            "completed_years": ouro_finais,
-            "checkpoint_years": ouro_checkpoint,
-            "available_input_years": [y for y in prata_finais if y not in ouro_finais],
+            "detail": f"{len(prata_finais)} anos em Prata",
+            "completed_years": kaka_finais,
+            "checkpoint_years": kaka_checkpoint,
+            "available_input_years": [y for y in prata_finais if y not in kaka_finais],
             "usage": {"input": 45600, "output": 12800}
         },
-        "4": {
+        "ronaldo": {
             "status": "idle", 
-            "input_ready": data_presence["prata"],
-            "detail": "Pronto para Validação" if prata_finais else "Sem dados Prata",
+            "input_ready": len(kaka_finais) > 0 or len(prata_finais) > 0,
+            "detail": "Pronto para Relacionamento e Ouro",
             "completed_years": ouro_finais,
             "checkpoint_years": ouro_checkpoint,
-            "available_input_years": prata_finais,
-            "usage": {"input": 8900, "output": 450}
-        },
-        "5": {
-            "status": "idle", 
-            "input_ready": data_presence["pdf"],
-            "detail": "Pronto para OCR" if data_presence["pdf"] else "Sem PDFs anexos",
-            "completed_years": [],
-            "checkpoint_years": [],
-            "available_input_years": [],
+            "available_input_years": kaka_finais or prata_finais,
             "usage": {"input": 0, "output": 0}
         },
-        "6": {
+        "dunga": {
             "status": "idle", 
-            "input_ready": data_presence["ouro"],
-            "detail": "Pronto para Consolidação" if ouro_finais else "Aguardando Ouro",
-            "completed_years": ouro_finais,
-            "checkpoint_years": ouro_checkpoint,
+            "input_ready": len(ouro_finais) > 0,
+            "detail": "Pronto para Persistência Prisma DB",
+            "completed_years": ouro_finais, # Dunga relies on the same files since it just runs them, or we could query the DB
+            "checkpoint_years": [],
             "available_input_years": ouro_finais,
             "usage": {"input": 0, "output": 0}
         }
+    }
+
+    # ── Status Zidane (Crew 00 — Biografias Parlamentares) ────────
+    PARLAMENTARES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "saida", "parlamentares")
+    RAW_DIR = os.path.join(PARLAMENTARES_DIR, "raw")
+    ids_file = os.path.join(RAW_DIR, "parlamentares_ids.json")
+    hub_file = os.path.join(PARLAMENTARES_DIR, "parlamentares_hub_normalized.json")
+    raw_perfis = glob.glob(os.path.join(RAW_DIR, "parlamentar_*_oficial.json"))
+
+    ids_count = 0
+    if os.path.exists(ids_file):
+        try:
+            with open(ids_file, "r") as f:
+                ids_count = json.load(f).get("total", 0)
+        except: pass
+
+    hub_count = 0
+    if os.path.exists(hub_file):
+        try:
+            with open(hub_file, "r") as f:
+                hub_count = json.load(f).get("estatisticas", {}).get("total_parlamentares", 0)
+        except: pass
+
+    status["zidane_a"] = {
+        "status": "idle",
+        "input_ready": True,
+        "detail": f"✅ {ids_count} IDs coletados" if os.path.exists(ids_file) else "Pronto para varredura",
+        "completed_years": ["2023-2027"] if os.path.exists(ids_file) else [],
+        "checkpoint_years": [],
+        "available_input_years": [],
+        "usage": {"input": 0, "output": ids_count}
+    }
+
+    status["zidane_b"] = {
+        "status": "idle",
+        "input_ready": os.path.exists(ids_file),
+        "detail": f"✅ {len(raw_perfis)} perfis extraídos" if raw_perfis else "Aguardando IDs do Zidane-A",
+        "completed_years": ["2023-2027"] if len(raw_perfis) > 50 else [],
+        "checkpoint_years": ["2023-2027"] if 0 < len(raw_perfis) <= 50 else [],
+        "available_input_years": [],
+        "usage": {"input": ids_count, "output": len(raw_perfis)}
+    }
+
+    status["zidane_c"] = {
+        "status": "idle",
+        "input_ready": len(raw_perfis) > 0,
+        "detail": f"✅ Hub consolidado ({hub_count} parlamentares)" if os.path.exists(hub_file) else f"{len(raw_perfis)} perfis prontos para consolidação",
+        "completed_years": ["2023-2027"] if os.path.exists(hub_file) else [],
+        "checkpoint_years": [],
+        "available_input_years": [],
+        "usage": {"input": len(raw_perfis), "output": hub_count}
+    }
+
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    base = os.path.dirname(cur_dir)
+    status["zidane_d"] = {
+        "status": "idle",
+        "input_ready": os.path.exists(hub_file),
+        "detail": "✅ Upsert Concluído" if os.path.exists(os.path.join(base, "data", "saida", "parlamentares", "logs", "carga_zidane_d.json")) else "Pronto para Upsert",
+        "completed_years": ["2023-2027"] if False else [],  # Mantém falso pois não criamos lock yet
+        "checkpoint_years": [],
+        "available_input_years": [],
+        "usage": {"input": hub_count, "output": hub_count}
     }
 
     # Sincroniza status de processos reais
@@ -752,6 +1018,7 @@ def universal_agent_worker(agent_id, script_args, env_vars, q):
     env.update({k: str(v) for k, v in env_vars.items()})
     env["PYTHONUNBUFFERED"] = "1"
     env["NO_COLOR"] = "1"
+    env["PYTHONWARNINGS"] = "ignore:Unverified HTTPS request"
 
     msg_start = f"\n🚀 [AGENT {agent_id}] INICIANDO OPERAÇÃO...\n"
     q.put(msg_start)
@@ -766,7 +1033,7 @@ def universal_agent_worker(agent_id, script_args, env_vars, q):
             env=env,
             text=True,
             bufsize=1,
-            cwd=os.path.dirname(os.path.abspath(__file__))
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         )
 
         for line in process.stdout:
@@ -792,6 +1059,62 @@ def universal_agent_worker(agent_id, script_args, env_vars, q):
         q.put(msg_err)
         print(msg_err, flush=True)
 
+@app.post("/api/run-agent/zidane_d")
+async def run_zidane_d(response: Response):
+    """Handler exclusivo para o Zidane-D (Loader Supabase) sem parâmetros de IA."""
+    global active_agent_processes
+    agent_id = "zidane_d"
+    
+    # Headers de CORS explícitos evitam bloqueio do Chrome se houver internal drops
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5175"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+
+    if agent_id in active_agent_processes and active_agent_processes[agent_id].is_alive():
+        return {"status": "running", "message": "Zidane-D já está em operação."}
+
+    print(f"📡 [AIOX] Launching Agent Zidane-D (Loader Supabase Native)")
+    
+    # Config mínima
+    agent_configs[agent_id] = {
+        "skin_variant": agent_configs.get(agent_id, {}).get("skin_variant", "default")
+    }
+    
+    env_vars = {} # Sem configs de LLM
+    script = ["src/agents/agent_zidane_d_loader.py"]
+    
+    p = multiprocessing.Process(
+        target=universal_agent_worker, 
+        args=(agent_id, script, env_vars, mp_queue)
+    )
+    p.start()
+    active_agent_processes[agent_id] = p
+    
+    return {"status": "started", "message": "Zidane-D iniciado com sucesso."}
+
+@app.post("/api/run/agent_1/audit/{ano}")
+async def run_audit_agent1(ano: int):
+    """Triggers the Audit Forensic Mode for Agent 1 (Zorg-Romário)"""
+    global active_agent_processes
+    agent_id = "1"
+    
+    if agent_id in active_agent_processes and active_agent_processes[agent_id].is_alive():
+        return {"status": "running", "message": f"Auditoria para o ano {ano} já está rodando."}
+
+    print(f"📡 [AIOX] Launching Agent 1 SMART SYNC AUDIT | Ano: {ano}")
+
+    script = ["src/agents/agent_1_wrapper.py", "--ano", str(ano), "--smart"]
+    env_vars = {}
+    
+    p = multiprocessing.Process(
+        target=universal_agent_worker, 
+        args=(agent_id, script, env_vars, mp_queue)
+    )
+    p.start()
+    active_agent_processes[agent_id] = p
+    
+    return {"status": "started", "message": f"Auditoria de {ano} iniciada com sucesso. Acompanhe os logs."}
+
+
 @app.post("/api/run-agent/{agent_id}")
 async def run_individual_agent(
     agent_id: str, 
@@ -802,7 +1125,8 @@ async def run_individual_agent(
     model: str = "llama-3.3-70b-versatile",
     filename: str = "",
     restart: bool = False,
-    max_pages: int = 0
+    max_pages: int = 0,
+    limit: int = 0
 ):
     """Triggers a specific agent task from the PRISMA pipeline."""
 
@@ -857,16 +1181,18 @@ async def run_individual_agent(
 
     # Mapeamento de Scripts (Caminhos relativos ao cwd que é src/)
     scripts = {
-        "1": ["agents/agent_1_wrapper.py"], # scraper_alba
-        "kaka": ["agents/agent_kaka_pdf.py"], # arquivista forense
-        "2": ["agents/agent_2_chunker.py"],   # Bebeto Xylos Purificador
-        "3": ["agents/agent_3_aguia.py"],
-        "4": ["agents/agent_4_prisma_db.py"],
-        "5": ["agents/agent_5_pdf_forensic.py"],
-        "6": ["agents/agent_6_merge.py"],
-        "zidane_a": ["agents/agent_zidane_a_ids.py"],       # Zidane ID Collector
-        "zidane_b": ["agents/agent_zidane_b_scraper.py"],   # Zidane Profile Scraper
-        "zidane_c": ["agents/agent_zidane_c_enricher.py"],  # Zidane LLM Enricher
+        "1": ["src/agents/agent_1_wrapper.py"], # scraper_alba
+        "2": ["src/agents/agent_2_chunker.py"],   # Bebeto Xylos Purificador
+        "3": ["src/agents/agent_kaka_pdf.py"],    # Kaká Forense (Novo Agente 3)
+        "dunga": ["src/agents/agent_3_aguia.py"], # Dunga
+        "4": ["src/agents/agent_4_prisma_db.py"],
+        "5": ["src/agents/agent_kaka_pdf.py"], # legado
+        "6": ["src/agents/agent_6_merge.py"],
+        "ronaldo": ["src/agents/agent_ronaldo_gold.py"], # Ronaldo Gold
+        "zidane_a": ["src/agents/agent_zidane_a_ids.py"],       
+        "zidane_b": ["src/agents/agent_zidane_b_scraper.py"],   
+        "zidane_c": ["src/agents/agent_zidane_c_enricher.py"],  
+        "zidane_d": ["src/agents/agent_zidane_d_loader.py"],
     }
 
     if agent_id not in scripts:
@@ -880,10 +1206,17 @@ async def run_individual_agent(
         scripts["1"] = ["agents/agent_1_batch.py"]
         # O script batch não recebe args, pois ele tem a lista chumbada interna
     else:
-        if agent_id in ["1", "2", "kaka"]:
-            extra_args = ["--ano", str(ano)] if agent_id in ["1", "kaka"] else ["--year", str(ano)]
+        if agent_id in ["1", "2", "3", "kaka", "ronaldo", "dunga", "4", "5", "6"]:
+            tag = "--ano" if agent_id in ["1", "3", "kaka"] else "--year"
+            extra_args = [tag, str(ano)]
+            
             if agent_id == "1" and max_pages > 0:
                 extra_args += ["--max_pages", str(max_pages)]
+            
+            # Limite de registros para Kaká (Agente 3)
+            if agent_id == "3" and limit > 0:
+                extra_args += ["--limit", str(limit)]
+
             # Passa o filename selecionado no frontend para o Agente 2
             if agent_id == "2" and filename:
                 extra_args += ["--file", filename]
@@ -938,9 +1271,10 @@ async def list_datalake_files():
         patterns = [
             os.path.join(base_dir, "saida", "bronze", "**", "*.*"),
             os.path.join(base_dir, "saida", "prata", "**", "*.*"),
-            os.path.join(base_dir, "saida", "gold", "**", "*.*"),
+            os.path.join(base_dir, "saida", "kaka", "**", "*.*"),
+            os.path.join(base_dir, "saida", "ouro", "**", "*.*"),
             os.path.join(base_dir, "saida", "checkpoints", "**", "*.*"),
-            os.path.join(base_dir, "parlamentares", "**", "*.*")
+            os.path.join(base_dir, "saida", "parlamentares", "**", "*.*")
         ]
         
         all_files = []
@@ -953,12 +1287,8 @@ async def list_datalake_files():
                     parts = rel_path.split(os.sep)
                     
                     if parts[0] == "saida" and len(parts) >= 3:
-                        layer = parts[1] # bronze, prata, etc
-                        name = "/".join(parts[2:]) # alba/alba_2015.json
-                    elif parts[0] == "parlamentares":
-                        # Compatibilidade Zidane original
-                        layer = "parlamentares"
-                        name = "/".join(parts[1:])
+                        layer = parts[1] # bronze, prata, parlamentares
+                        name = "/".join(parts[2:]) # raw/parlamentar_123.json ou alba_2015.json
                     else:
                         continue
                         
@@ -982,10 +1312,8 @@ async def get_datalake_file(layer: str, filename: str):
     try:
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
-        if layer in ["bronze", "prata", "ouro", "checkpoints", "quarentena"]:
+        if layer in ["bronze", "prata", "kaka", "ouro", "checkpoints", "quarentena", "parlamentares"]:
             fpath = os.path.join(base_dir, "data", "saida", layer, filename)
-        elif layer == "parlamentares":
-            fpath = os.path.join(base_dir, "data", "parlamentares", filename)
         else:
              return {"status": "error", "message": f"Camada inválida: {layer}."}
              
@@ -993,7 +1321,15 @@ async def get_datalake_file(layer: str, filename: str):
              return {"status": "error", "message": "Arquivo não encontrado."}
              
         with open(fpath, 'r', encoding='utf-8') as f:
-            data = json.load(f) if filename.endswith('.json') else f.read()
+            if filename.endswith('.json'):
+                data = json.load(f)
+                if isinstance(data, dict):
+                    if "records" in data:
+                        data = data["records"]
+                    elif "parlamentares" in data:
+                        data = data["parlamentares"]
+            else:
+                data = f.read()
         return {"status": "ok", "data": data, "type": "json" if filename.endswith('.json') else "text"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -1004,7 +1340,7 @@ async def delete_datalake_file(layer: str, filename: str):
     try:
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
-        if layer in ["bronze", "prata", "ouro", "checkpoints", "quarentena"]:
+        if layer in ["bronze", "prata", "kaka", "ouro", "checkpoints", "quarentena"]:
             fpath = os.path.join(base_dir, "data", "saida", layer, filename)
         elif layer == "parlamentares":
             fpath = os.path.join(base_dir, "data", "parlamentares", filename)
@@ -1027,6 +1363,7 @@ async def datalake_reset():
         os.path.join(base_dir, "data", "**", "*.json"),
         os.path.join(base_dir, "data", "**", "*.csv"),
         os.path.join(base_dir, "data", "**", "*.parquet"),
+        os.path.join(base_dir, "data", "raw", "alba", "pdfs", "**", "*.pdf"),
     ]
     removidos = []
     for padrao in padroes:
@@ -1042,4 +1379,4 @@ async def datalake_reset():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("api_server:app", host="0.0.0.0", port=8001)
+    uvicorn.run("api_server:app", host="0.0.0.0", port=8003)

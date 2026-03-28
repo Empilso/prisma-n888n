@@ -10,12 +10,14 @@ interface StudioApprovalProps {
     onLayerChange: (layer: Layer) => void;
 }
 
-type Layer = 'bronze' | 'prata' | 'ouro';
+type Layer = 'bronze' | 'prata' | 'kaka' | 'ouro' | 'parlamentares';
 
 const layers: { key: Layer; label: string; icon: string; color: string; desc: string }[] = [
     { key: 'bronze', label: 'Bronze', icon: '🥉', color: '#cd7f32', desc: 'Dados brutos do scraper' },
     { key: 'prata', label: 'Prata', icon: '🥈', color: '#c0c0c0', desc: 'Normalizado + dedup' },
+    { key: 'kaka', label: 'PDF Forense', icon: '🔎', color: '#8a2be2', desc: 'Auditoria de Notas Fiscais (PDF)' },
     { key: 'ouro', label: 'Ouro', icon: '🥇', color: '#ffd700', desc: 'Validado + score de risco' },
+    { key: 'parlamentares', label: 'Zidane', icon: '🕵️', color: '#9b59b6', desc: 'Biografias e Perfis' },
 ];
 
 const COLUMNS_MAP: Record<Layer, { key: string; label: string; width: string }[]> = {
@@ -30,9 +32,9 @@ const COLUMNS_MAP: Record<Layer, { key: string; label: string; width: string }[]
     ],
     prata: [
         { key: 'deputado', label: 'Deputado', width: 'w-[180px]' },
-        { key: 'categoria', label: 'Categoria', width: 'w-[200px]' },
+        { key: 'categoria_slug', label: 'Categoria', width: 'w-[160px]' },
         { key: 'valor', label: 'Valor (R$)', width: 'w-[120px]' },
-        { key: 'competencia', label: 'Competência', width: 'w-[110px]' },
+        { key: 'competencia_date', label: 'Competência', width: 'w-[110px]' },
         { key: 'nome_fornecedor', label: 'Fornecedor', width: 'w-[200px]' },
         { key: 'cnpj_fornecedor', label: 'CNPJ', width: 'w-[160px]' },
         { key: 'hash_id', label: 'Hash ID', width: 'w-[140px]' },
@@ -40,13 +42,38 @@ const COLUMNS_MAP: Record<Layer, { key: string; label: string; width: string }[]
     ],
     ouro: [
         { key: 'deputado', label: 'Deputado', width: 'w-[180px]' },
-        { key: 'categoria', label: 'Categoria', width: 'w-[200px]' },
+        { key: 'categoria_slug', label: 'Categoria', width: 'w-[160px]' },
         { key: 'valor', label: 'Valor (R$)', width: 'w-[120px]' },
         { key: 'risco_nivel', label: 'Risco', width: 'w-[100px]' },
         { key: 'comentario_aguia', label: 'Análise Águia', width: 'w-[250px]' },
-        { key: 'competencia', label: 'Competência', width: 'w-[110px]' },
+        { key: 'competencia_date', label: 'Competência', width: 'w-[110px]' },
         { key: 'nome_fornecedor', label: 'Fornecedor', width: 'w-[200px]' },
         { key: 'hash_id', label: 'Hash ID', width: 'w-[140px]' },
+    ],
+    kaka: [
+        { key: 'deputado', label: 'Deputado', width: 'w-[160px]' },
+        { key: 'kaka_status', label: 'Status', width: 'w-[90px]' },
+        { key: 'kaka_tipo_pdf', label: 'Tipo PDF', width: 'w-[110px]' },
+        { key: 'kaka_qualidade_pdf', label: 'Qualidade', width: 'w-[90px]' },
+        { key: 'kaka_confianca', label: 'Conf %', width: 'w-[70px]' },
+        { key: 'kaka_metodo_extracao', label: 'Metodo', width: 'w-[120px]' },
+        { key: 'valor', label: 'Valor Portal', width: 'w-[110px]' },
+        { key: 'kaka_valor_nf', label: 'Valor NF', width: 'w-[110px]' },
+        { key: 'kaka_delta_valor', label: 'Delta R$', width: 'w-[90px]' },
+        { key: 'kaka_divergencia_valor', label: 'Div.Valor', width: 'w-[80px]' },
+        { key: 'kaka_divergencia_cnpj', label: 'Div.CNPJ', width: 'w-[80px]' },
+        { key: 'kaka_emitente_cnpj', label: 'CNPJ NF', width: 'w-[140px]' },
+        { key: 'cnpj_fornecedor', label: 'CNPJ Portal', width: 'w-[140px]' },
+        { key: 'url_pdf_nf', label: 'PDF', width: 'w-[180px]' },
+    ],
+    parlamentares: [
+        { key: 'foto_url', label: 'Foto', width: 'w-[100px]' },
+        { key: 'nome_limpo', label: 'Parlamentar', width: 'w-[200px]' },
+        { key: 'sigla_partido', label: 'Partido', width: 'w-[100px]' },
+        { key: 'biografia_resumo', label: 'Resumo Bio', width: 'w-[300px]' },
+        { key: 'qualidade_score', label: 'Score', width: 'w-[80px]' },
+        { key: 'mandatos_count', label: 'Mandatos', width: 'w-[100px]' },
+        { key: 'processado_em', label: 'Extraído', width: 'w-[150px]' },
     ],
 };
 
@@ -75,6 +102,15 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
     const [sourceCode, setSourceCode] = useState('');
     const [sourceFilename, setSourceFilename] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+    const [explorerTree, setExplorerTree] = useState<any[]>([]);
+    
+    // UI State para Accordion
+    const [expandedCrews, setExpandedCrews] = useState<Record<string, boolean>>({ alba: true, zidane: true });
+    const [expandedLayers, setExpandedLayers] = useState<Record<string, boolean>>({ 'alba-ouro': true, 'alba-prata': false, 'alba-bronze': false });
+
+    // PAGINATION STATE
+    const [currentPage, setCurrentPage] = useState(1);
+    const ROWS_PER_PAGE = 75;
 
     const handleSort = (key: string) => {
         setSortConfig(current => {
@@ -88,17 +124,27 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
 
     useEffect(() => {
         if (isOpen) {
+            fetchExplorerTree();
             fetchData(activeLayer);
-            fetchAvailableFiles(activeLayer);
             if (viewMode === 'code' && codeTab === 'source') {
                 fetchSource(activeLayer);
             }
         }
     }, [isOpen, activeLayer, viewMode, codeTab]);
 
+    const fetchExplorerTree = async () => {
+        try {
+            const res = await fetch(`http://localhost:8003/api/studio/explorer`);
+            const json = await res.json();
+            if (json.status === 'ok') {
+                setExplorerTree(json.crews);
+            }
+        } catch(e) {}
+    };
+
     const fetchAvailableFiles = async (layer: Layer) => {
         try {
-            const res = await fetch(`http://localhost:8001/api/datalake/files`);
+            const res = await fetch(`http://localhost:8003/api/datalake/files`);
             const json = await res.json();
             if (json.status === 'ok') {
                 const filtered = json.files.filter((f: any) => f.layer === layer);
@@ -107,19 +153,37 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
         } catch (e) { }
     };
 
+
     const fetchData = async (layer: Layer, targetFile?: string) => {
         setLoading(true);
         setSelectedRow(null);
         try {
-            let url = `http://localhost:8001/api/agent-data/${layer}`;
+            let url = `http://localhost:8003/api/agent-data/${layer}`;
             if (targetFile) {
-                url = `http://localhost:8001/api/datalake/files/${layer}/${targetFile}`;
+                url = `http://localhost:8003/api/datalake/files/${layer}/${targetFile}`;
             }
             const res = await fetch(url);
             const json = await res.json();
-            if (json.status === 'ok' && Array.isArray(json.data)) {
-                setData(json.data);
-                setFilename(targetFile || json.filename || '');
+            
+            if (json.status === 'ok') {
+                let rawData = json.data;
+                // Se for um objeto único (perfil individual), envelopa em array para o grid
+                if (rawData && !Array.isArray(rawData) && typeof rawData === 'object') {
+                    // Enriquecimento ad-hoc se necessário
+                    if (layer === 'parlamentares' || targetFile?.includes('parlamentar')) {
+                        rawData.biografia_resumo = (rawData.biografia_completa || '') .substring(0, 200) + '...';
+                        rawData.mandatos_count = rawData.mandatos?.length || 0;
+                    }
+                    rawData = [rawData];
+                }
+                
+                if (Array.isArray(rawData)) {
+                    setData(rawData);
+                    setFilename(targetFile || json.filename || '');
+                } else {
+                    setData([]);
+                    setFilename('');
+                }
             } else {
                 setData([]);
                 setFilename('');
@@ -132,7 +196,7 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
 
     const fetchSource = async (layer: Layer) => {
         try {
-            const res = await fetch(`http://localhost:8001/api/agent-source/${layer}`);
+            const res = await fetch(`http://localhost:8003/api/agent-source/${layer}`);
             const json = await res.json();
             if (json.status === 'ok') {
                 setSourceCode(json.content);
@@ -140,6 +204,43 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
             }
         } catch (e) {
             setSourceCode('# Erro ao carregar fonte');
+        }
+    };
+
+    const handleFileDelete = async (layer: Layer, name: string) => {
+        if (!confirm(`Deseja realmente deletar o arquivo ${name}?`)) return;
+        try {
+            const res = await fetch(`http://localhost:8003/api/datalake/files/${layer}/${name}`, { method: 'DELETE' });
+            const json = await res.json();
+            if (json.status === 'ok') {
+                if (filename === name) {
+                    setData([]);
+                    setFilename('');
+                }
+                fetchAvailableFiles(layer);
+            } else {
+                alert(`Erro: ${json.message}`);
+            }
+        } catch (e) {
+            alert('Erro ao conectar com servidor');
+        }
+    };
+
+    const handleProjectReset = async () => {
+        if (!confirm('⚠️ ATENÇÃO: Isso irá apagar TODOS os arquivos de TODAS as camadas (Bronze, Prata, Kaká, Ouro) e PDFs. Confirma?')) return;
+        if (!confirm('CONFIRMAÇÃO FINAL: Deseja apagar TUDO do projeto?')) return;
+        
+        try {
+            const res = await fetch(`http://localhost:8003/api/datalake/reset`, { method: 'DELETE' });
+            const json = await res.json();
+            if (json.status === 'ok') {
+                setData([]);
+                setFilename('');
+                fetchAvailableFiles(activeLayer);
+                alert(`${json.removidos} arquivos removidos. Projeto limpo.`);
+            }
+        } catch (e) {
+            alert('Erro ao resetar projeto');
         }
     };
 
@@ -178,18 +279,37 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
         return result;
     }, [data, search, columns, sortConfig]);
 
-    // Stats
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, sortConfig, activeLayer, data]);
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / ROWS_PER_PAGE));
+    const paginatedData = useMemo(() => {
+        const start = (currentPage - 1) * ROWS_PER_PAGE;
+        return filtered.slice(start, start + ROWS_PER_PAGE);
+    }, [filtered, currentPage]);
+
     const totalValor = useMemo(() => data.reduce((s, r) => s + (parseFloat(r.valor) || 0), 0), [data]);
     const uniqueDeputados = useMemo(() => new Set(data.map(r => r.deputado)).size, [data]);
+    const uniqueCnpjs = useMemo(() => new Set(data.map(r => r.cnpj_fornecedor).filter(Boolean)).size, [data]);
+
+    const fieldStats = useMemo(() => {
+        if (!data || data.length === 0) return { total: 0, filled: 0 };
+        const keys = Object.keys(data[0]);
+        let filledCount = 0;
+        keys.forEach(k => {
+            const isFilled = data.some(row => row[k] !== null && row[k] !== undefined && row[k] !== '');
+            if (isFilled) filledCount++;
+        });
+        return { total: keys.length, filled: filledCount };
+    }, [data]);
 
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-[200] flex bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-            {/* Overlay click to close */}
             <div className="absolute inset-0" onClick={onClose} />
 
-            {/* Studio Panel - STUDIO 5X PREMIUM (Otimizado fluidez) 🛡️🧪👽🚀🛸👑 */}
             <div className="relative w-full h-full flex m-4 rounded-[24px] overflow-hidden border border-white/[0.08] shadow-2xl glass-premium"
                 style={{ background: 'rgba(10, 10, 15, 0.96)' }}>
 
@@ -209,7 +329,6 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                         </button>
                     </div>
 
-                    {/* Layer Selector - Apple Style Segmented */}
                     <div className="flex p-1 bg-white/[0.03] border border-white/[0.06] rounded-2xl mb-6">
                         {layers.map(l => (
                             <button
@@ -224,72 +343,117 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                         ))}
                     </div>
 
-                    {/* Datasets Sidebar Pro */}
                     <div className="flex-1 flex flex-col min-h-0">
-                        <div className="flex items-center justify-between px-2 mb-4">
+                        <div className="flex items-center justify-between px-2 mb-4 shrink-0">
                             <h3 className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-widest flex items-center gap-2">
-                                <span className="opacity-50">📂</span> Datasets
+                                <span className="opacity-50">📂</span> Datasets Explorer
                             </h3>
-                            <span className="text-[9px] font-mono-glass text-[var(--text-tertiary)] bg-white/5 px-2 py-0.5 rounded-full">{availableFiles.length}</span>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-1.5 min-h-0">
-                            {availableFiles.map(file => {
-                                const isSelected = filename === file.name;
-                                const yearMatch = file.name.match(/_(\d{4})_/);
-                                const label = yearMatch ? `Safra ${yearMatch[1]}` : file.name;
-                                return (
-                                    <button
-                                        key={file.name}
-                                        onClick={() => fetchData(activeLayer, file.name)}
-                                        className={`group/item w-full text-left p-3 rounded-2xl transition-all border animate-in slide-in-from-left duration-300 ${isSelected
-                                            ? 'bg-[var(--accent-purple)]/15 border-[var(--accent-purple)]/40 text-white shadow-[0_0_20px_rgba(191,90,242,0.1)]'
-                                            : 'hover:bg-white/[0.04] border-transparent text-[var(--text-secondary)] hover:text-white'
-                                            }`}
+                        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3 min-h-0">
+                            {explorerTree.map(crew => (
+                                <div key={crew.id} className="w-full">
+                                    {/* CREW LEVEL */}
+                                    <button 
+                                        onClick={() => setExpandedCrews(p => ({...p, [crew.id]: !p[crew.id]}))}
+                                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition-all group border border-white/[0.02]"
                                     >
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className={`text-[11px] font-bold ${isSelected ? 'text-[var(--accent-purple)]' : ''}`}>{label}</span>
-                                            <span className="text-[8px] opacity-40 font-mono-glass">{file.size}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm">{crew.icon}</span>
+                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest group-hover:text-white transition-colors">{crew.name}</span>
                                         </div>
-                                        <div className="text-[9px] opacity-30 truncate font-mono-glass group-hover/item:opacity-60 transition-opacity">
-                                            {file.name}
-                                        </div>
+                                        <span className={`text-[8px] text-white/30 transition-transform duration-300 ${expandedCrews[crew.id] ? 'rotate-180' : ''}`}>▼</span>
                                     </button>
-                                );
-                            })}
-                            {availableFiles.length === 0 && (
-                                <div className="flex flex-col items-center justify-center p-8 opacity-20 grayscale scale-75">
-                                    <span className="text-4xl mb-2">📁</span>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">Pasta Vazia</span>
+
+                                    <AnimatePresence>
+                                        {expandedCrews[crew.id] && (
+                                            <motion.div 
+                                                initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                                                className="overflow-hidden pl-2 mt-2 space-y-2 border-l border-white/[0.05] ml-4"
+                                            >
+                                                {/* LAYER LEVEL */}
+                                                {Object.keys(crew.layers).map(layerKey => {
+                                                    const layerFiles = crew.layers[layerKey];
+                                                    const lInfo = layers.find(l => l.key === layerKey) || { label: layerKey, icon: '📄', color: '#fff' };
+                                                    const layerId = `${crew.id}-${layerKey}`;
+                                                    const isExpLayer = expandedLayers[layerId];
+
+                                                    return (
+                                                        <div key={layerKey} className="w-full">
+                                                            <button 
+                                                                onClick={() => setExpandedLayers(p => ({...p, [layerId]: !p[layerId]}))}
+                                                                className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-white/[0.03] transition-all group/layer"
+                                                            >
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: lInfo.color, boxShadow: `0 0 5px ${lInfo.color}80` }} />
+                                                                    <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest group-hover/layer:text-white transition-colors">
+                                                                        {lInfo.label} <span className="opacity-50">({layerFiles.length})</span>
+                                                                    </span>
+                                                                </div>
+                                                            </button>
+
+                                                            <AnimatePresence>
+                                                                {isExpLayer && (
+                                                                    <motion.div 
+                                                                        initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                                                                        className="overflow-hidden pl-5 mt-1 space-y-1"
+                                                                    >
+                                                                        {layerFiles.length === 0 ? (
+                                                                            <div className="px-2 py-1 text-[9px] text-white/20 italic">Vazio</div>
+                                                                        ) : (
+                                                                            layerFiles.map((f: string) => {
+                                                                                const isSelected = filename === f && activeLayer === layerKey;
+                                                                                let shortName = f.replace('_processed.json', '').replace('_gold.json', '').replace('.json', '');
+                                                                                if (f.match(/_(\d{4})/)) shortName = `Safra ${f.match(/_(\d{4})/)![1]}`;
+                                                                                
+                                                                                return (
+                                                                                    <div 
+                                                                                        key={f}
+                                                                                        onClick={() => {
+                                                                                            onLayerChange(layerKey as Layer);
+                                                                                            fetchData(layerKey as Layer, f);
+                                                                                        }}
+                                                                                        className={`group/file w-full flex items-center justify-between px-2 py-1.5 rounded-md cursor-pointer transition-all border border-transparent ${
+                                                                                            isSelected ? 'bg-white/10 border-white/20 shadow-inner text-white' : 'hover:bg-white/[0.04] text-[var(--text-secondary)] hover:text-white'
+                                                                                        }`}
+                                                                                    >
+                                                                                        <span className="text-[10px] font-mono-glass truncate flex-1" title={f}>{shortName}</span>
+                                                                                        <button
+                                                                                            onClick={(e) => { e.stopPropagation(); handleFileDelete(layerKey as Layer, f); }}
+                                                                                            className="opacity-0 group-hover/file:opacity-100 text-red-500/50 hover:text-red-400 p-0.5"
+                                                                                        >
+                                                                                            ✕
+                                                                                        </button>
+                                                                                    </div>
+                                                                                );
+                                                                            })
+                                                                        )}
+                                                                    </motion.div>
+                                                                )}
+                                                            </AnimatePresence>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
-                            )}
+                            ))}
                         </div>
                     </div>
 
-                    {/* Stats Premium Card */}
-                    <div className="mt-6 p-5 rounded-[24px] border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-transparent shadow-inner">
-                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/5">
-                            <span className="text-sm">📊</span>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Audit Report</span>
-                        </div>
-                        <div className="space-y-3.5">
-                            <StatLine label="Registros" value={data.length.toLocaleString()} />
-                            <StatLine label="Entidades" value={uniqueDeputados.toString()} />
-                            <StatLine label="Montante" value={formatCurrency(totalValor)} />
-                            <div className="pt-2">
-                                <div className="text-[8px] font-bold text-[var(--text-tertiary)] uppercase tracking-widest mb-1.5">File Integrity</div>
-                                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                    <div className="h-full bg-[var(--accent-green)] animate-pulse" style={{ width: '100%' }} />
-                                </div>
-                            </div>
-                        </div>
+                    <div className="mt-4 pt-4 border-t border-white/[0.04] shrink-0">
+                        <button 
+                            onClick={handleProjectReset}
+                            className="w-full group/reset flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 transition-all text-[9px] font-black uppercase tracking-widest text-red-500/40 hover:text-red-400"
+                        >
+                            <span>Nuclear Reset</span>
+                            <span className="text-xs group-hover/reset:animate-bounce">☢️</span>
+                        </button>
                     </div>
                 </div>
 
-                {/* RIGHT: Main Studio Canvas */}
                 <div className="flex-1 flex flex-col overflow-hidden bg-white/[0.01]">
-
-                    {/* Studio Header Toolbar */}
                     <div className="h-20 flex items-center justify-between px-8 border-b border-white/[0.04] shrink-0">
                         <div className="flex items-center gap-5">
                             <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-2xl shadow-inner">
@@ -302,66 +466,38 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                                 <div className="flex items-center gap-2 mt-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-green)] animate-pulse" />
                                     <span className="text-[10px] text-[var(--text-tertiary)] font-mono-glass">
-                                        Viewing {filename || 'live_stream'}
+                                        Viewing {filename || 'live_stream'} ({data.length})
+                                        {activeLayer === 'parlamentares' && data.length > 0 && (
+                                            <span className="ml-2 text-[var(--accent-green)] opacity-80">
+                                                · 🕐 {new Date(data[data.length-1].processado_em).toLocaleString('pt-BR')}
+                                            </span>
+                                        )}
+                                        {data.length > 0 && <span className="ml-3 px-2 py-0.5 rounded bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] font-black uppercase shadow-inner border border-[var(--accent-purple)]/20">🧮 ~{Math.ceil(JSON.stringify(data).length / 4).toLocaleString('pt-BR')} Tokens</span>}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Mode Switcher Switch-Style */}
                         <div className="flex bg-black/40 p-1.5 rounded-[18px] border border-white/[0.08] shadow-inner">
-                            <button
-                                onClick={() => setViewMode('table')}
-                                className={`px-6 py-2 rounded-xl text-[10px] font-black transition-all transform active:scale-95 ${viewMode === 'table' ? 'bg-white/[0.1] text-white shadow-xl border border-white/10' : 'text-[var(--text-tertiary)] hover:text-white'}`}
-                            >
+                            <button onClick={() => setViewMode('table')}
+                                className={`px-6 py-2 rounded-xl text-[10px] font-black transition-all ${viewMode === 'table' ? 'bg-white/[0.1] text-white shadow-xl border border-white/10' : 'text-[var(--text-tertiary)] hover:text-white'}`}>
                                 📊 EXPLORER
                             </button>
-                            <button
-                                onClick={() => setViewMode('code')}
-                                className={`px-6 py-2 rounded-xl text-[10px] font-black transition-all transform active:scale-95 ${viewMode === 'code' ? 'bg-white/[0.1] text-white shadow-xl border border-white/10' : 'text-[var(--text-tertiary)] hover:text-white'}`}
-                            >
+                            <button onClick={() => setViewMode('code')}
+                                className={`px-6 py-2 rounded-xl text-[10px] font-black transition-all ${viewMode === 'code' ? 'bg-white/[0.1] text-white shadow-xl border border-white/10' : 'text-[var(--text-tertiary)] hover:text-white'}`}>
                                 ⚛️ CODE 5X
                             </button>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            {viewMode === 'table' ? (
-                                <>
-                                    <div className="relative group">
-                                        <div className="absolute inset-0 bg-[var(--accent-purple)]/10 blur-md opacity-0 group-focus-within:opacity-100 transition-opacity rounded-xl" />
-                                        <input
-                                            type="text"
-                                            value={search}
-                                            onChange={e => setSearch(e.target.value)}
-                                            placeholder="Audit Search..."
-                                            className="relative w-64 h-10 bg-black/40 border border-white/[0.08] rounded-xl px-4 pl-10 text-[11px] text-white placeholder:text-[var(--text-tertiary)] outline-none focus:border-[var(--accent-purple)]/40 transition-all font-mono-glass"
-                                        />
-                                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs opacity-40">🔍</span>
-                                    </div>
-                                    <button className="h-10 px-5 rounded-xl glass border border-white/10 text-[10px] font-black text-white hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-lg uppercase tracking-widest">
-                                        ⚡ Export
-                                    </button>
-                                </>
-                            ) : (
-                                <div className="flex bg-white/[0.03] p-1 rounded-xl border border-white/5">
-                                    <button
-                                        onClick={() => setCodeTab('json')}
-                                        className={`px-4 h-8 rounded-lg text-[9px] font-black tracking-widest transition-all ${codeTab === 'json' ? 'bg-[var(--accent-purple)] text-white shadow-lg' : 'text-[var(--text-tertiary)] hover:text-white'}`}
-                                    >
-                                        JSON
-                                    </button>
-                                    <button
-                                        onClick={() => setCodeTab('source')}
-                                        className={`px-4 h-8 rounded-lg text-[9px] font-black tracking-widest transition-all ${codeTab === 'source' ? 'bg-[var(--accent-purple)] text-white shadow-lg' : 'text-[var(--text-tertiary)] hover:text-white'}`}
-                                    >
-                                        PY SOURCE
-                                    </button>
-                                </div>
-                            )}
+                            <div className="relative group">
+                                <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Audit Search..."
+                                    className="relative w-64 h-10 bg-black/40 border border-white/[0.08] rounded-xl px-4 pl-10 text-[11px] text-white outline-none focus:border-[var(--accent-purple)]/40 transition-all font-mono-glass" />
+                                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs opacity-40">🔍</span>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Studio Main Body */}
                     <div className="flex-1 flex flex-col min-h-0">
                         {loading ? (
                             <div className="flex-1 flex flex-col items-center justify-center">
@@ -369,80 +505,98 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                                     <div className="absolute inset-0 border-4 border-[var(--accent-purple)]/10 rounded-full" />
                                     <div className="absolute inset-0 border-4 border-[var(--accent-purple)] border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(191,90,242,0.4)]" />
                                 </div>
-                                <span className="text-[10px] font-black text-[var(--accent-purple)] uppercase tracking-[0.3em] animate-pulse">Syncing Datalake...</span>
-                            </div>
-                        ) : data.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                                <div className="text-6xl mb-6 transform hover:scale-110 transition-transform">🛸</div>
-                                <div className="text-lg font-black text-white tracking-widest uppercase">Layer Undefined</div>
-                                <div className="text-[10px] text-[var(--text-tertiary)] mt-2 font-bold uppercase tracking-[0.2em]">Selecione um dataset para iniciar a auditoria</div>
+                                <span className="text-[10px] font-black text-[var(--accent-purple)] uppercase tracking-[0.3em] animate-pulse">Syncing...</span>
                             </div>
                         ) : viewMode === 'table' ? (
-                            <div className="flex-1 overflow-auto custom-scrollbar p-6">
-                                <div className="rounded-[24px] overflow-hidden border border-white/[0.06] bg-black/40 shadow-2xl">
-                                    <table className="w-full text-left border-collapse">
+                            <div className="flex-1 flex flex-col p-6 min-h-0 bg-white/[0.01]">
+                                <div className="flex items-center justify-between px-4 mb-5 shrink-0">
+                                    <div className="flex items-center gap-8">
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent-purple)] shadow-[0_0_8px_var(--accent-purple)]" />
+                                                <span className="text-[8px] font-black text-[var(--accent-purple)] uppercase">Registros</span>
+                                            </div>
+                                            <span className="text-xl font-mono-glass text-white font-black">{data.length.toLocaleString('pt-BR')}</span>
+                                        </div>
+                                        <div className="w-px h-8 bg-white/5" />
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent-green)]" />
+                                                <span className="text-[8px] font-black text-[var(--accent-green)] uppercase">Financeiro</span>
+                                            </div>
+                                            <span className="text-xl font-mono-glass text-white font-black">{formatCurrency(totalValor)}</span>
+                                        </div>
+                                        <div className="w-px h-8 bg-white/5" />
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#00f2fe]" />
+                                                <span className="text-[8px] font-black text-[#00f2fe] uppercase">Schema</span>
+                                            </div>
+                                            <span className="text-xl font-mono-glass text-white font-black">{fieldStats.filled} / {fieldStats.total}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-[24px] overflow-auto custom-scrollbar border border-white/[0.06] bg-black/40 flex-1 relative">
+                                    <table className="w-full text-left border-collapse min-w-[800px]">
                                         <thead>
                                             <tr className="bg-white/[0.02] border-b border-white/[0.06]">
-                                                <th className="w-[60px] px-6 py-4 text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] text-center">ID</th>
+                                                <th className="w-[60px] px-6 py-4 text-[9px] font-black text-[var(--text-tertiary)] uppercase text-center">ID</th>
                                                 {columns.map(col => (
-                                                    <th
-                                                        key={col.key}
-                                                        onClick={() => handleSort(col.key)}
-                                                        className={`${col.width} px-6 py-4 text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] cursor-pointer hover:bg-white/[0.04] hover:text-white transition-colors group/th select-none`}
-                                                    >
-                                                        <div className="flex items-center gap-2">
-                                                            {col.label}
-                                                            <span className={`text-[12px] opacity-0 group-hover/th:opacity-50 transition-opacity ${sortConfig?.key === col.key ? 'opacity-100 text-[var(--accent-purple)]' : ''}`}>
-                                                                {sortConfig?.key === col.key ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '↕'}
-                                                            </span>
-                                                        </div>
+                                                    <th key={col.key} onClick={() => handleSort(col.key)} className={`${col.width} px-6 py-4 text-[9px] font-black text-[var(--text-tertiary)] uppercase cursor-pointer hover:bg-white/[0.04]`}>
+                                                        {col.label}
                                                     </th>
                                                 ))}
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-white/[0.02]">
-                                            {filtered.map((row, i) => {
-                                                const isSelected = selectedRow === i;
+                                        <tbody>
+                                            {paginatedData.map((row, idx) => {
+                                                const i = (currentPage - 1) * ROWS_PER_PAGE + idx;
                                                 return (
-                                                    <tr
-                                                        key={i}
-                                                        onClick={() => setSelectedRow(isSelected ? null : i)}
-                                                        className={`group/row cursor-pointer transition-all duration-200 ${isSelected ? 'bg-[var(--accent-purple)]/10' : 'hover:bg-white/[0.02]'}`}
-                                                    >
-                                                        <td className="px-6 py-3.5 text-[10px] text-[var(--text-tertiary)] font-mono-glass text-center group-hover/row:text-white transition-colors">{(i + 1).toString().padStart(3, '0')}</td>
+                                                    <tr key={i} onClick={() => setSelectedRow(selectedRow === i ? null : i)} className={`cursor-pointer ${selectedRow === i ? 'bg-[var(--accent-purple)]/10' : 'hover:bg-white/[0.02]'}`}>
+                                                        <td className="px-6 py-3.5 text-[10px] text-[var(--text-tertiary)] font-mono-glass text-center">{(i + 1).toString().padStart(3, '0')}</td>
                                                         {columns.map(col => {
                                                             const val = row[col.key];
-                                                            if (col.key === 'valor') {
-                                                                return (
-                                                                    <td key={col.key} className="px-6 py-3.5 font-mono-glass text-[11px]">
-                                                                        <span className="text-[var(--accent-green)] font-black">{formatCurrency(val)}</span>
-                                                                    </td>
-                                                                );
-                                                            }
-                                                            if (col.key === 'risco_nivel' && val) {
-                                                                const badge = getRiskBadge(val);
-                                                                return (
-                                                                    <td key={col.key} className="px-6 py-3.5">
-                                                                        <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${badge.bg} ${badge.text} ${badge.border} shadow-sm`}>
-                                                                            {val}
-                                                                        </span>
-                                                                    </td>
-                                                                );
-                                                            }
-                                                            if (col.key === 'hash_id') {
-                                                                return (
-                                                                    <td key={col.key} className="px-6 py-3.5">
-                                                                        <span className="bg-white/5 border border-white/5 px-2 py-1 rounded-md text-[9px] text-[var(--accent-blue)] font-mono-glass font-bold tracking-tighter shadow-inner group-hover/row:border-[var(--accent-blue)]/50 transition-colors">
-                                                                            {String(val || '').substring(0, 10)}
-                                                                        </span>
-                                                                    </td>
-                                                                );
-                                                            }
+                                                            const isUrl = typeof val === 'string' && val.startsWith('http');
+                                                            
                                                             return (
-                                                                <td key={col.key} className="px-6 py-3.5 text-[11px] text-[var(--text-secondary)] group-hover/row:text-white transition-colors">
-                                                                    <div className="truncate max-w-[220px]" title={String(val || '')}>
-                                                                        {val ?? '—'}
-                                                                    </div>
+                                                                <td key={col.key} className="px-6 py-3.5 text-[11px] text-[var(--text-secondary)]">
+                                                                    {col.key === 'valor' || col.key === 'kaka_valor_nf' ? (
+                                                                        <span className="text-[var(--accent-green)] font-bold">{val != null ? formatCurrency(val) : '—'}</span>
+                                                                    ) : col.key === 'kaka_delta_valor' ? (
+                                                                        val != null ? (
+                                                                            <span className={`font-mono-glass font-bold ${Math.abs(val) > 0.10 ? 'text-red-400' : 'text-green-400'}`}>
+                                                                                {val > 0 ? '+' : ''}{typeof val === 'number' ? val.toFixed(2) : val}
+                                                                            </span>
+                                                                        ) : <span className="opacity-30">—</span>
+                                                                    ) : typeof val === 'boolean' ? (
+                                                                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${val ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/15 text-green-400 border border-green-500/20'}`}>
+                                                                            {val ? 'SIM' : 'NAO'}
+                                                                        </span>
+                                                                    ) : col.key === 'kaka_status' ? (
+                                                                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${val === 'ok' ? 'bg-green-500/15 text-green-400' : val === 'manual' ? 'bg-yellow-500/15 text-yellow-400' : 'bg-red-500/15 text-red-400'}`}>
+                                                                            {(val || '—').toUpperCase()}
+                                                                        </span>
+                                                                    ) : col.key === 'kaka_tipo_pdf' ? (
+                                                                        <span className={`px-2 py-0.5 rounded-lg text-[9px] font-bold bg-white/5 border border-white/10`}>
+                                                                            {val || '—'}
+                                                                        </span>
+                                                                    ) : col.key === 'kaka_confianca' ? (
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            <div className="w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                                                <div className="h-full rounded-full transition-all" style={{ width: `${val || 0}%`, background: (val || 0) > 70 ? '#34d399' : (val || 0) > 40 ? '#fbbf24' : '#f87171' }} />
+                                                                            </div>
+                                                                            <span className="text-[9px] font-mono-glass opacity-60">{val || 0}%</span>
+                                                                        </div>
+                                                                    ) : isUrl ? (
+                                                                        <a href={val} target="_blank" rel="noopener noreferrer" 
+                                                                           className="text-[var(--accent-blue)] hover:underline truncate block max-w-[200px]"
+                                                                           onClick={(e) => e.stopPropagation()}>
+                                                                            {val}
+                                                                        </a>
+                                                                    ) : (
+                                                                        val ?? '—'
+                                                                    )}
                                                                 </td>
                                                             );
                                                         })}
@@ -452,112 +606,76 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                                         </tbody>
                                     </table>
                                 </div>
+                                <div className="mt-4 flex items-center justify-between px-2">
+                                    <span className="text-[10px] text-white/30 uppercase">Page {currentPage} of {totalPages}</span>
+                                    <div className="flex gap-2">
+                                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="px-4 py-2 rounded-lg bg-black/40 border border-white/10 text-white/60 disabled:opacity-30">Anterior</button>
+                                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="px-4 py-2 rounded-lg bg-black/40 border border-white/10 text-white/60 disabled:opacity-30">Próxima</button>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
-                            <div className="flex-1 flex flex-col bg-black/30 overflow-hidden shadow-inner m-6 rounded-[24px] border border-white/[0.04]">
+                            <div className="flex-1 flex flex-col bg-black/30 m-6 rounded-[24px] border border-white/[0.04] overflow-hidden">
                                 <div className="h-10 flex items-center justify-between px-6 bg-white/[0.02] border-b border-white/[0.06]">
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex gap-1.5">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-                                        </div>
-                                        <span className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] font-mono-glass">
-                                            {codeTab === 'json' ? `DATALAKE_ENTITY::${filename}` : `AGENT_ROUTING::${sourceFilename}`}
-                                        </span>
+                                    <div className="flex p-1 bg-white/5 rounded-lg space-x-1">
+                                        <button onClick={() => setCodeTab('json')} className={`px-4 py-1 rounded-md text-[9px] font-black ${codeTab === 'json' ? 'bg-[var(--accent-purple)] text-white' : 'text-white/40'}`}>JSON</button>
+                                        <button onClick={() => setCodeTab('source')} className={`px-4 py-1 rounded-md text-[9px] font-black ${codeTab === 'source' ? 'bg-[var(--accent-purple)] text-white' : 'text-white/40'}`}>SOURCE</button>
                                     </div>
-                                    <button
-                                        onClick={() => {
-                                            const content = codeTab === 'json' ? JSON.stringify(data, null, 2) : sourceCode;
-                                            navigator.clipboard.writeText(content);
-                                        }}
-                                        className="text-[9px] font-black text-[var(--text-tertiary)] hover:text-white flex items-center gap-1.5 transition-colors"
-                                    >
-                                        📋 CLIPBOARD
-                                    </button>
                                 </div>
-                                <div className="flex-1 overflow-auto custom-scrollbar selection:bg-[var(--accent-purple)]/30">
-                                    <SyntaxHighlighter
-                                        language={codeTab === 'json' ? 'json' : 'python'}
-                                        style={vscDarkPlus}
-                                        customStyle={{
-                                            margin: 0,
-                                            padding: '2rem',
-                                            background: 'transparent',
-                                            fontSize: '12px',
-                                            lineHeight: '1.6',
-                                            fontFamily: "'SF Mono', 'JetBrains Mono', monospace"
-                                        }}
-                                        wrapLines={true}
-                                        showLineNumbers={true}
-                                    >
-                                        {codeTab === 'json' ? JSON.stringify(data, null, 2) : sourceCode}
-                                    </SyntaxHighlighter>
+                                <div className="flex-1 overflow-auto bg-black/20 p-6 custom-scrollbar">
+                                    {codeTab === 'json' ? (
+                                        <div className="space-y-4">
+                                            {data.slice(0, 100).map((item, idx) => (
+                                                <div key={idx} className="p-4 bg-white/[0.02] rounded-xl font-mono text-[11px] border border-white/5">
+                                                    <pre className="text-white/60">{JSON.stringify(item, null, 2)}</pre>
+                                                </div>
+                                            ))}
+                                            {data.length > 100 && <div className="text-center py-8 text-[10px] text-white/20 uppercase tracking-widest font-black">Restante omitido para performance...</div>}
+                                        </div>
+                                    ) : (
+                                        <SyntaxHighlighter language="python" style={vscDarkPlus} customStyle={{ background: 'transparent', padding: 0 }}>{sourceCode}</SyntaxHighlighter>
+                                    )}
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* RIGHT DRAWER: Advanced Audit Inspector */}
                 <AnimatePresence>
                     {selectedRow !== null && filtered[selectedRow] && (
-                        <motion.div
-                            initial={{ x: 100, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: 100, opacity: 0 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                            className="w-[420px] shrink-0 border-l border-white/[0.04] flex flex-col bg-black/40 backdrop-blur-3xl overflow-hidden p-8"
-                        >
-                            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
-                                <div>
-                                    <span className="text-[10px] font-black text-[var(--accent-purple)] uppercase tracking-[0.3em]">Auditoria Profunda</span>
-                                    <h4 className="text-xl font-black text-white tracking-tighter mt-1">Gasto Detalhado</h4>
-                                </div>
-                                <button onClick={() => setSelectedRow(null)}
-                                    className="w-8 h-8 rounded-xl glass flex items-center justify-center text-[var(--text-tertiary)] hover:text-white transition-all active:scale-90">✕</button>
+                        <motion.div initial={{ x: 300 }} animate={{ x: 0 }} exit={{ x: 300 }} className="w-[400px] bg-black/80 border-l border-white/5 p-8 overflow-y-auto custom-scrollbar">
+                            <div className="flex items-center justify-between mb-8">
+                                <h4 className="text-lg font-black text-white uppercase tracking-tighter">Detalhes</h4>
+                                <button onClick={() => setSelectedRow(null)} className="text-white/40 hover:text-white">✕</button>
                             </div>
-
-                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
-                                {Object.entries(filtered[selectedRow]).map(([key, val]) => {
-                                    const isHighlight = ['deputado', 'valor', 'risco_nivel', 'nome_fornecedor'].includes(key);
-                                    return (
-                                        <div key={key} className={`group/field animate-in slide-in-from-right duration-500`}>
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest">{key.replace(/_/g, ' ')}</div>
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white/10 group-hover/field:bg-[var(--accent-purple)] transition-colors shadow-[0_0_8px_rgba(191,90,242,0)] group-hover/field:shadow-[0_0_8px_rgba(191,90,242,0.8)]" />
-                                            </div>
-                                            <div className={`text-[12px] break-all leading-relaxed p-4 rounded-2xl border transition-all ${isHighlight ? 'bg-[var(--accent-purple)]/5 border-[var(--accent-purple)]/20 text-white shadow-inner font-bold' : 'bg-white/[0.02] border-white/[0.04] text-[var(--text-secondary)] font-mono-glass'}`}>
-                                                {typeof val === 'object' ? JSON.stringify(val, null, 2) : (key === 'valor' ? formatCurrency(val) : String(val ?? '—'))}
-                                            </div>
+                            <div className="space-y-6">
+                                {Object.entries(filtered[selectedRow]).map(([k, v]) => (
+                                    <div key={k}>
+                                        <div className="text-[9px] text-white/30 uppercase font-black mb-1">{k}</div>
+                                        <div className={`text-xs text-white/90 break-all bg-white/5 p-3 rounded-lg border border-white/5 font-mono-glass`}>
+                                            {typeof v === 'string' && v.startsWith('http') ? (
+                                                <a href={v} target="_blank" rel="noopener noreferrer" className="text-[var(--accent-blue)] hover:underline">
+                                                    {v}
+                                                </a>
+                                            ) : (
+                                                String(v ?? '—')
+                                            )}
                                         </div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Verification Badge */}
-                            <div className="mt-8 p-4 rounded-2xl border border-[var(--accent-green)]/20 bg-[var(--accent-green)]/5 flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[var(--accent-green)]/20 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(48,209,88,0.3)]">🛡️</div>
-                                <div>
-                                    <div className="text-[10px] font-black text-[var(--accent-green)] uppercase tracking-widest">Hash Validada</div>
-                                    <div className="text-[9px] text-[var(--accent-green)]/60 font-mono-glass truncate w-[240px]">
-                                        {String(filtered[selectedRow].hash_id || 'ALBA_V1_VERIFIED')}
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
-        </div >
+        </div>
     );
 };
 
-/* Stat line helper */
-const StatLine = ({ label, value, small }: { label: string; value: string; small?: boolean }) => (
-    <div className="flex justify-between items-center">
-        <span className="text-[10px] text-[var(--text-tertiary)]">{label}</span>
-        <span className={`font-semibold text-white ${small ? 'text-[9px] font-mono-glass truncate max-w-[120px]' : 'text-[11px]'}`}>{value}</span>
+const StatLine = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex justify-between items-center text-[10px]">
+        <span className="text-[var(--text-tertiary)]">{label}</span>
+        <span className="text-white font-bold">{value}</span>
     </div>
 );
 

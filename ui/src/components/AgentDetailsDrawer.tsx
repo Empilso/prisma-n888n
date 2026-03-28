@@ -11,7 +11,7 @@ interface AgentDetailsDrawerProps {
     agentId: string | null;
     agentLabel: string;
     selectedCrewId: string;
-    onOpenStudio: (layer: 'bronze' | 'prata' | 'ouro') => void;
+    onOpenStudio: (layer: 'bronze' | 'prata' | 'ouro' | 'kaka') => void;
     inputReady?: boolean;
     systemStatus?: any;
 }
@@ -31,12 +31,10 @@ const modelProviders = [
     { id: 'openrouter', name: 'OpenRouter', icon: '🔮', models: ['google/gemini-pro-1.5', 'anthropic/claude-3-haiku'], desc: 'Multi-modelos' },
 ];
 
-const getLayer = (agentId: string | null): string => {
+const getLayer = (agentId: string | null): 'bronze' | 'prata' | 'ouro' | 'kaka' => {
     if (agentId === '1') return 'bronze';
     if (agentId === '2') return 'prata';
-    if (agentId === 'zidane_a') return 'parlamentares';
-    if (agentId === 'zidane_b') return 'parlamentares/raw';
-    if (agentId === 'zidane_c') return 'parlamentares/gold';
+    if (agentId === '3' || agentId === 'kaka') return 'kaka';
     return 'ouro';
 };
 
@@ -112,6 +110,8 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     const [availableBronzeFiles, setAvailableBronzeFiles] = useState<any[]>([]);
     const [isFetchingFiles, setIsFetchingFiles] = useState(false);
     const [selectedBronzeFile, setSelectedBronzeFile] = useState<string>('');
+    const [pageLimit, setPageLimit] = useState<number>(3474);
+    const [agentManifest, setAgentManifest] = useState<any>(null);
 
     const [selectedAno, setSelectedAno] = useState<number | 'all'>(2024);
     const [selectedMunicipio, setSelectedMunicipio] = useState('Salvador');
@@ -126,16 +126,21 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     useEffect(() => {
         if (isOpen && agentId) {
             setActiveTab('overview');
+            fetchManifest();
             fetchPrompt();
             fetchAvailableFiles();
-            if (agentId === '2') fetchBronzeFiles();
+            if (agentId === '2' || agentId === 'kaka' || agentId === '3' || agentId === 'ronaldo' || agentId === 'dunga') fetchBronzeFiles();
             fetchPreview();
         }
     }, [isOpen, agentId, selectedCrewId]);
 
     const fetchBronzeFiles = async () => {
         try {
-            const res = await fetch(`http://localhost:8001/api/agent/2/bronze-files`);
+            // Se for o Bebeto (2), busca Bronze (entrada dele)
+            // Se for o Kaká (3) ou Ronaldo, busca Prata (entrada dele)
+            // Se for Dunga, busca Ouro (entrada dele)
+            const inputLayer = (agentId === 'dunga') ? 'ouro' : (agentId === 'kaka' || agentId === '3' || agentId === 'ronaldo') ? 'prata' : 'bronze';
+            const res = await fetch(`http://localhost:8003/api/agent/${agentId}/input-files?layer=${inputLayer}`);
             const data = await res.json();
             setAvailableBronzeFiles(data.files || []);
             if (data.files?.length > 0 && !selectedBronzeFile) {
@@ -144,9 +149,20 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
         } catch (e) { }
     };
 
+    const fetchManifest = async () => {
+        try {
+            setAgentManifest(null);
+            const res = await fetch(`http://localhost:8003/api/agent-manifest/${agentId}`);
+            const data = await res.json();
+            if (data.status === 'ok') {
+                setAgentManifest(data.manifest);
+            }
+        } catch (e) { }
+    };
+
     const fetchPrompt = async () => {
         try {
-            const res = await fetch(`http://localhost:8001/api/get-prompt/${agentId}`);
+            const res = await fetch(`http://localhost:8003/api/get-prompt/${agentId}`);
             const data = await res.json();
             setPrompt(data.prompt || '');
         } catch (e) { }
@@ -156,7 +172,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
         if (!agentId) return;
         setIsFetchingFiles(true);
         try {
-            const res = await fetch(`http://localhost:8001/api/datalake/files`);
+            const res = await fetch(`http://localhost:8003/api/datalake/files`);
             const json = await res.json();
             if (json.status === 'ok') {
                 const layer = getLayer(agentId);
@@ -172,9 +188,9 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
             const layer = getLayer(agentId);
             const fname = targetFile || filename;
 
-            let url = `http://localhost:8001/api/agent-data/${layer}`;
+            let url = `http://localhost:8003/api/agent-data/${layer}`;
             if (targetFile) {
-                url = `http://localhost:8001/api/datalake/files/${layer}/${targetFile}`;
+                url = `http://localhost:8003/api/datalake/files/${layer}/${targetFile}`;
             }
 
             const res = await fetch(url);
@@ -189,7 +205,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
             if (finalFname) {
                 // Reseta stats antes da nova busca para evitar confusão de dados
                 setFileStats(null);
-                const sResp = await fetch(`http://localhost:8001/api/datalake/stats/${agentId}?filename=${finalFname}`);
+                const sResp = await fetch(`http://localhost:8003/api/datalake/stats/${agentId}?filename=${finalFname}`);
                 const sData = await sResp.json();
                 if (sData.status === 'ok') setFileStats(sData);
             }
@@ -199,7 +215,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     const handleSave = async () => {
         setLoading(true);
         try {
-            await fetch(`http://localhost:8001/api/configure-prompt/${agentId}`, {
+            await fetch(`http://localhost:8003/api/configure-prompt/${agentId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ custom_prompt: prompt }),
@@ -216,18 +232,24 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
             const yearMatch = filename.match(/20\d{2}/);
             const yearToRun = yearMatch ? yearMatch[0] : selectedAno.toString();
 
-            const queryParams = new URLSearchParams({
-                ano: yearToRun,
-                municipio: selectedMunicipio,
-                provider: selectedProvider,
-                model: selectedModel
-            });
+            const isZidaneD = agentId === 'zidane_d';
+            const queryParams = new URLSearchParams();
+            if (!isZidaneD) {
+                queryParams.append('ano', yearToRun);
+                queryParams.append('municipio', selectedMunicipio);
+                queryParams.append('provider', selectedProvider);
+                queryParams.append('model', selectedModel);
+            }
 
             if (agentId === '2' && selectedBronzeFile) {
                 queryParams.append('filename', selectedBronzeFile);
             }
 
-            const url = `http://localhost:8001/api/run-agent/${agentId}?${queryParams.toString()}`;
+            if ((agentId === '3' || agentId === 'kaka') && pageLimit > 0) {
+                queryParams.append('limit', pageLimit.toString());
+            }
+
+            const url = `http://localhost:8003/api/run-agent/${agentId}?${queryParams.toString()}`;
             console.log(`🚀 [AGENT_DRAWER] Disparando Agente ${agentId}:`, url);
 
             await fetch(url, { method: 'POST' });
@@ -240,14 +262,14 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     const handleStop = async () => {
         if (!agentId) return;
         try {
-            await fetch(`http://localhost:8001/api/stop-agent/${agentId}`, { method: 'POST' });
+            await fetch(`http://localhost:8003/api/stop-agent/${agentId}`, { method: 'POST' });
         } catch (e) { }
     };
 
     const renderConfigControls = () => {
         const needsYear = ['1', '3', '4', '5', '6', '10'].includes(selectedCrewId) && agentId === '1';
         const needsCity = selectedCrewId === '9' && agentId === '1';
-        const isLLM = agent?.tech === 'llm';
+        const isLLM = agent?.tech === 'llm' && agentId !== 'zidane_c';
 
         return (
             <div className="grid grid-cols-1 gap-3 mt-2">
@@ -321,7 +343,6 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                 const isExtracted = agentStatus?.completed_years?.includes(ano.toString());
                                 const isCheckpointed = agentStatus?.checkpoint_years?.includes(ano.toString());
                                 const isAvailable = agentStatus?.available_input_years?.includes(ano.toString());
-
                                 return (
                                     <button
                                         key={ano}
@@ -393,65 +414,484 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
 
                 {selectedCrewId === '0' && (() => {
                     const agentStatus = systemStatus?.agents?.[agentId || ''];
-                    const idsFile = availableFiles.find(f => f.name === 'parlamentares_ids.json');
+                    const rawFiles = availableFiles.filter(f => f.layer === 'parlamentares' || f.name?.includes('parlamentar'));
+                    const idsFile = agentStatus?.usage?.output > 0;
+                    const totalPerfis = agentStatus?.usage?.output || 0;
+                    const hubExists = agentStatus?.id === 'zidane_c' ? agentStatus?.completed_years?.length > 0 : false;
 
                     if (agentId === 'zidane_a') {
+                        const isDone = agentStatus?.completed_years?.length > 0;
                         return (
                             <div className="space-y-4">
-                                <div className="p-4 bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/20 rounded-xl relative overflow-hidden group">
-                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">👤</div>
-                                    <h3 className="text-[10px] font-black text-yellow-500 uppercase tracking-[0.15em] mb-1">Módulo de Reconhecimento</h3>
-                                    <p className="text-[8px] text-white/40 leading-relaxed font-medium mb-3 max-w-[85%]">
-                                        Varredura completa na Assembleia Legislativa da Bahia para identificação e mapeamento dos parlamentares oficiais.
+                                {/* Status Card */}
+                                <div className={`p-4 rounded-xl border relative overflow-hidden group transition-all ${
+                                    isDone
+                                        ? 'bg-gradient-to-r from-yellow-500/10 to-transparent border-yellow-500/30'
+                                        : 'bg-white/[0.02] border-white/5'
+                                }`}>
+                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">🗺️</div>
+                                    <div className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Fase 1 — Identificador de Parlamentares</div>
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-xl">{isDone ? '✅' : '⚡'}</span>
+                                        <div>
+                                            <div className={`text-[10px] font-black ${isDone ? 'text-yellow-400' : 'text-white/50'}`}>
+                                                {isDone ? `${agentStatus?.usage?.output || 0} IDs Coletados` : 'Pronto para Varredura'}
+                                            </div>
+                                            <div className="text-[7px] text-white/20 uppercase font-black">Portal: al.ba.gov.br/deputados</div>
+                                        </div>
+                                    </div>
+                                    {/* Arquivos de Saída */}
+                                    <div className="space-y-1">
+                                        <div className="text-[7px] font-black text-white/20 uppercase tracking-widest mb-1">📤 Saída</div>
+                                        <div className="flex items-center justify-between p-2 bg-black/30 rounded-lg border border-white/5">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs">{isDone ? '📄' : '⬜'}</span>
+                                                <span className="text-[9px] font-black text-white/50">parlamentares_ids.json</span>
+                                            </div>
+                                            <span className={`text-[7px] font-black px-1.5 py-0.5 rounded ${
+                                                isDone ? 'bg-yellow-500/20 text-yellow-400' : 'bg-white/5 text-white/20'
+                                            }`}>{isDone ? 'GERADO' : 'PENDENTE'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Missão */}
+                                <div className="p-3 bg-yellow-500/5 border border-yellow-500/10 rounded-xl">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm">🎯</span>
+                                        <span className="text-[8px] font-black text-yellow-400 uppercase tracking-widest">Missão do Zidane-A</span>
+                                    </div>
+                                    <p className="text-[9px] text-white/40 leading-relaxed">
+                                        Varre o portal oficial <span className="text-white/60">al.ba.gov.br</span> para identificar os 63 deputados estaduais: nome, partido, ID único e observações de suplência.
                                     </p>
-
-                                    {idsFile ? (
-                                        <div className="flex items-center gap-3 p-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                                            <span className="text-xl">✅</span>
-                                            <div>
-                                                <div className="text-[9px] font-black text-yellow-400">COLETA CONCLUÍDA</div>
-                                                <div className="text-[7px] text-yellow-500/60 uppercase font-black">{idsFile.size} • {idsFile.modified}</div>
-                                            </div>
-                                            <button
-                                                onClick={() => {
-                                                    setFilename('parlamentares_ids.json');
-                                                    fetchPreview('parlamentares_ids.json');
-                                                }}
-                                                className="ml-auto px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/40 text-yellow-400 text-[8px] font-black rounded uppercase transition-colors"
-                                            >
-                                                Visualizar
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-3 p-2 bg-white/5 border border-white/10 rounded-lg opacity-60">
-                                            <span className="text-xl">⏳</span>
-                                            <div>
-                                                <div className="text-[9px] font-black text-white/50">AGUARDANDO COLETA</div>
-                                                <div className="text-[7px] text-white/30 uppercase font-black">Nenhum dado encontrado no Datalake</div>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         );
                     }
 
-                    if (agentId === 'zidane_b' || agentId === 'zidane_c') {
+                    if (agentId === 'zidane_b') {
+                        const isDone = agentStatus?.completed_years?.length > 0;
+                        const isProgress = (agentStatus?.checkpoint_years?.length || 0) > 0;
+                        const perfisGerados = agentStatus?.usage?.output || 0;
+                        const pct = Math.round((perfisGerados / 63) * 100);
+
                         return (
                             <div className="space-y-4">
-                                <div className="p-3 bg-[var(--accent-purple)]/5 border border-[var(--accent-purple)]/10 rounded-xl">
-                                    <div className="flex items-center gap-2 mb-1.5">
-                                        <span className="text-[10px]">⚙️</span>
-                                        <span className="text-[8px] font-black text-[var(--accent-purple)] uppercase tracking-widest">{agentId === 'zidane_b' ? 'Mass Scraper' : 'LLM Brain'}</span>
+                                {/* Status Card */}
+                                <div className={`p-4 rounded-xl border relative overflow-hidden group transition-all ${
+                                    isDone ? 'bg-gradient-to-r from-purple-500/10 to-transparent border-purple-500/30'
+                                    : isProgress ? 'bg-gradient-to-r from-orange-500/10 to-transparent border-orange-500/30'
+                                    : 'bg-white/[0.02] border-white/5'
+                                }`}>
+                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">🕵️</div>
+                                    <div className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Fase 2 — Deep Scraper de Biografias</div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-xl">{isDone ? '✅' : isProgress ? '⏳' : '⚡'}</span>
+                                        <div>
+                                            <div className={`text-[10px] font-black ${isDone ? 'text-purple-400' : isProgress ? 'text-orange-400' : 'text-white/50'}`}>
+                                                {isDone ? `${perfisGerados} Perfis Extraídos` : isProgress ? `${perfisGerados}/63 Perfis (Em Andamento)` : 'Aguardando Zidane-A'}
+                                            </div>
+                                            <div className="text-[7px] text-white/20 uppercase font-black">Score PRISMA: 0.98</div>
+                                        </div>
                                     </div>
-                                    <p className="text-[9px] text-white/40 leading-relaxed font-medium">
-                                        Monitoramento de arquivos em andamento. Total disponíveis: {availableFiles.length} perfis.
+                                    {/* Barra de Progresso */}
+                                    <div className="mb-3">
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-[7px] font-black text-white/20 uppercase">Progresso</span>
+                                            <span className="text-[7px] font-black text-white/40">{perfisGerados}/63 • {pct}%</span>
+                                        </div>
+                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full transition-all duration-500"
+                                                style={{
+                                                    width: `${pct}%`,
+                                                    background: isDone ? 'var(--accent-green)' : isProgress ? '#f97316' : 'var(--accent-purple)'
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Arquivos */}
+                                    <div className="space-y-1">
+                                        <div className="text-[7px] font-black text-white/20 uppercase tracking-widest mb-1">📥 Entrada → 📤 Saída</div>
+                                        <div className="grid grid-cols-2 gap-1">
+                                            <div className="flex items-center gap-1.5 p-1.5 bg-black/30 rounded-lg border border-white/5">
+                                                <span className="text-xs">📋</span>
+                                                <span className="text-[8px] font-black text-white/40">parlamentares_ids.json</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 p-1.5 bg-black/30 rounded-lg border border-white/5">
+                                                <span className="text-xs">📁</span>
+                                                <span className="text-[8px] font-black text-white/40">raw/parlamentar_*.json</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Missão */}
+                                <div className="p-3 bg-purple-500/5 border border-purple-500/10 rounded-xl">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm">⚽</span>
+                                        <span className="text-[8px] font-black text-purple-400 uppercase tracking-widest">Missão do Zidane-B</span>
+                                    </div>
+                                    <p className="text-[9px] text-white/40 leading-relaxed">
+                                        Para cada parlamentar identificado pelo Zidane-A, extrai a <span className="text-white/60">biografia completa</span>: formação, mandatos, dados pessoais, foto e observações de suplência. Score PRISMA 0.98.
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    }
+
+                    if (agentId === 'zidane_c') {
+                        const isDone = agentStatus?.completed_years?.length > 0;
+                        const hubCount = agentStatus?.usage?.output || 0;
+                        const perfisEntrada = agentStatus?.usage?.input || 0;
+
+                        return (
+                            <div className="space-y-4">
+                                {/* Status Card */}
+                                <div className={`p-4 rounded-xl border relative overflow-hidden group transition-all ${
+                                    isDone ? 'bg-gradient-to-r from-blue-500/10 to-transparent border-blue-500/30'
+                                    : 'bg-white/[0.02] border-white/5'
+                                }`}>
+                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">🏛️</div>
+                                    <div className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">FASE 3 — NORMALIZADOR & CONSOLIDADOR</div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-xl">{isDone ? '✅' : '⚙️'}</span>
+                                        <div>
+                                            <div className={`text-[10px] font-black ${isDone ? 'text-blue-400' : 'text-white/50'}`}>
+                                                {isDone ? `Hub com ${hubCount} Parlamentares` : `${perfisEntrada} Perfis Prontos para Normalizar`}
+                                            </div>
+                                            <div className="text-[7px] text-white/20 uppercase font-black">Processamento local Python — sem LLM</div>
+                                        </div>
+                                    </div>
+                                    {/* Arquivos */}
+                                    <div className="space-y-1 mt-2">
+                                        <div className="text-[7px] font-black text-white/20 uppercase tracking-widest mb-1">📥 Entrada → 📤 Saída</div>
+                                        <div className="grid grid-cols-2 gap-1">
+                                            <div className="flex flex-col p-2 bg-black/30 rounded-lg border border-white/5">
+                                                <span className="text-[8px] font-black text-white/40 uppercase mb-1">Entrada</span>
+                                                <div className="flex items-center gap-1">
+                                                    <span className="text-xs">📁</span>
+                                                    <span className="text-[8px] font-black text-white/60">63x parlamentar_*.json</span>
+                                                </div>
+                                                <span className="text-[6px] text-white/20 mt-1 uppercase">data/saida/parlamentares/raw/</span>
+                                            </div>
+                                            <div className="flex flex-col p-2 bg-black/30 rounded-lg border border-white/5">
+                                                <span className="text-[8px] font-black text-white/40 uppercase mb-1">Saída</span>
+                                                <div className="flex items-center gap-1">
+                                                    <span className="text-xs">{isDone ? '📊' : '⬜'}</span>
+                                                    <span className="text-[8px] font-black text-white/60">hub_normalized.json</span>
+                                                </div>
+                                                <span className="text-[6px] text-white/20 mt-1 uppercase">data/saida/parlamentares/</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Missão */}
+                                <div className="p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm">🎯</span>
+                                        <span className="text-[8px] font-black text-blue-400 uppercase tracking-widest">Missão do Zidane-C</span>
+                                    </div>
+                                    <p className="text-[9px] text-white/40 leading-relaxed">
+                                        Lê os 63 arquivos gerados pelo Zidane-B, executa normalização (Nascimento, Município, UF, Promoção de campos e Filiação) e consolida no <span className="text-white/60">parlamentares_hub_normalized.json</span>.
                                     </p>
                                 </div>
                             </div>
                         );
                     }
                     return null;
+                })()}
+
+                {(agentId === 'dunga') && (() => {
+                    const agentStatus = systemStatus?.agents?.[agentId];
+                    const isDone = Boolean(agentStatus?.status === 'done' || agentStatus?.detail?.includes('Upsert Concluído'));
+                    return (
+                        <div className="space-y-4">
+                            <div className="p-4 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-blue-500/20 transition-all duration-700"></div>
+                                <div className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">FASE 4 — INGESTÃO NO BANCO</div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-xl">{isDone ? '✅' : '🐘'}</span>
+                                    <div>
+                                        <div className={`text-[10px] font-black ${isDone ? 'text-blue-400' : 'text-white/50'}`}>
+                                            Carga Prisma DB (Supabase)
+                                        </div>
+                                        <div className="text-[7px] text-white/20 uppercase font-black">Processamento Local Python — sem LLM</div>
+                                    </div>
+                                </div>
+                                {/* Arquivos */}
+                                <div className="space-y-1 mt-2">
+                                    <div className="text-[7px] font-black text-white/20 uppercase tracking-widest mb-1">📥 Entrada → 📤 Saída</div>
+                                    <div className="grid grid-cols-2 gap-1">
+                                        <div className="flex flex-col p-2 bg-black/30 rounded-lg border border-white/5">
+                                            <span className="text-[8px] font-black text-white/40 uppercase mb-1">Entrada</span>
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-xs">💎</span>
+                                                <span className="text-[8px] font-black text-white/60">hub_normalized.json</span>
+                                            </div>
+                                            <span className="text-[6px] text-white/20 mt-1 uppercase">data/saida/parlamentares/</span>
+                                        </div>
+                                        <div className="flex flex-col p-2 bg-black/30 rounded-lg border border-white/5">
+                                            <span className="text-[8px] font-black text-white/40 uppercase mb-1">Saída</span>
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-xs">🐘</span>
+                                                <span className="text-[8px] font-black text-white/60">Tabela Parlamentares</span>
+                                            </div>
+                                            <span className="text-[6px] text-white/20 mt-1 uppercase">Supabase (REST UPSERT)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Missão */}
+                            <div className="p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-sm">🎯</span>
+                                    <span className="text-[8px] font-black text-blue-400 uppercase tracking-widest">Missão do Dunga</span>
+                                </div>
+                                <p className="text-[9px] text-white/40 leading-relaxed">
+                                    Lê os arquivos <span className="text-white/60">Ouro</span> validados pelo Ronaldo Gold e executa carga (Upsert) definitiva na tabela <span className="text-white/60">despesas_gabinete</span> no Supabase usando <span className="text-white/60">prisma_id</span>. Carga resiliente, garantindo zero duplicidades e total sincronia com Kaka (Auditoria Forense) e Bebeto (Extrator).
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })()}
+
+                {(agentId === 'kaka' || agentId === '3') && (() => {
+                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+                    const agentStatus = systemStatus?.agents?.[agentId || 'kaka'];
+                    const kakaAnos: string[] = agentStatus?.completed_years || [];
+                    const checkpointAnos: string[] = agentStatus?.checkpoint_years || [];
+                    const prataAnos: string[] = (systemStatus?.agents?.['2']?.completed_years || []);
+
+                    return (
+                        <div className="space-y-4">
+                            {/* Radar de Safras Prata → Kaká (Forense) */}
+                            <div>
+                                <label className="text-[7px] font-black text-white/20 uppercase tracking-[0.1em] mb-3 block">Radar Forense (Prata → Kaká)</label>
+                                <div className="grid grid-cols-3 gap-1.5">
+                                    {ANOS.map(ano => {
+                                        const anoStr = ano.toString();
+                                        const isKaka = kakaAnos.includes(anoStr);
+                                        const isPrata = prataAnos.includes(anoStr) && !isKaka;
+                                        const hasCheckpoint = checkpointAnos.includes(anoStr) && !isKaka;
+                                        const isSelected = selectedAno === ano;
+                                        const kakaCurrent = availableFiles.find(f => f.name.includes(anoStr));
+                                        const kakaProgresso = kakaCurrent ? kakaCurrent.items_count : 0;
+
+                                        return (
+                                            <button
+                                                key={ano}
+                                                onClick={() => {
+                                                    const match = availableFiles.find((f: any) => f.name.includes(anoStr));
+                                                    if (match) {
+                                                        setSelectedAno(ano);
+                                                        fetchPreview(match.name);
+                                                    } else {
+                                                        setSelectedAno(ano);
+                                                    }
+                                                }}
+                                                disabled={!isPrata && !isKaka && !hasCheckpoint}
+                                                className={`relative flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${isKaka ? 'bg-[var(--accent-blue)]/5 border-[var(--accent-blue)]/20 hover:border-[var(--accent-blue)]/40'
+                                                    : (isPrata || hasCheckpoint) ? 'bg-[var(--accent-purple)]/5 border-[var(--accent-purple)]/20 hover:border-[var(--accent-purple)]/40 cursor-pointer'
+                                                        : 'bg-white/[0.01] border-white/5 opacity-30 cursor-not-allowed'
+                                                    } ${isSelected ? 'ring-1 ring-[var(--accent-purple)]/60 bg-white/5' : ''}`}
+                                            >
+                                                <div className={`w-2 h-2 rounded-full mb-1 ${isKaka ? 'bg-[var(--accent-blue)] shadow-[0_0_8px_var(--accent-blue)]'
+                                                    : hasCheckpoint ? 'bg-orange-400 animate-pulse'
+                                                        : isPrata ? 'bg-[var(--accent-purple)]'
+                                                            : 'bg-white/10'
+                                                    }`} />
+                                                <span className={`text-[9px] font-black ${isKaka ? 'text-[var(--accent-blue)]' : (isPrata || hasCheckpoint) ? 'text-white/60' : 'text-white/20'}`}>{ano}</span>
+                                                <span className={`text-[6px] font-black uppercase mt-0.5 ${isKaka ? 'text-[var(--accent-blue)]/60' : (isPrata || hasCheckpoint) ? 'text-white/30' : 'text-white/10'}`}>
+                                                    {isKaka ? 'FINALI' : (hasCheckpoint || kakaProgresso > 0) ? 'PARCIAL' : isPrata ? 'PRONTO' : 'SEM_DADO'}
+                                                </span>
+                                                {kakaProgresso > 0 && !isKaka && (
+                                                    <div className="mt-1 text-[6px] font-black text-[var(--accent-blue)] bg-[var(--accent-blue)]/10 px-1 rounded">
+                                                        {kakaProgresso} ITENS
+                                                    </div>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* NOVO: Seletor de Limite de Páginas para Kaká */}
+                            {(agentId === '3' || agentId === 'kaka') && (
+                                <div className="p-3 bg-[var(--accent-blue)]/5 border border-[var(--accent-blue)]/15 rounded-xl">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <label className="text-[7px] font-black text-white/40 uppercase tracking-[0.1em]">Limite de Auditoria (Registros)</label>
+                                        <span className="text-[9px] font-black text-[var(--accent-blue)]">{pageLimit === 3474 ? 'SAFRA COMPLETA' : `${pageLimit} ITENS`}</span>
+                                    </div>
+                                    <input 
+                                        type="range" 
+                                        min="10" 
+                                        max="3474" 
+                                        step="10"
+                                        value={pageLimit}
+                                        onChange={(e) => setPageLimit(parseInt(e.target.value))}
+                                        className="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-[var(--accent-blue)]"
+                                    />
+                                    <div className="flex justify-between mt-1">
+                                        <span className="text-[6px] font-black text-white/20">10</span>
+                                        <span className="text-[6px] font-black text-white/20">3474</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Seletor de Arquivo Prata (Alvo do Kaká) */}
+                            <div>
+                                <label className="text-[7px] font-black text-white/20 uppercase tracking-[0.1em] mb-3 block">Selecionar Alvo (Camada Prata)</label>
+                                <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
+                                    {availableBronzeFiles.length > 0 ? (
+                                        availableBronzeFiles.map((f: any) => {
+                                            const yrMatch = f.name.match(/20\d{2}/);
+                                            const fileYear = yrMatch ? yrMatch[0] : null;
+                                            const isDone = fileYear && kakaAnos.includes(fileYear);
+                                            return (
+                                                <button
+                                                    key={f.name}
+                                                    onClick={() => {
+                                                        if (fileYear) setSelectedAno(parseInt(fileYear));
+                                                        fetchPreview(f.name);
+                                                    }}
+                                                    className={`w-full flex items-center justify-between p-2.5 rounded-xl border transition-all ${filename === f.name
+                                                        ? 'bg-[var(--accent-purple)]/10 border-[var(--accent-purple)]/40 text-white'
+                                                        : 'bg-white/5 border-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'}`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-sm">💎</span>
+                                                        <div className="text-left">
+                                                            <div className="text-[9px] font-black tracking-tight">{f.name}</div>
+                                                            <div className="text-[7px] opacity-40 font-black uppercase mt-0.5">{f.size} • {f.modified}</div>
+                                                        </div>
+                                                    </div>
+                                                    {isDone && <span className="text-[6px] font-black px-1.5 py-0.5 rounded-lg bg-[var(--accent-blue)]/15 text-[var(--accent-blue)]">CONCLUÍDO</span>}
+                                                </button>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="text-center py-6 bg-white/[0.01] rounded-xl border border-dashed border-white/5 text-white/10 text-[8px] font-black uppercase tracking-widest leading-relaxed">
+                                            Aguardando Bebeto v2.2<br/>purificar arquivos Prata...
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Info */}
+                            <div className="p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <span className="text-[10px]">🔎</span>
+                                    <span className="text-[8px] font-black text-blue-400 uppercase tracking-widest">Estratégia Forense</span>
+                                </div>
+                                <p className="text-[9px] text-white/40 leading-relaxed font-medium">
+                                    Kaká audita PDFs da <span className="text-white/60">Camada Prata</span>. Ele detecta divergências de valores e CNPJs entre o portal e o documento original.
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })()}
+
+                {agentId === 'ronaldo' && (() => {
+                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+                    const agentStatus = systemStatus?.agents?.['ronaldo'];
+                    const ouroAnos: string[] = agentStatus?.completed_years || [];
+                    const prataAnos: string[] = (systemStatus?.agents?.['2']?.completed_years || []);
+
+                    return (
+                        <div className="space-y-4">
+                            {/* Radar de Safras Prata → Ouro */}
+                            <div>
+                                <label className="text-[7px] font-black text-white/20 uppercase tracking-[0.1em] mb-3 block">Rastreamento Relacional (Prata → Ouro)</label>
+                                <div className="grid grid-cols-3 gap-1.5">
+                                    {ANOS.map(ano => {
+                                        const anoStr = ano.toString();
+                                        const isOuro = ouroAnos.includes(anoStr);
+                                        const isPrata = prataAnos.includes(anoStr) && !isOuro;
+                                        const isSelected = selectedBronzeFile.includes(anoStr);
+                                        return (
+                                            <button
+                                                key={ano}
+                                                onClick={() => {
+                                                    const match = availableBronzeFiles.find((f: any) => f.name.includes(anoStr) && !f.name.includes('checkpoint'));
+                                                    if (match) {
+                                                        setSelectedBronzeFile(match.name);
+                                                        setSelectedAno(ano);
+                                                        fetchPreview(match.name);
+                                                    }
+                                                }}
+                                                disabled={!isOuro && !isPrata}
+                                                className={`relative flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${isOuro ? 'bg-yellow-500/5 border-yellow-500/30'
+                                                    : isPrata ? 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/30 hover:border-[var(--accent-green)]/50 cursor-pointer'
+                                                        : 'bg-white/[0.01] border-white/5 opacity-30 cursor-not-allowed'
+                                                    } ${isSelected ? 'ring-1 ring-yellow-500/60' : ''}`}
+                                            >
+                                                <div className={`w-2 h-2 rounded-full mb-1 ${isOuro ? 'bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]'
+                                                    : isPrata ? 'bg-[var(--accent-green)] shadow-[0_0_8px_rgba(50,205,50,0.5)]'
+                                                        : 'bg-white/10'
+                                                    }`} />
+                                                <span className={`text-[9px] font-black ${isOuro ? 'text-yellow-400' : isPrata ? 'text-[var(--accent-green)]' : 'text-white/20'}`}>{ano}</span>
+                                                <span className={`text-[6px] font-black uppercase mt-0.5 ${isOuro ? 'text-yellow-500/60' : isPrata ? 'text-[var(--accent-green)]/60' : 'text-white/10'}`}>{isOuro ? 'OURO' : isPrata ? 'PRONTO' : 'PEND.'}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                            
+                            {/* Seletor de Arquivo Prata (Input do Ronaldo) */}
+                            <div>
+                                <label className="text-[7px] font-black text-white/20 uppercase tracking-[0.1em] mb-2 block">Arquivo Fonte (Camada Prata)</label>
+                                <div className="space-y-1.5 max-h-[200px] overflow-y-auto pr-1 custom-scrollbar">
+                                    {availableBronzeFiles.length > 0 ? (
+                                        availableBronzeFiles.map((f: any) => {
+                                            const yrMatch = f.name.match(/20\d{2}/);
+                                            const fileYear = yrMatch ? yrMatch[0] : null;
+                                            const isAlreadyOuro = fileYear && ouroAnos.includes(fileYear) && !f.name.includes('checkpoint');
+                                            return (
+                                                <button
+                                                    key={f.name}
+                                                    onClick={() => {
+                                                        setSelectedBronzeFile(f.name);
+                                                        if (fileYear) setSelectedAno(parseInt(fileYear));
+                                                        fetchPreview(f.name);
+                                                    }}
+                                                    className={`w-full flex items-center justify-between p-2.5 rounded-xl border transition-all ${selectedBronzeFile === f.name
+                                                        ? 'bg-yellow-500/10 border-yellow-500/40 text-white'
+                                                        : 'bg-white/5 border-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'}`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-sm">{f.name.includes('checkpoint') ? '⏳' : '📥'}</span>
+                                                        <div className="text-left">
+                                                            <div className="text-[9px] font-black tracking-tight">{f.name}</div>
+                                                            <div className="text-[7px] opacity-40 font-black uppercase mt-0.5">{f.size} • {f.modified}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        {isAlreadyOuro && <span className="text-[7px] font-black px-1.5 py-0.5 rounded-lg bg-yellow-500/15 text-yellow-500">✓ OURO</span>}
+                                                        {fileYear && <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-lg ${isAlreadyOuro ? 'bg-yellow-500/10 text-yellow-500' : 'bg-[var(--accent-green)]/15 text-[var(--accent-green)]'}`}>{fileYear}</span>}
+                                                        {selectedBronzeFile === f.name && <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,1)]" />}
+                                                    </div>
+                                                </button>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="text-center py-6 bg-white/[0.01] rounded-xl border border-dashed border-white/5 text-white/10 text-[8px] font-black uppercase tracking-widest">
+                                            Aguardando Bebeto (Prata)...
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Missão */}
+                            <div className="p-3 bg-yellow-500/5 border border-yellow-500/10 rounded-xl">
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <span className="text-[10px]">⚖️</span>
+                                    <span className="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Missão de Ronaldo</span>
+                                </div>
+                                <p className="text-[9px] text-white/40 leading-relaxed font-medium">
+                                    Aplica regras de engajamento relacional, vinculando deputados ao Supabase. Produz a blindagem final na <span className="text-white/60">Camada Ouro</span> e acopla metadados determinísticos para carga por Dunga.
+                                </p>
+                            </div>
+                        </div>
+                    );
                 })()}
 
                 {agentId === '2' && (() => {
@@ -618,7 +1058,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
 
                             <div className="mt-4 bg-white/[0.02] p-3 rounded-xl border border-white/5">
                                 <p className="text-[10px] leading-snug text-white/50 font-medium">
-                                    {agent?.description.split('.')[0]}.
+                                    {agentManifest?.visao_geral?.missao || agent?.description?.split('.')[0] || '...'}
                                 </p>
                             </div>
                         </div>
@@ -650,16 +1090,16 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                     </Section>
 
                                     <div className="grid grid-cols-2 gap-2">
-                                        <Metric label="Resposta" value="12ms" sub="Velocidade de Processamento" color="var(--accent-purple)" />
-                                        <Metric label="Disponibilidade" value="100%" sub="Status da conexão" color="var(--accent-green)" />
+                                        <Metric label="Status de Normalização" value="Determinístico" sub="Motor de Regras Python — Local" color="var(--accent-green)" />
+                                        <Metric label="Carga de Trabalho" value="63 Perfis" sub="Consolidação e Enriquecimento" color="var(--accent-blue)" />
                                     </div>
 
                                     <Section title="Especificações Técnicas" icon="🎖️">
                                         <div className="grid grid-cols-1 gap-0.5 bg-white/[0.01] p-2 rounded-xl border border-white/[0.02]">
-                                            <InfoRow label="Protocolo" value={agent?.tech === 'llm' ? 'DeepSeek-V3 Nexus Core' : 'Python 3.12 Engine'} />
-                                            <InfoRow label="Camada de Dados" value={getLayer(agentId).toUpperCase()} />
-                                            <InfoRow label="Grupo de Operação" value={crew.name} />
-                                            <InfoRow label="Segurança" value="Criptografia TLS-1.3" />
+                                            <InfoRow label="Protocolo" value={agentManifest?.visao_geral?.protocolo_tecnico || (agent?.tech === 'llm' ? 'DeepSeek-V3 Nexus Core' : 'Python 3.12 Engine')} />
+                                            <InfoRow label="Especialidade" value={agentManifest?.visao_geral?.especialidade || agent?.role || '...'} />
+                                            <InfoRow label="Camada de Dados" value={agentManifest?.visao_geral?.camada_dados || getLayer(agentId).toUpperCase()} />
+                                            <InfoRow label="Segurança" value={agentManifest?.visao_geral?.seguranca || "Criptografia TLS-1.3"} />
                                         </div>
                                     </Section>
 
@@ -701,12 +1141,21 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                                     ? 'Interromper Operação'
                                                     : (() => {
                                                         const isResume = systemStatus?.agents?.[agentId || '']?.checkpoint_years?.includes(selectedAno.toString());
-                                                        const action = agentId === '1' ? 'Extrair' : agentId === '2' ? 'Purificar' : agentId === 'kaka' ? 'Arquivar' : 'Analisar';
+                                                        
+                                                        // Labels específicos por agente
+                                                        const zidaneLabels: Record<string, string> = {
+                                                            'zidane_a': 'Coletar IDs',
+                                                            'zidane_b': 'Deep Scrape',
+                                                            'zidane_c': 'Consolidar Hub',
+                                                        };
+                                                        const action = zidaneLabels[agentId || ''] ||
+                                                            (agentId === '1' ? 'Extrair' : agentId === '2' ? 'Purificar' : agentId === 'kaka' ? 'Arquivar' : 'Analisar');
 
-                                                        // Tenta extrair o ano do arquivo carregado no preview (filename)
-                                                        const currentFileYear = filename.match(/20\d{2}/)?.[0] || selectedAno.toString();
+                                                        // Para Zidane não usa ano
+                                                        const isZidane = (agentId || '').startsWith('zidane');
+                                                        const currentFileYear = isZidane ? '' : (filename.match(/20\d{2}/)?.[0] || selectedAno.toString());
 
-                                                        return isResume ? `Continuar ${action} ${currentFileYear}` : `Iniciar ${action} ${currentFileYear}`;
+                                                        return isResume ? `Continuar ${action} ${currentFileYear}`.trim() : `Iniciar ${action} ${currentFileYear}`.trim();
                                                     })()}
                                             </span>
                                         </button>
@@ -717,11 +1166,16 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                                     if (!agentId) return;
                                                     setLoading(true);
                                                     try {
-                                                        const queryParams = new URLSearchParams({
-                                                            ano: selectedAno.toString(), municipio: selectedMunicipio,
-                                                            provider: selectedProvider, model: selectedModel, restart: 'true'
-                                                        });
-                                                        await fetch(`http://localhost:8001/api/run-agent/${agentId}?${queryParams.toString()}`, { method: 'POST' });
+                                                        const isZidaneD = agentId === 'zidane_d';
+                                                        const queryParams = new URLSearchParams();
+                                                        if (!isZidaneD) {
+                                                            queryParams.append('ano', selectedAno.toString());
+                                                            queryParams.append('municipio', selectedMunicipio);
+                                                            queryParams.append('provider', selectedProvider);
+                                                            queryParams.append('model', selectedModel);
+                                                        }
+                                                        queryParams.append('restart', 'true');
+                                                        await fetch(`http://localhost:8003/api/run-agent/${agentId}?${queryParams.toString()}`, { method: 'POST' });
                                                     } finally { setLoading(false); }
                                                 }}
                                                 className="flex-1 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-lg hover:bg-white/10 transition-all active:scale-90"
@@ -738,17 +1192,27 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
 
                             {activeTab === 'prompts' && (
                                 <div className="space-y-4 h-full flex flex-col">
-                                    <Section title="Instruções de Inteligência" icon="📜">
-                                        <textarea
-                                            value={prompt}
-                                            onChange={(e) => setPrompt(e.target.value)}
-                                            className="w-full flex-1 min-h-[300px] bg-black/40 border border-white/[0.03] rounded-xl p-4 text-[10px] font-mono-glass leading-relaxed text-[var(--accent-green)]/60 focus:outline-none focus:border-white/10 transition-all custom-scrollbar shadow-inner"
-                                            placeholder="Descrevendo as diretrizes do agente..."
-                                        />
+                                    <Section title="Diretrizes Operacionais do Manifesto" icon="📜">
+                                        <div className="w-full flex-1 min-h-[300px] bg-black/10 border border-white/[0.03] rounded-xl p-4 text-[10px] font-mono-glass leading-relaxed text-[var(--accent-purple)]/80 overflow-y-auto custom-scrollbar">
+                                            {agentManifest?.diretrizes ? (
+                                                <ul className="space-y-2">
+                                                    {agentManifest.diretrizes.map((d: string, idx: number) => (
+                                                        <li key={idx} className="flex gap-2">
+                                                            <span className="text-[var(--accent-purple)]">✓</span>
+                                                            <span className="text-white/70">{d}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <div className="text-white/30 italic">Aguardando auto-descrição do manifesto...</div>
+                                            )}
+                                        </div>
                                     </Section>
-                                    <button onClick={handleSave} disabled={loading} className="h-10 bg-[var(--accent-purple)]/10 border border-[var(--accent-purple)]/20 rounded-xl text-white/80 font-black text-[9px] uppercase tracking-widest hover:bg-[var(--accent-purple)]/20 transition-all">
-                                        {loading ? 'SINCRONIZANDO...' : 'ATUALIZAR DIRETRIZES'}
-                                    </button>
+                                    <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                                        <p className="text-[8px] text-white/20 uppercase font-black text-center tracking-widest">
+                                            As diretrizes acima são fornecidas pelo manifesto da classe em Python e aplicadas em tempo de execução.
+                                        </p>
+                                    </div>
                                 </div>
                             )}
 
@@ -801,6 +1265,19 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                             </span>
                                         </div>
                                     </Section>
+
+                                    {agentManifest?.apuracao && (
+                                        <Section title="Apuração do Manifesto" icon="📋">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Metric label="Camada Saída" value={agentManifest.apuracao.camada_saida || "Prata"} sub={agentManifest.apuracao.formato || "NDJSON estruturado"} color="var(--accent-purple)" />
+                                                <Metric label="Métricas" value={agentManifest.apuracao.metricas?.[0] || "-"} sub={agentManifest.apuracao.metricas?.slice(1).join(', ') || ""} color="var(--accent-green)" />
+                                            </div>
+                                            <div className="mt-2 text-[8px] text-white/40 p-2 bg-white/[0.02] border border-white/[0.03] rounded-lg">
+                                                <span className="font-black uppercase text-white/50 block mb-1">📋 Expectativa de Logs:</span>
+                                                {agentManifest.apuracao.logs || "-"}
+                                            </div>
+                                        </Section>
+                                    )}
 
                                     <Section title="Arquivos de Saída (Datalake)" icon="📁">
                                         <div className="grid grid-cols-1 gap-1.5">

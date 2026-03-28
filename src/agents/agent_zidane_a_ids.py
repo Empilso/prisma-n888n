@@ -1,126 +1,177 @@
+#!/usr/bin/env python3
 """
-Agent Zidane-A: O Coletor de IDs (Híbrido)
-Fase 1 — Coleta de parlamentares com Fallback: API -> Selenium.
+⚽ AGENT ZIDANE-A v4.0 — COLETOR DE IDs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FONTE:  https://www.al.ba.gov.br/deputados/deputados-estaduais
+OUTPUT: data/saida/parlamentares/raw/parlamentares_ids.json
+FUNÇÃO: Fase 1 — Identifica todos os deputados (nomes, IDs, partidos, observações)
 """
-import os, sys, json, re, time, argparse
+
+import os, sys, json, re, hashlib, argparse
 import requests
+import urllib3
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Optional
+from bs4 import BeautifulSoup
+from typing import Dict, List
 
-try:
-    from selenium import webdriver
-    from bs4 import BeautifulSoup
-except ImportError:
-    pass
+# Silencia avisos de SSL (InsecureRequestWarning)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-VERSION = "zidane_v3.0_hybrid"
-BASE_URL = "https://albalegis.nopapercloud.com.br"
+BASE_URL = "https://www.al.ba.gov.br"
+URL_LISTA = f"{BASE_URL}/deputados/deputados-estaduais"
+VERSAO = "v4.0-prisma-ids"
 
-def extrair_via_api(status_id: int = 1) -> List[Dict]:
-    """Tenta extrair via API de Dados Abertos (Rápido)."""
-    api_url = f"{BASE_URL}/api/publico/parlamentar/"
-    params = {"parlamentarSituacao": status_id, "qtd": 100, "pag": 1}
-    print(f"📡 [ZIDANE-A] Tentando API Dados Abertos (Timeout 30s)...")
+__PRISMA_MANIFEST__ = {
+    "visao_geral": {
+        "missao": "Identificar todos os parlamentares ativos e listar IDs e páginas de perfil.",
+        "especialidade": "Reconhecimento de Superfície",
+        "protocolo_tecnico": "Requests + BeautifulSoup4 + LXML",
+        "camada_dados": "Raw (Bronze Inicial)",
+        "seguranca": "Timeout 30s + Ignora Erros de Certificado ALBA"
+    },
+    "diretrizes": [
+        "1. Acessa a lista master de deputados estaduais da ALBA.",
+        "2. Identifica o CARD de cada deputado (nó DOM .col-md-3).",
+        "3. Extrai o parlamentar_id dinâmico da URL do perfil.",
+        "4. Captura partido, nome parlamentar e foto.",
+        "5. Verifica a sessão de observações para listar suplências."
+    ],
+    "apuracao": {
+        "safras_suportadas": ["Atual (Tempo Real)"],
+        "saida_esperada": "data/saida/parlamentares/raw/parlamentares_ids.json"
+    }
+}
+
+
+
+def get_soup(url: str):
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0"}
     try:
-        resp = requests.get(api_url, params=params, verify=False, timeout=30)
+        resp = requests.get(url, headers=headers, verify=False, timeout=30)
         resp.raise_for_status()
-        data = resp.json()
-        deputados = []
-        for info in data:
-            pid = info.get("parlamentarID")
-            if not pid: continue
-            deputados.append({
-                "parlamentar_id": pid,
-                "autor_id": info.get("autorID"),
-                "nome_parlamentar": info.get("parlamentarNome"),
-                "partido_atual": info.get("parlamentarSiglaPartido"),
-                "status": "ativo" if status_id == 1 else "inativo",
-                "foto_url": f"{BASE_URL}{info.get('parlamentarFoto')}" if info.get('parlamentarFoto') else None,
-                "url_perfil": f"{BASE_URL}/spl/parlamentar.aspx?id={pid}"
-            })
-        return deputados
+        return BeautifulSoup(resp.content, "lxml")
     except Exception as e:
-        print(f"⚠️ [ZIDANE-A] API falhou ou Timeout: {e}")
-        return []
+        print(f"    ❌ Erro ao acessar: {url} → {e}")
+        return None
 
-def extrair_via_selenium(status: str = "ativo") -> List[Dict]:
-    """Fallback: Extração via Selenium Headless (Lento mas Seguro)."""
-    url = f"{BASE_URL}/spl/parlamentares.aspx"
-    print(f"🕵️ [ZIDANE-A] Iniciando Fallback Selenium: {url}")
-    
-    options = webdriver.ChromeOptions()
-    options.page_load_strategy = 'eager'
-    options.add_argument('--headless=new')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    
-    try:
-        driver = webdriver.Chrome(options=options)
-        driver.set_page_load_timeout(45)
-        driver.get(url)
-        time.sleep(5)
-        html = driver.page_source
-        driver.quit()
-        
-        soup = BeautifulSoup(html, "lxml")
-        deputados = []
-        vistos = set()
-        for card in soup.find_all("div", class_="custom-user-profile"):
-            link = card.find("a", href=re.compile(r"parlamentar\.aspx\?id=\d+"))
-            if not link: continue
-            pid = int(re.search(r"id=(\d+)", link["href"]).group(1))
-            if pid in vistos: continue
-            vistos.add(pid)
-            
-            nome = card.find("a", class_="kt-widget__username")
-            partido = card.find("small")
-            img = card.find("img", class_="kt-widget__img")
-            producao = card.find("a", href=re.compile(r"consulta-producao\.aspx\?autor=\d+"))
-            
-            deputados.append({
-                "parlamentar_id": pid,
-                "autor_id": int(re.search(r"autor=(\d+)", producao["href"]).group(1)) if producao else None,
-                "nome_parlamentar": nome.get_text(strip=True) if nome else "Desconhecido",
-                "partido_atual": partido.get_text(strip=True).strip("()") if partido else "S/P",
-                "status": status,
-                "foto_url": f"{BASE_URL}{img['src']}" if img and img.get('src') else None,
-                "url_perfil": f"{BASE_URL}/spl/parlamentar.aspx?id={pid}"
-            })
-        return deputados
-    except Exception as e:
-        print(f"❌ [ZIDANE-A] Falha crítica no Selenium: {e}")
-        return []
+# ── Estética Premium Terminal ─────────────────────────────────────────
+C_PURPLE = "\033[95m"
+C_CYAN = "\033[96m"
+C_GREEN = "\033[92m"
+C_YELLOW = "\033[93m"
+C_RED = "\033[91m"
+C_BOLD = "\033[1m"
+C_END = "\033[0m"
+
+def print_header(title: str):
+    width = 70
+    print(f"\n{C_PURPLE}╔" + "═"*(width-2) + f"╗{C_END}")
+    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN} {title.center(width-4)} {C_END}{C_PURPLE}║{C_END}")
+    print(f"{C_PURPLE}╚" + "═"*(width-2) + f"╝{C_END}\n")
+
+def print_status(msg: str, status="info"):
+    icons = {"info": "🔹", "success": "✅", "error": "❌", "warn": "⚠️", "process": "⚙️", "user": "👤"}
+    colors = {"info": C_CYAN, "success": C_GREEN, "error": C_RED, "warn": C_YELLOW, "process": C_PURPLE, "user": C_BOLD}
+    icon = icons.get(status, "🔹")
+    color = colors.get(status, C_CYAN)
+    print(f"{color}{icon} {msg}{C_END}")
+
 
 def main():
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    output_dir = base_dir / "data" / "parlamentares"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    print_header(f"ZIDANE-A {VERSAO} | COLETOR DE IDs")
+    print_status("Iniciando reconhecimento de parlamentares no portal ALBA...", "process")
 
-    # 1. Tenta API
-    ativos = extrair_via_api(1)
-    
-    # 2. Se falhar, tenta Selenium
-    if not ativos:
-        print("🔄 [ZIDANE-A] API sem resposta ou vazia. Ativando Resgate via Selenium...")
-        ativos = extrair_via_selenium("ativo")
+    base_dir = Path("/home/carneiro888/CARNEIRO888/N888N - AGENTIC EXTRATORES/n888n")
+    out_dir = base_dir / "data" / "saida" / "parlamentares" / "raw"
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    if not ativos:
-        print("💀 [ZIDANE-A] Ambos os métodos falharam. Portal Offline?")
+    print(f"📡 Acessando lista: {URL_LISTA}")
+    soup = get_soup(URL_LISTA)
+    if not soup:
+        print("💀 Falha crítica: não foi possível acessar o portal ALBA.")
         return
 
-    print(f"\n✅ [ZIDANE-A] Sucesso! Coletados {len(ativos)} parlamentares.")
-    
+    # ── Extração de Cards ──────────────────────────────────────────
+    cards = [c for c in soup.select(".col-md-3") if c.select_one(".campo-dados")]
+    print(f"   ✅ Cards de deputados encontrados: {len(cards)}")
+
+    deputados = []
+    for card in cards:
+        nome_tag = card.select_one(".deputado-nome a span")
+        if not nome_tag:
+            nome_tag = card.select_one(".deputado-nome a")
+        if not nome_tag:
+            continue
+        nome = nome_tag.get_text(strip=True)
+
+        link_tag = card.select_one(".deputado-nome a")
+        if not link_tag:
+            continue
+        href = link_tag.get("href", "")
+        url = BASE_URL + href if href.startswith("/") else href
+        p_id = href.rstrip("/").split("/")[-1]
+
+        partido_tag = card.select_one(".partido-nome")
+        partido = partido_tag.get_text(strip=True) if partido_tag else "N/D"
+
+        # Foto do card
+        img_tag = card.select_one(".deputado-img")
+        foto_url = None
+        if img_tag and img_tag.get("src"):
+            src = img_tag["src"].split("/static:")[0]
+            foto_url = BASE_URL + src if src.startswith("/") else src
+
+        if nome and p_id:
+            deputados.append({
+                "parlamentar_id": p_id,
+                "nome_parlamentar": nome,
+                "partido_atual": partido,
+                "status": "ativo",
+                "foto_url": foto_url,
+                "url_perfil": url
+            })
+            print(f"   {C_BOLD}👤 {nome:<40}{C_END} | {C_CYAN}{partido:<12}{C_END} | {C_PURPLE}ID: {p_id}{C_END}")
+
+    # ── Extração de Observações (suplentes/substituições) ──────────
+    mapa_obs: Dict[str, str] = {}
+    obs_header = soup.find(lambda t: t.name in ["h2","h3","h4","b","strong","p"]
+                           and t.get_text(strip=True).lower() in ["observações", "observacoes"])
+    if obs_header:
+        bloco = obs_header.find_next_sibling()
+        while bloco:
+            txt = bloco.get_text(separator="\n", strip=True)
+            linhas = [l.strip() for l in txt.split("\n") if l.strip()]
+            if len(linhas) >= 2:
+                mapa_obs[linhas[0].lower()] = " ".join(linhas[1:])
+            bloco = bloco.find_next_sibling()
+            if not bloco or bloco.get_text(strip=True).lower().startswith("atualização"):
+                break
+
+    for dep in deputados:
+        dep["observacao_mandato"] = mapa_obs.get(dep["nome_parlamentar"].lower(), None)
+
+    print(f"\n   📋 Total: {len(deputados)} parlamentares | Observações: {len(mapa_obs)}")
+
+    # ── Salvar JSON ────────────────────────────────────────────────
     output = {
-        "total": len(ativos),
+        "total": len(deputados),
         "coletado_em": datetime.utcnow().isoformat() + "Z",
-        "metodo": "api" if len(ativos) > 0 and "metodo" not in locals() else "selenium",
-        "records": ativos
+        "fonte": "al.ba.gov.br",
+        "metodo": "scraping_oficial",
+        "versao": VERSAO,
+        "records": deputados
     }
 
-    with open(output_dir / "parlamentares_ids.json", "w", encoding="utf-8") as f:
+    out_file = out_dir / "parlamentares_ids.json"
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"💾 [ZIDANE-A] JSON salvo em data/parlamentares/")
+
+    print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
+    print_status(f"ZIDANE-A CONCLUÍDO! {C_BOLD}{len(deputados)}{C_END} IDs coletados.", "success")
+    print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
+    print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
+
 
 if __name__ == "__main__":
     main()

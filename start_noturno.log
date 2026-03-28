@@ -1,0 +1,69 @@
+🧹 [1/4] Limpando processos antigos (Ghost Processes)...
+🚀 [2/4] Iniciando Backend (Port 8003)...
+🩺 [3/4] Aguardando Backend ficar online...
+✅ Backend ONLINE em 1s (PID: 11358)
+🎨 [4/4] Iniciando Frontend (Port 5175)...
+
+> ui@1.0.0 dev
+> vite --port 5175
+
+04:28:06 [vite] (client) Re-optimizing dependencies because vite config has changed
+
+  VITE v8.0.1  ready in 2165 ms
+
+  ➜  Local:   http://localhost:5175/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+04:28:57 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+04:28:57 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:07:36 [vite] (client) hmr update /src/components/CrewFlow.tsx, /src/index.css
+05:07:36 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:07:36 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:14:44 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:14:44 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:28:18 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:28:18 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:29:35 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:29:35 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:33:26 [vite] (client) hmr update /src/components/CrewFlow.tsx, /src/index.css
+05:33:27 [vite] (client) [Unhandled error] ReferenceError: handleEdgesChange is not defined
+ > CrewFlow src/components/CrewFlow.tsx:351:31
+    349 |                  edges={edges}
+    350 |                  onNodesChange={handleNodesChange}
+    351 |                  onEdgesChange={handleEdgesChange}
+        |                                 ^
+    352 |                  onConnect={onConnect}
+    353 |                  nodeTypes={NODE_TYPES}
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+ > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+ > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+ > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+ > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+ > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+ > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+ > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16583:34
+
+05:33:27 [vite] (client) [console.warn] An error occurred in the <CrewFlow> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+05:35:16 [vite] (client) hmr update /src/components/CrewFlow.tsx, /src/index.css
+05:35:16 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:35:16 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:35:34 [vite] (client) hmr update /src/App.tsx, /src/components/CrewFlow.tsx, /src/components/AgentDetailsDrawer.tsx, /src/components/Sidebar.tsx, /src/index.css
+05:35:34 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:35:34 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:37:41 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:37:56 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:38:25 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:39:43 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:39:43 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:49:38 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:49:38 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:50:01 [vite] (client) hmr update /src/components/AgentDetailsDrawer.tsx, /src/index.css
+05:57:12 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+05:57:12 [vite] (client) [console.warn] [React Flow]: It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them. Help: https://reactflow.dev/error#002
+start_noturno.sh, linha 31: 11358 Morto                   nohup python3 src/api_server.py > backend.log 2>&1  (wd: ~/CARNEIRO888/N888N - AGENTIC EXTRATORES/n888n)
+start_noturno.sh, linha 31: 11368 Morto                   npm run dev -- --port 5175

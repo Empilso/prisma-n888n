@@ -24,9 +24,11 @@ interface BaseNodeProps {
         completedYears?: string[];
         checkpointYears?: string[];
         extractedYears?: string[];
+        auditGaps?: Record<string, boolean>;
         availableInputYears?: string[];
         skinVariant?: string;
         onSkinChange?: (skin: string) => void;
+        onRename?: (newName: string) => void;
     };
 };
 
@@ -60,6 +62,9 @@ const BaseNode = ({ data }: BaseNodeProps) => {
     const sConf = statusConfig[status];
     const tech = data.tech ? techBadge[data.tech] : null;
 
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [editNameValue, setEditNameValue] = useState(data.label);
+
     // Optimistic UI for skins
     const [localSkin, setLocalSkin] = useState<string | null>(null);
     const activeSkin = localSkin || data.skinVariant || 'default';
@@ -68,7 +73,7 @@ const BaseNode = ({ data }: BaseNodeProps) => {
         e.stopPropagation();
         setLocalSkin(sk);
         try {
-            await fetch(`http://localhost:8001/api/configure-prompt/${(data as any).id}`, {
+            await fetch(`http://localhost:8003/api/configure-prompt/${(data as any).id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ skin_variant: sk })
@@ -121,7 +126,45 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                         </div>
 
                         <div className="flex-1 min-w-0 pt-0.5">
-                            <h3 className="text-[13px] font-semibold text-white truncate leading-tight">{data.label}</h3>
+                            {isEditingName ? (
+                                <input
+                                    autoFocus
+                                    className="w-full bg-black/50 border border-[var(--accent-purple)]/50 rounded px-1.5 py-0.5 text-[13px] font-semibold text-white outline-none"
+                                    value={editNameValue}
+                                    onChange={e => setEditNameValue(e.target.value)}
+                                    onBlur={() => {
+                                        setIsEditingName(false);
+                                        if (editNameValue.trim() && editNameValue !== data.label) {
+                                            data.onRename?.(editNameValue.trim());
+                                        }
+                                    }}
+                                    onClick={e => e.stopPropagation()}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') {
+                                            setIsEditingName(false);
+                                            if (editNameValue.trim() && editNameValue !== data.label) {
+                                                data.onRename?.(editNameValue.trim());
+                                            }
+                                        }
+                                        if (e.key === 'Escape') {
+                                            setIsEditingName(false);
+                                            setEditNameValue(data.label);
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                <h3 
+                                    className="text-[13px] font-semibold text-white truncate leading-tight group-hover:text-[var(--accent-purple)] transition-colors" 
+                                    onDoubleClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditNameValue(data.label);
+                                        setIsEditingName(true);
+                                    }}
+                                    title="Dê um duplo-clique para renomear"
+                                >
+                                    {data.label}
+                                </h3>
+                            )}
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                                 {data.role && (
                                     <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-wider"
@@ -199,7 +242,7 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                             onClick={async (e) => {
                                 e.stopPropagation();
                                 try {
-                                    await fetch(`http://localhost:8001/api/agent/${(data as any).id}/stop`, { method: 'DELETE' });
+                                    await fetch(`http://localhost:8003/api/agent/${(data as any).id}/stop`, { method: 'DELETE' });
                                     data.onStop?.();
                                 } catch (err) { }
                             }}
@@ -214,8 +257,8 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                     // ══ BOTÃO INICIAR / RESUMIR NORMAL ══
                     <button
                         onClick={(e) => { e.stopPropagation(); data.onPlay?.(false, selectedYear || undefined); }}
-                        disabled={(!data.inputReady && data.id !== '1') || (data.id === '1' && !selectedYear && !data.config?.ano)}
-                        className={`flex-1 h-10 rounded-[14px] flex items-center justify-center gap-2.5 transition-all active:scale-95 border relative overflow-hidden group/btn ${(!data.inputReady && data.id !== '1')
+                        disabled={!data.inputReady && !selectedYear && !data.config?.ano}
+                        className={`flex-1 h-10 rounded-[14px] flex items-center justify-center gap-2.5 transition-all active:scale-95 border relative overflow-hidden group/btn ${(!data.inputReady && !selectedYear && !data.config?.ano)
                             ? 'bg-white/5 border-white/5 text-white/10 opacity-30 cursor-not-allowed'
                             : (data.checkpointYears && data.checkpointYears.length > 0 && selectedYear && data.checkpointYears.includes(selectedYear))
                                 ? 'bg-[var(--orange)]/20 border-[var(--orange)]/40 text-[var(--orange)] shadow-[0_0_20px_rgba(255,159,10,0.2)] hover:bg-[var(--orange)]/30 hover:border-[var(--orange)]/60'
@@ -236,8 +279,35 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                     </button>
                 )}
 
+                {/* ══ NOVO: MINI-LIMITE PARA KAKÁ ══ */}
+                {(data.id === '3' || data.id === 'kaka') && !isRunning && (
+                    <div className="flex flex-col gap-1 shrink-0">
+                        <label className="text-[6px] font-black text-white/20 uppercase text-center">Limite</label>
+                        <input 
+                            type="number"
+                            value={data.config?.limit || 3474}
+                            onChange={async (e) => {
+                                const val = parseInt(e.target.value);
+                                e.stopPropagation();
+                                try {
+                                    await fetch(`http://localhost:8003/api/configure-prompt/${data.id}`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ limit: val })
+                                    });
+                                } catch(err) {}
+                            }}
+                            className="w-12 h-10 glass border border-white/10 rounded-[14px] bg-black/40 text-[9px] font-black text-[var(--accent-blue)] text-center outline-none focus:border-[var(--accent-blue)]/40 transition-all font-mono-glass"
+                            min="10"
+                            max="3474"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Limite de registros para esta rodada"
+                        />
+                    </div>
+                )}
+
                 {/* ══ REINICIAR (Discreto) ══ */}
-                {!isRunning && (data.inputReady || data.id === '1') && (
+                {!isRunning && (
                     <button
                         onClick={(e) => { e.stopPropagation(); data.onPlay?.(true); }}
                         className="w-10 h-10 glass border border-white/10 rounded-[14px] flex items-center justify-center text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/20 hover:border-[var(--accent-blue)]/30 transition-all active:scale-90 shrink-0"
@@ -256,6 +326,33 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                     <span className="text-base filter drop-shadow-sm">⚙️</span>
                 </button>
 
+                {/* ══ AUDITORIA (Agente 1) ══ */}
+                {data.id === '1' && !isRunning && (
+                    <button
+                        onClick={async (e) => {
+                            e.stopPropagation();
+                            if (!selectedYear) {
+                                alert("Selecione uma safra (bolinha com ano) para revisar o scrap!");
+                                return;
+                            }
+                            try {
+                                await fetch(`http://localhost:8003/api/run/agent_1/audit/${selectedYear}`, { method: 'POST' });
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        }}
+                        className={`h-10 px-3 glass border rounded-[14px] flex items-center justify-center transition-all bg-black/40 group/audit shrink-0
+                            ${selectedYear ? 'border-[var(--accent-purple)]/50 text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/20 shadow-[0_0_15px_rgba(191,90,242,0.2)] cursor-pointer active:scale-95' 
+                                           : 'border-white/10 text-white/20 cursor-not-allowed opacity-50'}`}
+                        title="Revisar extração e gaps (Smart Sync)"
+                    >
+                        <span className="text-sm">🔍</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest hidden group-hover/audit:block ml-1">
+                            {selectedYear ? `Review ${selectedYear}` : 'Selecione Safra'}
+                        </span>
+                    </button>
+                )}
+
                 {/* ══ TERMINAL (Discreto) ══ */}
                 <button
                     onClick={(e) => {
@@ -269,8 +366,8 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                 </button>
             </div>
 
-            {/* ══ YEAR STATUS MAPPING (Exclusivo Agente 1) ══ */}
-            {data.id === '1' && (
+            {/* ══ YEAR STATUS MAPPING (Aplicado a todos que processam safras) ══ */}
+            {(!data.id?.startsWith('zidane')) && (
                 <div className="px-5 pb-6 flex flex-col items-center gap-3">
                     <div className="w-full h-[1px] bg-white/5 mb-1" />
                     <div className="grid grid-cols-6 gap-3">
@@ -278,12 +375,17 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                             const isExtracted = data.extractedYears?.includes(year.toString());
                             const isCheckpoint = data.checkpointYears?.includes(year.toString());
                             const isSelected = selectedYear === year.toString();
+                            const hasGap = data.auditGaps?.[year.toString()];
 
                             let color = 'bg-white/5 border-white/10';
                             let glow = '';
                             let labelColor = 'text-white/20';
 
-                            if (isExtracted) {
+                            if (hasGap) {
+                                color = 'bg-red-500/20 border-red-500/50';
+                                glow = 'shadow-[0_0_10px_rgba(255,0,0,0.5)]';
+                                labelColor = 'text-red-400 font-bold';
+                            } else if (isExtracted) {
                                 color = 'bg-[var(--accent-green)] border-[var(--accent-green)]/40';
                                 glow = 'shadow-[0_0_10px_rgba(50,205,50,0.4)]';
                                 labelColor = 'text-[var(--accent-green)] font-bold';
@@ -303,7 +405,9 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                                     className="flex flex-col items-center gap-1.5 cursor-pointer group/yr"
                                     title={`${year}: Clique para selecionar. Status: ${isExtracted ? 'Extraído' : (isCheckpoint ? 'Pausado' : 'Não Iniciado')}`}
                                 >
-                                    <div className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${color} ${glow} ${ringStyle} group-hover/yr:scale-110`} />
+                                    <div className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${color} ${glow} ${ringStyle} group-hover/yr:scale-110 flex items-center justify-center`}>
+                                        {hasGap && <span className="text-[8px]">⚠️</span>}
+                                    </div>
                                     <span className={`text-[8px] font-black tracking-tighter ${isSelected ? 'text-white' : labelColor} transition-colors group-hover/yr:text-white/70`}>
                                         {year.toString().slice(-2)}
                                     </span>
@@ -314,12 +418,11 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                 </div>
             )}
 
-            {/* ══ SKIN SELECTOR (Apenas outros agentes) ══ */}
-            {data.id !== '1' && (
-                <div className="px-4 pb-4 flex flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                    {/* Row 1: Gradients */}
-                    <div className="flex items-center justify-center gap-4">
-                        {SKIN_CATALOG.filter(s => s.type === 'gradient').map(sk => {
+            {/* ══ SKIN SELECTOR ══ */}
+            {(!data.id?.startsWith('zidane')) && (
+                <div className="px-4 pb-4 flex flex-col items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex flex-wrap items-center justify-center gap-2 max-w-[150px]">
+                        {SKIN_CATALOG.map(sk => {
                             const isActive = activeSkin === sk.key;
                             const c = sk.color;
                             return (
@@ -331,7 +434,7 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                                         ? { scale: 1.3, boxShadow: `0 0 15px 2px ${c}66` }
                                         : { scale: 1, boxShadow: 'none' }
                                     }
-                                    className={`w-3 h-3 rounded-full transition-opacity ${isActive ? 'opacity-100 ring-2 ring-white/80 ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100'}`}
+                                    className={`w-[14px] h-[14px] rounded-full transition-opacity ${isActive ? 'opacity-100 ring-2 ring-white/80 ring-offset-2 ring-offset-black' : 'opacity-40 hover:opacity-100'}`}
                                     style={{
                                         background: sk.gradient ? `linear-gradient(135deg, ${sk.gradient[0]}, ${sk.gradient[1]})` : c
                                     }}

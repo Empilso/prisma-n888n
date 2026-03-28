@@ -1,10 +1,33 @@
 import os, sys, json, hashlib, re, argparse
 from pathlib import Path
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
+
+__PRISMA_MANIFEST__ = {
+    "visao_geral": {
+        "missao": "Higienização e Padronização Estrutural (Pipeline Silver).",
+        "especialidade": "Normalização Regexp / Algoritmo",
+        "protocolo_tecnico": "Regex + Mapeamento Semântico + Hash",
+        "camada_dados": "Prata (Dados Limpos)",
+        "seguranca": "Validação de Checksum/Tipagem"
+    },
+    "diretrizes": [
+        "1. Limpa strings (espaços extras, N/A, Null).",
+        "2. Normaliza Textos para Title Case inteligente.",
+        "3. Extrai CNPJ/CPF embutidos em descrições soltas.",
+        "4. Repara URLs de PDF truncadas ou relativas.",
+        "5. Converte Valores Monetários BR (1.234,56 -> 1234.56).",
+        "6. Unifica Meses e Anos em ISO-8601 (YYYY-MM-01).",
+        "7. Gera `prisma_id` único baseado em Hash da despesa."
+    ],
+    "apuracao": {
+        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        "saida_esperada": "data/saida/prata/alba_{ano}_prata.json"
+    }
+}
 
 class PurificadorBebeto:
-    VERSION = "bebeto_v2"
+    VERSION = "bebeto_v2.2"
     
     def __init__(self):
         self.flags = []
@@ -33,12 +56,19 @@ class PurificadorBebeto:
         # Title Case inteligente respeitando siglas e preposições
         stopwords = {"de", "da", "do", "das", "dos", "e", "a", "o", "del", "la"}
         palavras = s.split()
-        return " ".join(
+        resultado = " ".join(
             w.capitalize() if w.lower() not in stopwords else w.lower()
             for w in palavras
         )
+        
+        # Corrige siglas empresariais que o Title Case quebrou
+        siglas = ["S.A.", "S/A", "LTDA", "EPP", "ME", "EIRELI", "S.A"]
+        for sigla in siglas:
+            resultado = re.sub(re.escape(sigla.title()), sigla, resultado, flags=re.IGNORECASE)
+        
+        return resultado
 
-    def extrair_cpf(self, nome_fornecedor: str) -> (str, Optional[str]):
+    def extrair_cpf(self, nome_fornecedor: str) -> Tuple[str, Optional[str]]:
         """Diretriz 2: Extração de CPF embutido no final do nome."""
         if not nome_fornecedor: return nome_fornecedor, None
         
@@ -51,22 +81,32 @@ class PurificadorBebeto:
             return novo_nome, cpf
         return nome_fornecedor, None
 
-    def validar_pdf(self, url: Any) -> List[str]:
-        """Diretriz 4: Flags de PDF."""
+    def validar_pdf(self, url: Any) -> Tuple[Optional[str], List[str]]:
+        """Diretriz 4: Flags de PDF e URL Correction."""
         flags = []
         u = self.clean_string(url)
         if not u:
             flags.append("pdf_ausente")
-            return flags
+            return None, flags
+            
+        BASE_ALBA = "https://www.al.ba.gov.br"
+        if u.startswith("/"):
+            u = BASE_ALBA + u
+            flags.append("pdf_url_relativa_corrigida")
+        
+        # URL quebrada sem nome de arquivo (ex: /fserver/:anexo:)
+        if u.endswith(":anexo:") or u.endswith(":anexo") or u.endswith("/"):
+            flags.append("pdf_url_sem_arquivo")
+            return None, flags
             
         if not u.startswith("http"):
             flags.append("pdf_url_invalida")
         if not u.lower().endswith(".pdf"):
             flags.append("pdf_extensao_estranha")
             
-        return flags
+        return u, flags
 
-    def normalizar_nf(self, nf: Any):
+    def normalizar_nf(self, nf: Any) -> Tuple[Optional[str], str, List[str]]:
         """Diretriz 5: Normalização de NF. Retorna (nf_limpo, nf_tipo, flags)."""
         flags = []
         s = self.clean_string(nf)
@@ -101,9 +141,20 @@ class PurificadorBebeto:
             "telef": "telefonia",
             "correio": "correios",
             "consult": "consultoria",
+            "assessor":  "consultoria",
             "hosped": "hospedagem",
             "aliment": "alimentacao",
             "passag": "passagens",
+            "aluguel": "aluguel",
+            "imovel": "aluguel",
+            "material": "material",
+            "aquisi": "aquisicao",
+            "tecnolog": "tecnologia",
+            "software": "tecnologia",
+            "locaç": "locacao_veiculo",
+            "locac": "locacao_veiculo",
+            "carro": "locacao_veiculo",
+            "veicu": "locacao_veiculo",
         }
         for key, val in mapping.items():
             if key in s: return val
@@ -126,7 +177,7 @@ class PurificadorBebeto:
                 res["mes"] = mes
         return res
 
-    def validar_cnpj(self, cnpj: Any) -> (Optional[str], List[str]):
+    def validar_cnpj(self, cnpj: Any) -> Tuple[Optional[str], List[str]]:
         """Diretriz 8: Validação matemática de CNPJ."""
         s = str(cnpj)
         digits = re.sub(r'\D', '', s)
@@ -153,7 +204,7 @@ class PurificadorBebeto:
             
         return digits, []
 
-    def normalizar_valor(self, valor: Any) -> (Optional[float], List[str]):
+    def normalizar_valor(self, valor: Any) -> Tuple[Optional[float], List[str]]:
         """Diretriz 10: Valor Monetário Robusto."""
         flags = []
         if valor is None: return None, []
@@ -193,29 +244,42 @@ class PurificadorBebeto:
         nome_forn_cru = r.get("nome_fornecedor", "")
         nome_limpo, cpf_extraido = self.extrair_cpf(nome_forn_cru)
         p["nome_fornecedor"] = self.normalizar_texto(nome_limpo)
+        p["nome_fornecedor_limpo"] = nome_limpo
         p["cpf_fornecedor"] = cpf_extraido
         if cpf_extraido: flags.append("cpf_extraido_do_nome")
         
-        # 8: CNPJ
-        cnpj_norm, cnpj_flags = self.validar_cnpj(r.get("cnpj_fornecedor"))
-        p["cnpj_fornecedor"] = cnpj_norm
-        p["cnpj_valido"] = len(cnpj_flags) == 0
-        flags.extend(cnpj_flags)
+        # 8: CNPJ ou CPF
+        tipo_documento = self.clean_string(r.get("tipo_documento"))
+        
+        if tipo_documento == "CPF":
+            cpf_digits = re.sub(r'\D', '', str(r.get("cnpj_fornecedor", "")))
+            if len(cpf_digits) == 11:
+                p["cpf_fornecedor"] = cpf_digits
+            p["cnpj_fornecedor"] = None
+            p["cnpj_valido"] = None
+        else:
+            cnpj_norm, cnpj_flags = self.validar_cnpj(r.get("cnpj_fornecedor"))
+            p["cnpj_fornecedor"] = cnpj_norm
+            p["cnpj_valido"] = len(cnpj_flags) == 0
+            flags.extend(cnpj_flags)
         
         # 10: Valor
         valor_norm, valor_flags = self.normalizar_valor(r.get("valor"))
+        p["valor_raw"] = self.clean_string(r.get("valor"))
         p["valor"] = valor_norm
         flags.extend(valor_flags)
         
         # 5: NF
-        nf_norm, nf_tipo, nf_flags = self.normalizar_nf(r.get("num_nf"))
-        p["num_nf"] = nf_norm
+        nf_original = r.get("num_nf")
+        nf_norm, nf_tipo, nf_flags = self.normalizar_nf(nf_original)
+        p["num_nf"] = self.clean_string(nf_original) # Preserva o original com zeros
         p["num_nf_normalizado"] = nf_norm
         p["nf_tipo"] = nf_tipo
         flags.extend(nf_flags)
         
         # 7 & 11: Competência
         comp_info = self.converter_competencia(r.get("competencia"))
+        p["competencia_raw"] = self.clean_string(r.get("competencia"))
         p["competencia_date"] = comp_info["date"]
         p["competencia_ano"] = comp_info["ano"]
         p["competencia_mes"] = comp_info["mes"]
@@ -223,12 +287,14 @@ class PurificadorBebeto:
         
         # 6: Categoria
         p["categoria_original"] = self.clean_string(r.get("categoria"))
+        p["categoria_detalhe_raw"] = self.clean_string(r.get("categoria_detalhe"))
         p["categoria_slug"] = self.mapear_categoria(r.get("categoria"))
-        
         # 4: PDF — BUG FIX: Bronze grava como 'link_pdf_nf', não 'url_pdf'
-        p["url_pdf_nf"] = self.clean_string(r.get("link_pdf_nf"))
-        pdf_flags = self.validar_pdf(r.get("link_pdf_nf"))
-        p["link_pdf_valido"] = len(pdf_flags) == 0
+        link_orig = self.clean_string(r.get("link_pdf_nf"))
+        p["link_pdf_nf_raw"] = link_orig
+        u_corrigida, pdf_flags = self.validar_pdf(r.get("link_pdf_nf"))
+        p["url_pdf_nf"] = u_corrigida
+        p["link_pdf_valido"] = len([f for f in pdf_flags if f != "pdf_url_relativa_corrigida"]) == 0
         flags.extend(pdf_flags)
         
         # Pass Through
@@ -278,9 +344,11 @@ def main():
     if args.file:
         bronze_path = Path(args.file)
         if not bronze_path.exists():
-            bronze_path = data_dir / "saida" / "bronze" / "alba" / args.file
+            bronze_path = data_dir / "saida" / "bronze" / args.file
+        if not bronze_path.exists():
+            bronze_path = data_dir / "saida" / "checkpoints" / args.file
     elif args.year:
-        final_path = data_dir / "saida" / "bronze" / "alba" / f"alba_{args.year}_bronze.json"
+        final_path = data_dir / "saida" / "bronze" / f"alba_{args.year}_bronze.json"
         checkpoint_path = data_dir / "saida" / "checkpoints" / f"alba_{args.year}_checkpoint.json"
         if final_path.exists():
             bronze_path = final_path
@@ -289,7 +357,7 @@ def main():
     else:
         bronze_files = sorted(
             list((data_dir / "saida" / "checkpoints").rglob("*alba*checkpoint*.json")) +
-            list((data_dir / "saida" / "bronze" / "alba").rglob("*alba*bronze*.json")),
+            list((data_dir / "saida" / "bronze").rglob("*alba*bronze*.json")),
             key=os.path.getmtime, reverse=True
         )
         bronze_path = bronze_files[0] if bronze_files else None
@@ -330,7 +398,7 @@ def main():
         ano_final = match.group(0) if match else (args.year or "undefined")
 
     # Mapeamento Estrito 11 Portais PRISMA: Portal 1 - ALBA
-    output_path = data_dir / "saida" / "prata" / "alba" / f"alba_{ano_final}_prata.json"
+    output_path = data_dir / "saida" / "prata" / f"alba_{ano_final}_prata.json"
     os.makedirs(output_path.parent, exist_ok=True)
 
     with open(output_path, "w", encoding="utf-8") as f:

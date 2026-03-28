@@ -1,0 +1,230 @@
+{
+  "positions": {
+    "1_1": {
+      "x": -2560,
+      "y": -1080
+    },
+    "1_2": {
+      "x": -2100,
+      "y": -920
+    },
+    "1_3": {
+      "x": -480,
+      "y": -1060
+    },
+    "1_dunga": {
+      "x": -140,
+      "y": -1060
+    },
+    "0_zidane_a": {
+      "x": -700,
+      "y": -100
+    },
+    "0_zidane_b": {
+      "x": -240,
+      "y": -100
+    },
+    "0_zidane_c": {
+      "x": 320,
+      "y": -100
+    },
+    "0_zidane_d": {
+      "x": 820,
+      "y": -100
+    },
+    "2_1": {
+      "x": -360,
+      "y": 40
+    },
+    "2_2": {
+      "x": -40,
+      "y": 440
+    },
+    "2_3": {
+      "x": 300,
+      "y": 100
+    },
+    "2_4": {
+      "x": 780,
+      "y": 520
+    },
+    "1_zidane_d": {
+      "x": -1120,
+      "y": -680
+    },
+    "1_ronaldo": {
+      "x": -1620,
+      "y": -980
+    },
+    "3_1": {
+      "x": -900,
+      "y": -200
+    },
+    "3_2": {
+      "x": -520,
+      "y": -220
+    },
+    "3_3": {
+      "x": 40,
+      "y": -220
+    },
+    "3_4": {
+      "x": 580,
+      "y": -200
+    }
+  },
+  "stages": {
+    "1": {
+      "agentIds": [
+        "0_zidane_d"
+      ],
+      "removedIds": []
+    }
+  },
+  "edges": {
+    "0": [
+      {
+        "id": "e-zidane_a-zidane_b",
+        "source": "zidane_a",
+        "target": "zidane_b",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-zidane_b-zidane_c",
+        "source": "zidane_b",
+        "target": "zidane_c",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-zidane_c-zidane_d",
+        "source": "zidane_c",
+        "target": "zidane_d",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      }
+    ],
+    "1": [
+      {
+        "id": "e-1-2",
+        "source": "1",
+        "target": "2",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.15)"
+        },
+        "source": "2",
+        "sourceHandle": null,
+        "target": "ronaldo",
+        "targetHandle": null,
+        "id": "reactflow__edge-2-ronaldo",
+        "animated": false
+      },
+      {
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.15)"
+        },
+        "source": "ronaldo",
+        "sourceHandle": null,
+        "target": "zidane_d",
+        "targetHandle": null,
+        "id": "reactflow__edge-ronaldo-zidane_d",
+        "animated": false
+      }
+    ],
+    "2": [
+      {
+        "id": "e-1-2",
+        "source": "1",
+        "target": "2",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-2-3",
+        "source": "2",
+        "target": "3",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-3-4",
+        "source": "3",
+        "target": "4",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      }
+    ],
+    "3": [
+      {
+        "id": "e-1-2",
+        "source": "1",
+        "target": "2",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-2-3",
+        "source": "2",
+        "target": "3",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-3-4",
+        "source": "3",
+        "target": "4",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      }
+    ]
+  }
+}

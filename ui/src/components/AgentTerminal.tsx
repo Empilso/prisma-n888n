@@ -6,7 +6,18 @@ const AgentTerminal = ({ agentId }: { agentId: string }) => {
 
     useEffect(() => {
         setLogs([]); // limpa ao trocar de agente
-        const eventSource = new EventSource('http://localhost:8001/api/logs');
+        
+        // Carrega histórico gravado em disco
+        fetch(`http://localhost:8003/api/agent-logs/${agentId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.logs && data.logs.length > 0) {
+                    setLogs(data.logs);
+                }
+            })
+            .catch(() => {});
+
+        const eventSource = new EventSource('http://localhost:8003/api/logs');
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.msg) {
