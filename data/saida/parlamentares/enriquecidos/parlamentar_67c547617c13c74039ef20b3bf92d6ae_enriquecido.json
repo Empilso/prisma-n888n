@@ -1,0 +1,83 @@
+{
+  "prisma_id": "67c547617c13c74039ef20b3bf92d6ae",
+  "parlamentar_id": "915863",
+  "nome_eleitoral": "Cacá Leão",
+  "nome_limpo": "Cacá Leão",
+  "partido": "PP",
+  "sigla_partido": "PP",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915863",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:CacaLeao.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o ensino fundamental e o ensino médio no Colégio Apoio, Lauro de Freitas-BA, 1995-1998. Formou-se em Administração e Planejamento Municipal pela Faculdade Metropolitana - POLIFUCS, Lauro de Freitas, 2002. Pós Graduação em Gestão Pública, 2004.\nAtividade Profissional\nAssessor especial da Prefeitura Municipal de Lauro de Freitas, 2001-2003. Diretor de Habitação da Prefeitura Municipal de Salvador, 2009-2010.\nMandato Eletivo\nEleito deputado estadual pelo Partido Progressista-PP, 2011 - 2015. Eleito deputado federal , 2015-2019.\nFiliação Partidária\nPP;\nAtividade Partidária\nVice-presidente da Juventude Progressista da Bahia. Vice-líder da Bancada da Maioria, ALBA, 2011-2013; vice-líder do Bloco Parlamentar PSL/PRB/PP, ALBA, out. 2013. Vice-líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.\nAtividade Parlamentar\nNa Assembléia Legislativa, VICE-PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2011); TITULAR das  Comissões:  Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011,2012), Infra-estrutura, Desenvolvimento Econômico e Turismo (2011, 2013-2014), Especial da Ferrovia de Integração Oeste-leste (2011-2014), Defesa do Consumidor e Relações de Trabalho (2013-2014), Especial de Desenvolvimento Urbano (2013-2014), CPI da Telefonia (nov/2013 - 2014 );  SUPLENTE das Comissões: Finanças, Orçamento, Fiscalização e Controle (2011), Constituição e Justiça (2011), Especial da Copa de 2014 (2011-2014), Educação, Cultura, Ciência e Tecnologia e Serviço Público (out./dez.2011), Extraordinária para Acompanhar a Privatização dos Cartórios (2012, 2014); membro da Sub-comissão Especial de Desenvolvimento Urbano (2011), Membro suplente do Código de Ética e Decoro Parlamentar (set.2012), Especial da Verdade (2013-2014).\nCondecorações\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "CARLOS FELIPE VAZQUEZ DE SOUZA LEAO",
+    "Profissão": "Administrador",
+    "Nascimento": "03/11/1979, Salvador-BA",
+    "Filiação": "João Felipe de Souza Leão e Maria Tereza Vazquez de Souza Leão"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Progressista-PP, 2011 - 2015. Eleito deputado federal , 2015-2019.",
+    "Filiação Partidária",
+    "PP;",
+    "Atividade Partidária",
+    "Vice-presidente da Juventude Progressista da Bahia. Vice-líder da Bancada da Maioria, ALBA, 2011-2013; vice-líder do Bloco Parlamentar PSL/PRB/PP, ALBA, out. 2013. Vice-líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, VICE-PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2011); TITULAR das  Comissões:  Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011,2012), Infra-estrutura, Desenvolvimento Econômico e Turismo (2011, 2013-2014), Especial da Ferrovia de Integração Oeste-leste (2011-2014), Defesa do Consumidor e Relações de Trabalho (2013-2014), Especial de Desenvolvimento Urbano (2013-2014), CPI da Telefonia (nov/2013 - 2014 );  SUPLENTE das Comissões: Finanças, Orçamento, Fiscalização e Controle (2011), Constituição e Justiça (2011), Especial da Copa de 2014 (2011-2014), Educação, Cultura, Ciência e Tecnologia e Serviço Público (out./dez.2011), Extraordinária para Acompanhar a Privatização dos Cartórios (2012, 2014); membro da Sub-comissão Especial de Desenvolvimento Urbano (2011), Membro suplente do Código de Ética e Decoro Parlamentar (set.2012), Especial da Verdade (2013-2014)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915863",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:30:54.271674Z",
+  "data_nascimento": "1979-11-03",
+  "municipio_nascimento": "Salvador",
+  "uf_nascimento": "BA",
+  "nome_civil": "CARLOS FELIPE VAZQUEZ DE SOUZA LEAO",
+  "profissao": "Administrador",
+  "sexo": null,
+  "tags_estrategicas": [
+    "Progressista (PP)",
+    "Ascensão Federal",
+    "Liderança de Maioria",
+    "Foco em Infraestrutura",
+    "Juventude Partidária"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Administração e Planejamento Municipal",
+      "sub": "Faculdade Metropolitana - POLIFUCS — 2002"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2011-2015"
+    },
+    {
+      "label": "Deputado Federal",
+      "sub": "PP — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder da Bancada da Maioria",
+      "sub": "ALBA — 2011-2013"
+    },
+    {
+      "label": "VICE-PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho",
+      "sub": "ALBA — 2011"
+    },
+    {
+      "label": "TITULAR DAS COMISSÕES: Infra-estrutura, Desenvolvimento Econômico e Turismo",
+      "sub": "ALBA — 2011, 2013-2014"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Político do Progressistas (PP) que rapidamente ascendeu de Deputado Estadual a Federal. Manteve-se alinhado à maioria na ALBA, atuando em comissões estratégicas como Infraestrutura e Defesa do Consumidor, refletindo uma trajetória de proximidade com o poder executivo estadual.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

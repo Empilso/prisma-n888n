@@ -18,6 +18,18 @@ from datetime import datetime
 from dotenv import load_dotenv
 import google.generativeai as genai
 
+SIGLA_PARTIDO_NORMALIZER = {
+    "UNIO": "UNIÃO",
+    "UNIÃO BRASIL": "UNIÃO",
+    "UNION": "UNIÃO",
+    "DEMOCRATAS": "DEM",
+    "PARTIDO DOS TRABALHADORES": "PT",
+    "PARTIDO LIBERAL": "PL",
+    "PROGRESSISTAS": "PP",
+    "PARTIDO PROGRESSISTA": "PP",
+    "PARTIDO PROGRESSISTA BRASILEIRO": "PPB",
+}
+
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
         "missao": "Normalizar dados em massa usando Inteligência Artificial (Lote de 5).",
@@ -35,8 +47,9 @@ __PRISMA_MANIFEST__ = {
         "6. Faz sleep de 15 segundos entre lotes para respeitar Rate Limits do Google."
     ],
     "apuracao": {
-        "safras_suportadas": ["Atual (Tempo Real)"],
-        "saida_esperada": "data/saida/parlamentares/parlamentares_hub_normalized.json"
+        "safras_suportadas": ["17", "18", "19", "20 (Atual)"],
+        "entrada_esperada": "data/saida/parlamentares/raw/parlamentar_{id}_oficial.json",
+        "saida_esperada": "data/saida/parlamentares/enriquecidos/leg_{X}/parlamentar_{id}_enriquecido.json"
     }
 }
 
@@ -52,9 +65,9 @@ C_WHITE = "\033[97m"
 C_END = "\033[0m"
 
 # --- Configurações de Orquestração ---
-# Usando gemini-2.0-flash-001 para ter acesso a uma nova cota diária de requisições.
+# Usando gemini-flash-lite-latest (novo equivalente ao 1.5-flash-lite)
 MODEL_NAME = "gemini-flash-lite-latest"
-BATCH_SIZE = 11        # Lote máximo para Paid Tier
+BATCH_SIZE = 10        # Lote máximo para Paid Tier
 SLEEP_BETWEEN_BATCHES = 2 # Alta velocidade (sem rate limit no Paid Tier)
 
 SYSTEM_PROMPT = """Você é um Analista de Inteligência Política Sênior do sistema PRISMA.
@@ -123,6 +136,71 @@ def normalizar_basico(data: dict) -> dict:
     data["sexo"] = dp.get("Sexo")
     return data
 
+def validar_dados_premium(original: dict, dados_premium: dict) -> tuple[dict, list, float]:
+    """
+    Confronta cada item gerado pelo LLM com a biografia original.
+    Retorna (dados_validados, flags_lista, score_final).
+    """
+    bio = (original.get("biografia_completa") or "").lower()
+    flags = []
+
+    def item_confirmado(item: dict, campo: str) -> bool:
+        """
+        Verifica se pelo menos 2 palavras-chave do item existem na biografia.
+        Palavras com menos de 4 chars são ignoradas (artigos, preposições).
+        """
+        texto = f"{item.get('label', '')} {item.get('sub', '')}".lower()
+        palavras = [p for p in texto.split() if len(p) >= 4]
+        if not palavras:
+            return True  # sem palavras suficientes → não punir
+        encontradas = sum(1 for p in palavras if p in bio)
+        return encontradas >= 2  # pelo menos 2 palavras confirmadas
+
+    # Validar carreira_politica
+    carreira_original = dados_premium.get("carreira_politica", [])
+    carreira_valida = []
+    for i, item in enumerate(carreira_original):
+        if item_confirmado(item, "carreira_politica"):
+            carreira_valida.append(item)
+        else:
+            flags.append(f"carreira_politica[{i}]_nao_confirmado: {item.get('label')}")
+
+    # Validar formacao_academica
+    formacao_original = dados_premium.get("formacao_academica", [])
+    formacao_valida = []
+    for i, item in enumerate(formacao_original):
+        if item_confirmado(item, "formacao_academica"):
+            formacao_valida.append(item)
+        else:
+            flags.append(f"formacao_academica[{i}]_nao_confirmado: {item.get('label')}")
+
+    # Validar lideranca_e_comissoes
+    lideranca_original = dados_premium.get("lideranca_e_comissoes", [])
+    lideranca_valida = []
+    for i, item in enumerate(lideranca_original):
+        if item_confirmado(item, "lideranca_e_comissoes"):
+            lideranca_valida.append(item)
+        else:
+            flags.append(f"lideranca[{i}]_nao_confirmado: {item.get('label')}")
+
+    # Normalizar sigla_partido no registro original
+    sigla = original.get("sigla_partido", "")
+    original["sigla_partido"] = SIGLA_PARTIDO_NORMALIZER.get(sigla.upper(), sigla)
+
+    # Calcular qualidade_score final
+    base_score = float(original.get("qualidade_score") or 1.0)
+    desconto = len(flags) * 0.05
+    score_final = round(max(0.5, base_score - desconto), 2)
+
+    dados_validados = {
+        **dados_premium,
+        "carreira_politica": carreira_valida,
+        "formacao_academica": formacao_valida,
+        "lideranca_e_comissoes": lideranca_valida,
+    }
+
+    return dados_validados, flags, score_final
+
 def processar_lote_bulk(model, lote_bruto: list, retries=3) -> list:
     if not lote_bruto: return []
     
@@ -172,6 +250,8 @@ def main():
     brain = init_brain()
     base_dir = Path(__file__).resolve().parent.parent.parent
     raw_dir = base_dir / "data" / "saida" / "parlamentares" / "raw"
+    enriquecido_dir = base_dir / "data" / "saida" / "parlamentares" / "enriquecidos"
+    enriquecido_dir.mkdir(parents=True, exist_ok=True)
     out_dir = base_dir / "data" / "saida" / "parlamentares"
     hub_file = out_dir / "parlamentares_hub_normalized.json"
 
@@ -216,6 +296,20 @@ def main():
     lotes = list(chunk_list(todos_dados, BATCH_SIZE))
     total_lotes = len(lotes)
     
+    # Carregar Mapeamento Global de Legislaturas por ID
+    leg_map = {}
+    for ids_f in glob.glob(str(raw_dir / "parlamentares_ids_leg_*.json")):
+        m = re.search(r"leg_(\d+)\.json", ids_f)
+        if m:
+            lg = m.group(1)
+            with open(ids_f, "r", encoding="utf-8") as f_ids:
+                dados_ids = json.load(f_ids).get("records", [])
+                for rec in dados_ids:
+                    pid = rec.get("parlamentar_id")
+                    if pid:
+                        if pid not in leg_map: leg_map[pid] = []
+                        if lg not in leg_map[pid]: leg_map[pid].append(lg)
+
     print(f"🚀 Iniciando processo em {total_lotes} lotes de {BATCH_SIZE}...")
     
     for i, lote in enumerate(lotes):
@@ -234,19 +328,44 @@ def main():
                 original = next((item for item in lote if item.get("prisma_id") == pid), None)
                 
                 if original:
-                    original["tags_estrategicas"] = dados_premium.get("tags_estrategicas", [])
-                    original["formacao_academica"] = dados_premium.get("formacao_academica", [])
-                    original["carreira_politica"] = dados_premium.get("carreira_politica", [])
-                    original["lideranca_e_comissoes"] = dados_premium.get("lideranca_e_comissoes", [])
-                    original["condecoracoes"] = dados_premium.get("condecoracoes", [])
-                    if dados_premium.get("biografia_resumo"):
-                        original["biografia_resumo"] = dados_premium["biografia_resumo"]
-                    original["versao_enricher"] = f"v6.0-{MODEL_NAME}"
+                    dados_premium = extraido.get("dados_premium", {})
                     
+                    # ← NOVO: validar antes de salvar
+                    dados_validados, flags, score_final = validar_dados_premium(original, dados_premium)
+
+                    original["carreira_politica"]      = dados_validados.get("carreira_politica", [])
+                    original["formacao_academica"]     = dados_validados.get("formacao_academica", [])
+                    original["lideranca_e_comissoes"]  = dados_validados.get("lideranca_e_comissoes", [])
+                    original["condecoracoes"]          = dados_validados.get("condecoracoes", [])
+                    original["tags_estrategicas"]      = dados_validados.get("tags_estrategicas", [])
+                    original["biografia_resumo"]       = dados_validados.get("biografia_resumo", "")
+                    original["versao_enricher"]        = f"v6.1-validated-{MODEL_NAME}"
+                    original["qualidade_score"]        = score_final
+                    original["flags_validacao"]        = flags  # ← novo campo para auditoria
+
+                    if flags:
+                        print(f"  ⚠️ {original['nome_limpo']}: {len(flags)} flag(s) → {flags}")
+
                     # Atualiza o mapa global
                     hub_map[original["nome_limpo"]] = original
                     
-            print(f"          🏷️  Lote Salvo na Memória.")
+                    parl_id_api = original.get("parlamentar_id")
+                    legislaturas_ativas = leg_map.get(parl_id_api, ["20"])
+                    
+                    # Salva o JSON enriquecido na pasta temporária isolada por safra
+                    for leg in legislaturas_ativas:
+                        leg_dir = enriquecido_dir / f"leg_{leg}"
+                        leg_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        copy_data = dict(original)
+                        copy_data["legislatura_alvo"] = str(leg)
+                        copy_data["historico_legislaturas"] = sorted([int(x) for x in legislaturas_ativas])
+                        
+                        out_path = leg_dir / f"parlamentar_{pid}_enriquecido.json"
+                        with open(out_path, "w", encoding="utf-8") as f_out:
+                            json.dump(copy_data, f_out, ensure_ascii=False, indent=2)
+                    
+            print(f"          🏷️  Lote Salvo na Memória e Arquivos Criados separados por Legislatura.")
             
             # SAVING PARCIAL
             hub_data["parlamentares"] = list(hub_map.values())
@@ -257,15 +376,6 @@ def main():
         else:
             print(f" {C_RED}❌ Lote ignorado após falhas múltiplas.{C_END}")
         
-        if i < total_lotes - 1:
-            print(f"   [COOLDOWN] ⏳ Aguardando {SLEEP_BETWEEN_BATCHES}s para a próxima leva...")
-            time.sleep(SLEEP_BETWEEN_BATCHES)
-
-    # FINAL SAVING
-    hub_data["parlamentares"] = list(hub_map.values())
-    hub_data["gerado_em"] = datetime.utcnow().isoformat() + "Z"
-    with open(hub_file, "w", encoding="utf-8") as f:
-        json.dump(hub_data, f, ensure_ascii=False, indent=2)
 
     print(f"\n{C_GREEN}✅ BULK ENGINE FINALIZADA! Arquivo Hub atualizado.{C_END}\n")
 

@@ -1,0 +1,26 @@
+{
+  "ts": "2026-03-24T18:09:40.769293",
+  "resultados": [
+    {
+      "url": "https://www.al.ba.gov.br/",
+      "nome": "homepage",
+      "status": null,
+      "bytes": 0,
+      "erro": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
+    {
+      "url": "https://www.al.ba.gov.br/atividade-legislativa",
+      "nome": "atividades",
+      "status": null,
+      "bytes": 0,
+      "erro": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
+    {
+      "url": "https://www.al.ba.gov.br/transparencia/verbas-idenizatorias",
+      "nome": "verbas",
+      "status": null,
+      "bytes": 0,
+      "erro": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    }
+  ]
+}

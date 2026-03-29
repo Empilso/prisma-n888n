@@ -1,0 +1,106 @@
+{
+  "prisma_id": "9995d6c2ef86dce5350364e6279e767c",
+  "parlamentar_id": "932100",
+  "nome_eleitoral": "Leandro de Jesus",
+  "nome_limpo": "Leandro De Jesus",
+  "partido": "PL",
+  "sigla_partido": "PL",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932100",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:leandrodejesus.jpg",
+  "biografia_completa": "Formação Educacional\nGradou-se em Direito, pela Universidade Estácio, em 2014 e em Gestão Pública, pela mesma instituição, em 2016. Pós-graduado em Metodologia e Docência do Ensino Superior, pela Faculdade D. Pedro II, em 2015; em Direito Penal e Processo Penal, pela Universidade Estácio, em 2018, e em Direito Civil e Processo Civil, pela mesma instituição, em 2018.\nAtividade Profissional\nAdvogado no escritório Advocacia Leandro de Jesus, 2015-2022.\nMandato Eletivo\nEleito deputado estadual pelo PL, 2023-2027.\nFiliação Partidária\nPL, 2022 - ;\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO de Meio Ambiente, Seca e Recursos Hídricos, 2023-2024. TITULAR DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos, 2025; Direitos Humanos e Segurança Pública, fev.2026.\nCondecorações\nTroféu Destaque Parlamentar, Comitê de Imprensa, Assembleia Legislativa do Estado da Bahia, 2023\nContato\nEndereço:\nPrédio Anexo, gab. 101, Wilson Lins\nTel.:\n3115-5244 /\n3115-5245 /\n3115-5358 /\n3115-5531 /\n3115-5532 /\n3115-7131 /\n3115-7362 /\n3115-7363\ndeputadoleandrodejesus@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "LEANDRO SILVA DE JESUS",
+    "Profissão": "Advogado",
+    "Nascimento": "19/11/1981, Salvador",
+    "Filiação": "Jorge Sacramento de Jesus e Ilcilene Silva de Jesus",
+    "Sexo": "Masculino",
+    "Filhos": "Davi e Catarina"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo PL, 2023-2027.",
+    "Filiação Partidária",
+    "PL, 2022 - ;",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO de Meio Ambiente, Seca e Recursos Hídricos, 2023-2024. TITULAR DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos, 2025; Direitos Humanos e Segurança Pública, fev.2026."
+  ],
+  "contatos": {
+    "email": "deputadoleandrodejesus@alba.ba.gov.br",
+    "telefones": [
+      "3115-5244",
+      "3115-5245",
+      "3115-5358",
+      "3115-5531",
+      "3115-5532",
+      "3115-7131",
+      "3115-7362",
+      "3115-7363"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 101, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932100",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:28.013166Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "LEANDRO SILVA DE JESUS",
+  "profissao": "Advogado",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Direito",
+    "PL",
+    "Meio Ambiente",
+    "Gestão Pública",
+    "Advocacia"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Universidade Estácio — 2014"
+    },
+    {
+      "label": "Gestão Pública",
+      "sub": "Universidade Estácio — 2016"
+    },
+    {
+      "label": "Metodologia e Docência do Ensino Superior (Pós-graduação)",
+      "sub": "Faculdade D. Pedro II — 2015"
+    },
+    {
+      "label": "Direito Penal e Processo Penal (Pós-graduação)",
+      "sub": "Universidade Estácio — 2018"
+    },
+    {
+      "label": "Direito Civil e Processo Civil (Pós-graduação)",
+      "sub": "Universidade Estácio — 2018"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Advogado",
+      "sub": "Escritório Advocacia Leandro de Jesus — 2015-2022"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PL — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente da Comissão de Meio Ambiente, Seca e Recursos Hídricos",
+      "sub": "Assembleia Legislativa da Bahia — 2023-2024"
+    }
+  ],
+  "condecoracoes": [
+    "Troféu Destaque Parlamentar (Comitê de Imprensa, ALBA, 2023)"
+  ],
+  "biografia_resumo": "Advogado com formação robusta em Direito e Gestão Pública, Leandro De Jesus foi eleito deputado estadual pelo PL em 2023. Sua atuação inicial focou na presidência da Comissão de Meio Ambiente, indicando prioridade temática em questões ambientais e hídricas.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    20
+  ],
+  "flags_validacao": []
+}

@@ -1,0 +1,89 @@
+{
+  "prisma_id": "2481813302000c6f5bc6f9e84a679418",
+  "parlamentar_id": "932117",
+  "nome_eleitoral": "Soane Galvão",
+  "nome_limpo": "Soane Galvão",
+  "partido": "PSB",
+  "sigla_partido": "PSB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932117",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:soanegalvao.jpg",
+  "biografia_completa": "Formação Educacional\nGraduou-se em Direito pela Faculdade de Tecnologia e Ciência, FTC, Itabuna, 2011-2016.\nAtividade Profissional\nEstagiária como professora de magistério no Colégio Madre Savina Petrilli, 1986. Sócia-proprietária e diretora, da Lasoy Indústria e Comércio de Confecções LTDA, 1993-2001. Secretária parlamentar na Assembleia Legislativa do Estado da Bahia, 2011-2015. Coordenadora de Unidade A, Bahia Pesca, 2015-2017. Secretária de Desenvolvimento Social do Município de Ilhéus, 2017-2018. Secretária parlamentar na Câmara dos Deputados, 2018. Membro do Comitê da Bacia Hidrográfica do Leste do Instituto do Meio Ambiente e Recursos Hídricos, Inema, 2016-2019.\nFiliação Partidária\nPSD, 1993 - 1994;\nPSC, 1994 - 2007;\nPSB, 2022 - ;\nAtividade Partidária\nVice-líder do Bloco Parlamentar MDB/PSB/Patriota/Avante\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: SUPLENTE na MESA DIRETORA, 2025-2027. PRESIDENTE DA COMISSÃO dos Direitos da Mulher, 2023-2024. TITULAR DAS COMISSÕES: de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2023-2024, fev-abril 2025;\nCondecorações\nReconhecimento de Honra ao Mérito, Tribunal de Justiça do Estado da Bahia, 2016.\nContato\nEndereço:\nPrédio Anexo, gab. 207, Wilson Lins\nTel.:\n3115-7149\ndep.soanegalvao@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "SOANE GALVAO BARBOSA",
+    "Profissão": "Empresária",
+    "Nascimento": "25/12/1968, Itapetinga",
+    "Filiação": "João Evangelista Fortunato Barbosa e Ivanilde Silva Galvão Barbosa",
+    "Sexo": "Feminino",
+    "Estado Civil": "Casada",
+    "Cônjuge": "Mário Alexandre Correa de Sousa",
+    "Filhos": "Esther e Raquel"
+  },
+  "mandatos": [],
+  "contatos": {
+    "email": "dep.soanegalvao@alba.ba.gov.br",
+    "telefones": [
+      "3115-7149"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 207, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932117",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.93,
+  "processado_em": "2026-03-28T16:22:13.149956Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "SOANE GALVAO BARBOSA",
+  "profissao": "Empresária",
+  "sexo": "Feminino",
+  "tags_estrategicas": [
+    "PSB",
+    "Direitos da Mulher",
+    "Experiência Administrativa",
+    "Mesa Diretora (Suplente)",
+    "Bloco de Oposição/Apoio"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Faculdade de Tecnologia e Ciência (FTC), Itabuna — 2016"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Secretária de Desenvolvimento Social do Município de Ilhéus",
+      "sub": "Não especificado — 2017-2018"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Secretária parlamentar",
+      "sub": "Assembleia Legislativa do Estado da Bahia — 2011-2015"
+    },
+    {
+      "label": "Vice-líder do Bloco Parlamentar MDB/PSB/Patriota/Avante",
+      "sub": "Assembleia Legislativa da Bahia — Não especificado"
+    },
+    {
+      "label": "Presidente da Comissão dos Direitos da Mulher",
+      "sub": "Assembleia Legislativa da Bahia — 2023-2024"
+    },
+    {
+      "label": "Suplente na Mesa Diretora",
+      "sub": "Assembleia Legislativa da Bahia — 2025-2027"
+    }
+  ],
+  "condecoracoes": [
+    "Reconhecimento de Honra ao Mérito (Tribunal de Justiça do Estado da Bahia, 2016)"
+  ],
+  "biografia_resumo": "Com formação em Direito e experiência em gestão social municipal, Soane Galvão é Deputada Estadual pelo PSB, atuando como Presidente da Comissão dos Direitos da Mulher. Sua influência cresce com a inclusão na suplência da Mesa Diretora, consolidando-a como figura relevante na articulação política.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    20
+  ],
+  "flags_validacao": [
+    "carreira_politica[1]_nao_confirmado: Deputada Estadual"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "prisma_id": "fe04c956c8e3438c109123a3fc81562f",
+  "parlamentar_id": "932147",
+  "nome_eleitoral": "Marcinho Oliveira",
+  "nome_limpo": "Marcinho Oliveira",
+  "partido": "PRD",
+  "sigla_partido": "PRD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932147",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:marcinhooliveira.jpg",
+  "biografia_completa": "Atividade Profissional\nDirigente do Serviço Público Federal, da Secretaria de Infraestrutura da Bahia, 2007-2009. Empresário dos ramos de transporte, infraestrutura e produção cultural. Agropecuarista na Região do Sisal.\nMandato Eletivo\nEleito vice-prefeito do município de Santaluz, 2017-2020. Eleito deputado estadual, União Brasil, para o período 2023-2027.\nFiliação Partidária\nPP, 2014 - 2018;\nAVANTE, 2020 - ;\nPSL, 2021 - ;\nUNIÃO, 2022 - 2025;\nPRD, 2025 - ;\nAtividade Partidária\nLíder do União Brasil, fev. 2023-mar. 2023; Vice-líder do União Brasil, mar. 2024.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: VICE-PRESIDENTE DA COMISSÃO: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2025. TITULAR DAS COMISSÕES: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2023-2024; de Meio Ambiente, Seca e Recurso Hídricos, 2023-2024; de Defesa do Consumidor e Relações de Trabalho, 2025. SUPLENTE na Comissão: de Agricultura e Política Rural (out.2025) Conselho de Ética e Decoro Parlamentar (mar. 2024).\nCondecorações\nTroféu Destaque Parlamentar, Comitê de Imprensa, Assembleia Legislativa do Estado da Bahia, 2023, 2024, 2025.\nContato\nEndereço:\nPrédio Anexo, gab. 202, Wilson Lins\nTel.:\n3115-0950 /\n3115-5329 /\n3115-5425 /\n3115-5426 /\n3115-5506 /\n3115-5507 /\n3115-7092 /\n3115-7093 /\n3115-7281\ndeputadomarcinhooliveira@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "MARCIO EVANGELISTA DE OLIVEIRA",
+    "Profissão": "Empresário",
+    "Nascimento": "25/02/1980, Santaluz, Bahia",
+    "Filiação": "José Hailton Carneiro De Oliveira Tereza Cristina Evangelista De Oliveira",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Isla De Santana Martins",
+    "Filhos": "Vinícius, Maria Eduarda, Luiza E Lucas."
+  },
+  "mandatos": [
+    "Eleito vice-prefeito do município de Santaluz, 2017-2020. Eleito deputado estadual, União Brasil, para o período 2023-2027.",
+    "Filiação Partidária",
+    "PP, 2014 - 2018;",
+    "AVANTE, 2020 - ;",
+    "PSL, 2021 - ;",
+    "UNIÃO, 2022 - 2025;",
+    "PRD, 2025 - ;",
+    "Atividade Partidária",
+    "Líder do União Brasil, fev. 2023-mar. 2023; Vice-líder do União Brasil, mar. 2024.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: VICE-PRESIDENTE DA COMISSÃO: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2025. TITULAR DAS COMISSÕES: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2023-2024; de Meio Ambiente, Seca e Recurso Hídricos, 2023-2024; de Defesa do Consumidor e Relações de Trabalho, 2025. SUPLENTE na Comissão: de Agricultura e Política Rural (out.2025) Conselho de Ética e Decoro Parlamentar (mar. 2024)."
+  ],
+  "contatos": {
+    "email": "deputadomarcinhooliveira@alba.ba.gov.br",
+    "telefones": [
+      "3115-0950",
+      "3115-5329",
+      "3115-5425",
+      "3115-5426",
+      "3115-5506",
+      "3115-5507",
+      "3115-7092",
+      "3115-7093",
+      "3115-7281"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 202, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932147",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:39.472013Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MARCIO EVANGELISTA DE OLIVEIRA",
+  "profissao": "Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Agronegócio (Sisal)",
+    "União Brasil",
+    "Infraestrutura",
+    "Ex-Vice-Prefeito",
+    "Consistência Legislativa"
+  ],
+  "formacao_academica": [],
+  "carreira_politica": [
+    {
+      "label": "Vice-Prefeito de Santaluz",
+      "sub": "Não especificado — 2017-2020"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "União Brasil — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Dirigente do Serviço Público Federal",
+      "sub": "Secretaria de Infraestrutura da Bahia — 2007-2009"
+    },
+    {
+      "label": "Líder do União Brasil",
+      "sub": "Assembleia Legislativa da Bahia — fev. 2023-mar. 2023"
+    },
+    {
+      "label": "Vice-líder do União Brasil",
+      "sub": "Assembleia Legislativa da Bahia — mar. 2024"
+    },
+    {
+      "label": "Vice-Presidente da Comissão de Infraestrutura, Desenvolvimento Econômico e Turismo",
+      "sub": "Assembleia Legislativa da Bahia — 2025"
+    }
+  ],
+  "condecoracoes": [
+    "Troféu Destaque Parlamentar (Comitê de Imprensa, ALBA, 2023, 2024, 2025)"
+  ],
+  "biografia_resumo": "Empresário e agropecuarista com experiência executiva no serviço público e como Vice-Prefeito, Marcinho Oliveira é Deputado Estadual pelo União Brasil. Demonstra foco em Infraestrutura e Meio Ambiente, sendo reconhecido por sua atuação parlamentar consistente nos últimos anos.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    20
+  ],
+  "flags_validacao": []
+}

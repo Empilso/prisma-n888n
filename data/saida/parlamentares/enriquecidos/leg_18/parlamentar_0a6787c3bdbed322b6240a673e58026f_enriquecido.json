@@ -1,0 +1,106 @@
+{
+  "prisma_id": "0a6787c3bdbed322b6240a673e58026f",
+  "parlamentar_id": "921272",
+  "nome_eleitoral": "Hildécio Meireles",
+  "nome_limpo": "Hildécio Meireles",
+  "partido": "PSC",
+  "sigla_partido": "PSC",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921272",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:HildecioMeireles.jpg%20",
+  "biografia_completa": "Formação Educacional\nCursou o fundamental e o 2º grau no Colégio Militar da Bahia, 1967-1972 e 1973-1975, respectivamente. Formou-se em Ciências Contábeis pela Universidade Católica do Salvador - UCSAL, 1981, Salvador. MBA em Gestão Pública, UNIJORGE,  Salvador, 2009-2010.\nAtividade Profissional\nAuditor fiscal na Secretaria da Fazenda do Estado da Bahia, SEFAZ-BA, 1977-2015.\nMandato Eletivo\nEleito prefeito do município de Cairu em três mandatos, 1993-1996, 2005-2008 e 2009-2012.. Eleito deputado estadual, PMDB, 2015-2019.\nFiliação Partidária\nMDB, 1984 - 1987;\nPP, 1992 - 2000;\nMDB, 2001 - 2017;\nPSC, 2018 - ;\nAtividade Partidária\nPresidente do Partido Progressista, PP ; presidente do Partido do  Movimento Democrático  Brasileiro - PMDB no município de Cairu, 2008. Membro da Executiva Estadual do PMDB. Vice-líder da Minoria, 2018.\nAtividade Parlamentar\nNa Assembléia Legislativa da Bahia, PRESIDENTE da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2017);  VICE-PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2015-2016, 2018);     TITULAR das  Comissões: Finanças, Orçamento, Fiscalização e Controle (2016-2017), Direitos da Mulher (jun.2016-), Defesa do Consumidor e Relações de Trabalho (mar.-ago.2017), Comissão Especial de Desenvolvimento Urbano (2018), Constituição e Justiça (2019);     SUPLENTE da Comissão de Saúde e Saneamento (2015).\nCondecorações\nTítulo de Cidadão do Município de Valença, BA, 2012; Homenagem concedida por representantes do Grupo A Tarde, 2013, pela idealização do Festival de Primavera Morro de São Paulo; Prêmio Qualidade e Excelência na Saúde Pública à Prefeitura de Cairu, concedida pela  MS Brasil/ Obregon, Florianópolis, SC, 2011; Título Companheiro Paul Harris , Rotary Club de Valença, 2011; Prêmio SEBRAE Prefeito Empreendedor 2012, pelo projeto Cairu 2030: \"Planejamento e Gestão Pública para o Desenvolvimento Sustentável\". Mérito SESAB-BIRD pelo cumprimento das metas no ano de 2005, como gestor do município de Cairu; Troféu Destaque Parlamentar, Comitê de Imprensa, Assembléia Legislativa da Bahia, 2015, 2016, 2017, 2018.\nMissões Oficiais\nConferência Internacional de Cidades Inovadoras, 2010, Curitiba-PR. Conferencista  no Painel 4, Experiências Inovadoras para um Novo Ambiente Mundial, palestra Cairu 2030, Metas do Milênio no Principado de Cairu.",
+  "dados_pessoais": {
+    "Nome": "HILDECIO ANTONIO MEIRELES FILHO",
+    "Profissão": "Funcionário Público",
+    "Nascimento": "14/03/1956, Cairu-BA",
+    "Filiação": "Hildécio Antônio Meireles e Raimunda Martins Meireles",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Cíntia Rosemberg Meireles",
+    "Filhos": "Rafael, Amanda e Matheus"
+  },
+  "mandatos": [
+    "Eleito prefeito do município de Cairu em três mandatos, 1993-1996, 2005-2008 e 2009-2012.. Eleito deputado estadual, PMDB, 2015-2019.",
+    "Filiação Partidária",
+    "MDB, 1984 - 1987;",
+    "PP, 1992 - 2000;",
+    "MDB, 2001 - 2017;",
+    "PSC, 2018 - ;",
+    "Atividade Partidária",
+    "Presidente do Partido Progressista, PP ; presidente do Partido do  Movimento Democrático  Brasileiro - PMDB no município de Cairu, 2008. Membro da Executiva Estadual do PMDB. Vice-líder da Minoria, 2018.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa da Bahia, PRESIDENTE da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2017);  VICE-PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2015-2016, 2018);     TITULAR das  Comissões: Finanças, Orçamento, Fiscalização e Controle (2016-2017), Direitos da Mulher (jun.2016-), Defesa do Consumidor e Relações de Trabalho (mar.-ago.2017), Comissão Especial de Desenvolvimento Urbano (2018), Constituição e Justiça (2019);     SUPLENTE da Comissão de Saúde e Saneamento (2015)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921272",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:48.102734Z",
+  "data_nascimento": "1956-03-14",
+  "municipio_nascimento": "Cairu",
+  "uf_nascimento": "BA",
+  "nome_civil": "HILDECIO ANTONIO MEIRELES FILHO",
+  "profissao": "Funcionário Público",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Gestão Municipal",
+    "MDB/PMDB",
+    "Finanças e Orçamento",
+    "Liderança Regional",
+    "Servidor de Carreira"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ciências Contábeis",
+      "sub": "Universidade Católica do Salvador - UCSAL — 1981"
+    },
+    {
+      "label": "MBA em Gestão Pública",
+      "sub": "UNIJORGE — 2010"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Prefeito de Cairu (3 mandatos)",
+      "sub": "Não informado — 1993-1996, 2005-2012"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PMDB — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente do PP",
+      "sub": "Partido Progressista — Não informado"
+    },
+    {
+      "label": "Presidente do PMDB em Cairu",
+      "sub": "PMDB — 2008"
+    },
+    {
+      "label": "Presidente da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo",
+      "sub": "Assembleia Legislativa da Bahia — 2015-2017"
+    },
+    {
+      "label": "Vice-líder da Minoria",
+      "sub": "Assembleia Legislativa da Bahia — 2018"
+    }
+  ],
+  "condecoracoes": [
+    "Título de Cidadão do Município de Valença (2012)",
+    "Prêmio SEBRAE Prefeito Empreendedor 2012",
+    "Troféu Destaque Parlamentar (2015-2018)"
+  ],
+  "biografia_resumo": "Político com forte base no executivo municipal, tendo sido prefeito de Cairu por três mandatos, e carreira como auditor fiscal. Sua transição para a ALBA pelo PMDB/MDB consolidou sua influência, com destaque em comissões de infraestrutura e finanças, refletindo sua experiência administrativa.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "18",
+  "historico_legislaturas": [
+    18
+  ],
+  "flags_validacao": []
+}

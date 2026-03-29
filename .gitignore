@@ -1,13 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Datalake (Brutos/Cache) - OPCIONAL: Se quiser guardar os dados no Git, remova as linhas abaixo
+# data/saida/parlamentares/raw/
+# data/saida/parlamentares/enriquecidos/
+# parlamentares_hub_normalized.json
+# parlamentares_brutos_consolidado.json
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Node/Frontend
 node_modules/
 dist/
-.env
-__pycache__/
-*.pyc
-backend.log
-data/saida/
-data/raw/
-data/parlamentares/
-data/anexos/
-.DS_Store
-*.swp
-test_alba.html
+build/
+.next/
+    
+# Logs
+*.log
+nohup.out
+list_models.py
+consolidate_hub.py
+consolidate_raw.py
+run_seg_legs.py
+apply_validator.py
+EOF

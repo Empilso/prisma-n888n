@@ -299,16 +299,20 @@ async def get_studio_explorer():
     
     z_files = []
     if os.path.exists(parlamentares_dir):
-        if os.path.exists(os.path.join(parlamentares_dir, "parlamentares_hub_normalized.json")):
-            z_files.append("parlamentares_hub_normalized.json")
-        if os.path.exists(os.path.join(parlamentares_dir, "parlamentares_hub.json")):
-            z_files.append("parlamentares_hub.json")
+        for f in os.listdir(parlamentares_dir):
+            if f.endswith(".json") and os.path.isfile(os.path.join(parlamentares_dir, f)):
+                z_files.append(f)
             
     if os.path.exists(raw_dir):
-        if os.path.exists(os.path.join(raw_dir, "_checkpoint_zidane.json")):
-            z_files.append("raw/_checkpoint_zidane.json")
+        for f in os.listdir(raw_dir):
+            if f.endswith(".json") and os.path.isfile(os.path.join(raw_dir, f)):
+                z_files.append(f"raw/{f}")
     
-    if z_files:
+    enriquecido_dir = os.path.join(parlamentares_dir, "enriquecidos")
+    if os.path.exists(enriquecido_dir):
+        for f in os.listdir(enriquecido_dir):
+            if f.endswith(".json") and os.path.isfile(os.path.join(enriquecido_dir, f)):
+                z_files.append(f"enriquecidos/{f}")
         zidane_files["parlamentares"] = z_files
         crews.append({
             "id": "zidane",
@@ -484,6 +488,7 @@ async def get_agent_manifest(agent_id: str):
             "zidane_a": "agent_zidane_a_ids.py",
             "zidane_b": "agent_zidane_b_scraper.py",
             "zidane_c": "agent_zidane_c_brain.py",
+            "zidane_d": "agent_zidane_d_loader.py",
             "4": "agent_4_prisma_db.py",
             "dunga": "agent_4_prisma_db.py",
             "5": "agent_5_pdf_forensic.py",
@@ -989,31 +994,36 @@ async def get_system_status():
     }
 
     # ── Status Zidane (Crew 00 — Biografias Parlamentares) ────────
-    PARLAMENTARES_DIR = os.path.join(PRISMA_ROOT, "data", "parlamentares")
+    PARLAMENTARES_DIR = os.path.join(PRISMA_ROOT, "data", "saida", "parlamentares")
     RAW_DIR = os.path.join(PARLAMENTARES_DIR, "raw")
-    ids_file = os.path.join(RAW_DIR, "parlamentares_ids.json")
+    
+    # Detect legislatures
+    zidane_a_completed = []
+    ids_count = 0
+    for leg in ["18", "19", "20"]:
+        f_path = os.path.join(RAW_DIR, f"parlamentares_ids_leg_{leg}.json")
+        if os.path.exists(f_path):
+            zidane_a_completed.append(leg)
+            try:
+                with open(f_path, "r") as f:
+                    ids_count += json.load(f).get("total", 0)
+            except: pass
+
     hub_file = os.path.join(PARLAMENTARES_DIR, "parlamentares_hub_normalized.json")
     raw_perfis = glob.glob(os.path.join(RAW_DIR, "parlamentar_*_oficial.json"))
-
-    ids_count = 0
-    if os.path.exists(ids_file):
-        try:
-            with open(ids_file, "r") as f:
-                ids_count = json.load(f).get("total", 0)
-        except: pass
 
     hub_count = 0
     if os.path.exists(hub_file):
         try:
             with open(hub_file, "r") as f:
-                hub_count = json.load(f).get("estatisticas", {}).get("total_parlamentares", 0)
+                hub_count = len(json.load(f).get("parlamentares", []))
         except: pass
 
     status["zidane_a"] = {
         "status": "idle",
         "input_ready": True,
-        "detail": f"✅ {ids_count} IDs coletados" if os.path.exists(ids_file) else "Pronto para varredura",
-        "completed_years": ["Censo"] if os.path.exists(ids_file) else [],
+        "detail": f"✅ {ids_count} IDs coletados" if zidane_a_completed else "Pronto para varredura",
+        "completed_years": zidane_a_completed,
         "checkpoint_years": [],
         "available_input_years": [],
         "usage": {"input": 0, "output": ids_count}
@@ -1021,11 +1031,11 @@ async def get_system_status():
 
     status["zidane_b"] = {
         "status": "idle",
-        "input_ready": os.path.exists(ids_file),
+        "input_ready": len(zidane_a_completed) > 0,
         "detail": f"✅ {len(raw_perfis)} perfis extraídos" if raw_perfis else "Aguardando IDs",
-        "completed_years": ["Censo"] if len(raw_perfis) > 50 else [],
-        "checkpoint_years": ["Censo"] if 0 < len(raw_perfis) <= 50 else [],
-        "available_input_years": [],
+        "completed_years": zidane_a_completed if len(raw_perfis) > 50 else [],
+        "checkpoint_years": zidane_a_completed if 0 < len(raw_perfis) <= 50 else [],
+        "available_input_years": zidane_a_completed,
         "usage": {"input": ids_count, "output": len(raw_perfis)}
     }
 
@@ -1033,9 +1043,9 @@ async def get_system_status():
         "status": "idle",
         "input_ready": len(raw_perfis) > 0,
         "detail": f"✅ Hub consolidado ({hub_count} parlamentares)" if os.path.exists(hub_file) else f"{len(raw_perfis)} perfis prontos para consolidação",
-        "completed_years": ["Censo"] if os.path.exists(hub_file) else [],
+        "completed_years": ["18", "19", "20"] if os.path.exists(hub_file) else [],
         "checkpoint_years": [],
-        "available_input_years": [],
+        "available_input_years": ["18", "19", "20"],
         "usage": {"input": len(raw_perfis), "output": hub_count}
     }
 
@@ -1283,7 +1293,16 @@ async def run_individual_agent(
         scripts["1"] = ["agents/agent_1_batch.py"]
         # O script batch não recebe args, pois ele tem a lista chumbada interna
     else:
-        if agent_id in ["1", "2", "3", "kaka", "ronaldo", "dunga", "4", "5", "6"]:
+        if agent_id.startswith("zidane"):
+            # Mapeamento estrito: Para a crew Zidane, usamos --legislatura em vez de --ano
+            # Ignoramos para Zidane-D, pois ele processa o dataset unificado final
+            if agent_id in ["zidane_a", "zidane_b", "zidane_c"]:
+                extra_args = ["--legislatura", str(ano)]
+                print(f"[EXEC] 🏛️ running {agent_id} with --legislatura {ano}")
+                if limit > 0:
+                    extra_args += ["--limit", str(limit)]
+        elif agent_id in ["1", "2", "3", "kaka", "ronaldo", "dunga", "4", "5", "6"]:
+            # Mapeamento de Extração: para a crew Alba Verbas e Auditoria
             tag = "--ano" if agent_id in ["1", "3", "kaka"] else "--year"
             extra_args = [tag, str(ano)]
             
@@ -1297,6 +1316,7 @@ async def run_individual_agent(
             # Passa o filename selecionado no frontend para o Agente 2
             if agent_id == "2" and filename:
                 extra_args += ["--file", filename]
+
 
     env_vars = {
         "ANO_ALVO": str(ano),

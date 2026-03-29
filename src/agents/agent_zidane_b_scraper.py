@@ -20,7 +20,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "https://www.al.ba.gov.br"
 URL_LISTA = f"{BASE_URL}/deputados/deputados-estaduais"
-VERSAO = "v4.0-prisma-hub"
+VERSAO = "v5.0-prisma-hub-multileg"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
@@ -28,17 +28,19 @@ __PRISMA_MANIFEST__ = {
         "especialidade": "Extração Textual Complexa (Regex + DOM Traversal)",
         "protocolo_tecnico": "Requests + BeautifulSoup4 + LXML + RegEx",
         "camada_dados": "Raw (Bronze Detalhado)",
-        "seguranca": "Timeout 30s + Sleep entre requests (0.8s) + Checkpoints"
+        "seguranca": "Timeout 30s + Sleep entre requests (0.8s) + Skip (Evita redundância)"
     },
     "diretrizes": [
-        "1. Acessa a página individual (perfil) de cada deputado coletada no Zidane-A.",
-        "2. Varre blocos de texto não-estruturados na div .fe-dep-dados-ajsut-mobile.",
-        "3. Usa Expressões Regulares (Regex) para garimpar emails e telefones ocultos.",
-        "4. Segmenta e estrutura a biografia por tópicos (Formação, Obras, etc.).",
-        "5. Salva um arquivo JSON individualizado por deputado na camada raw."
+        "1. Lê a lista de parlamentares extraída pelo Zidane-A.",
+        "2. Pula deputados cujos arquivos json já existam na pasta (SKIP).",
+        "3. Acessa a página individual (perfil) de cada deputado que falta.",
+        "4. Usa RegEx para garimpar emails e telefones.",
+        "5. Preserva 'nome_eleitoral' EXATAMENTE como no site (ex: Zé Neto Lula).",
+        "6. Salva arquivo json usando parlamentar_id como chave."
     ],
     "apuracao": {
-        "safras_suportadas": ["Atual (Tempo Real)"],
+        "safras_suportadas": ["17", "18", "19", "20 (Atual)"],
+        "entrada_esperada": "data/saida/parlamentares/raw/parlamentares_ids_leg_{num}.json",
         "saida_esperada": "data/saida/parlamentares/raw/parlamentar_{id}_oficial.json"
     }
 }
@@ -166,82 +168,6 @@ def scrape_perfil(url_perfil: str) -> Dict:
 
     return dados
 
-def scrape_lista() -> List[Dict]:
-
-    """Extrai lista de deputados com Nome, Partido e URL do perfil."""
-    print(f"📡 Acessando lista: {URL_LISTA}")
-    soup = get_soup(URL_LISTA)
-    if not soup:
-        return []
-
-    perfis = []
-    # Seletores identificados via inspeção real do HTML do portal ALBA:
-    # Card raiz: div.col-md-3 que contenha .campo-dados
-    # Nome: .deputado-nome a span
-    # Partido: .partido-nome (texto solto)
-    cards = [c for c in soup.select(".col-md-3") if c.select_one(".campo-dados")]
-    print(f"   ✅ Cards de deputados encontrados: {len(cards)}")
-
-    for card in cards:
-        # Nome
-        nome_tag = card.select_one(".deputado-nome a span")
-        if not nome_tag:
-            nome_tag = card.select_one(".deputado-nome a")
-        if not nome_tag:
-            continue
-        nome = nome_tag.get_text(strip=True)
-
-        # URL do perfil
-        link_tag = card.select_one(".deputado-nome a")
-        if not link_tag:
-            continue
-        href = link_tag.get("href", "")
-        url = BASE_URL + href if href.startswith("/") else href
-
-        # Partido
-        partido_tag = card.select_one(".partido-nome")
-        partido = partido_tag.get_text(strip=True) if partido_tag else "N/D"
-        partido = re.sub(r'\s+', ' ', partido).strip()  # normaliza espaços
-
-        if nome and url:
-            perfis.append({"nome": nome, "url": url, "partido": partido})
-
-    if not perfis:
-        # Fallback: links diretos (caso o HTML mude)
-        print("   ⚠️ Fallback: buscando links diretos de deputado-estadual...")
-        for a in soup.select("a[href*='/deputados/deputado-estadual/']"):
-            nome = a.get_text(strip=True)
-            if nome and len(nome) > 3:
-                url = BASE_URL + a["href"] if a["href"].startswith("/") else a["href"]
-                perfis.append({"nome": nome, "url": url, "partido": "N/D"})
-
-    # ── Captura bloco Observações (suplentes/substituições) ─────────────
-    # O bloco "Observações" fica no rodapé da listagem com parágrafos
-    # tipo: "Nome do Deputado\nAssumiu o mandato..."
-    mapa_observacoes: Dict[str, str] = {}
-    obs_header = soup.find(lambda t: t.name in ["h2","h3","h4","b","strong","p"] 
-                           and t.get_text(strip=True).lower() in ["observações", "observacoes"])
-    if obs_header:
-        bloco = obs_header.find_next_sibling()
-        while bloco:
-            txt = bloco.get_text(separator="\n", strip=True)
-            # Cada observação começa com o nome do parlamentar em uma linha isolada
-            linhas = [l.strip() for l in txt.split("\n") if l.strip()]
-            if len(linhas) >= 2:
-                nome_obs = linhas[0]
-                texto_obs = " ".join(linhas[1:])
-                mapa_observacoes[nome_obs.lower()] = texto_obs
-            bloco = bloco.find_next_sibling()
-            if not bloco or bloco.get_text(strip=True).lower().startswith("atualização"):
-                break
-
-    # Associa as observações aos parlamentares pelo nome
-    for p in perfis:
-        p["observacao_mandato"] = mapa_observacoes.get(p["nome"].lower(), None)
-
-    print(f"   📋 {len(perfis)} parlamentares detectados. | Obs. capturadas: {len(mapa_observacoes)}")
-    return perfis
-
 
 
 def dump_checkpoint(dados: list, out_dir: Path):
@@ -251,38 +177,48 @@ def dump_checkpoint(dados: list, out_dir: Path):
         json.dump({"total": len(dados), "registros": dados}, f, ensure_ascii=False, indent=2)
 
 
-def run(limit: int = 0):
-    print_header(f"ZIDANE-B {VERSAO} | HUB PARLAMENTAR PRISMA")
+def run(legislatura: str = "20", limit: int = 0):
+    print_header(f"ZIDANE-B {VERSAO} | HUB PARLAMENTAR PRISMA (Leg {legislatura})")
     print_status("Iniciando varredura profunda de perfis...", "process")
 
     base_dir = Path("/home/carneiro888/CARNEIRO888/N888N - AGENTIC EXTRATORES/n888n")
     out_dir = base_dir / "data" / "saida" / "parlamentares" / "raw"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    checkpoint_a_path = out_dir / "parlamentares_ids.json"
-    fotos_map = {}
-    if checkpoint_a_path.exists():
-        with open(checkpoint_a_path, "r", encoding="utf-8") as f:
-            data_a = json.load(f)
-            for rec in data_a.get("records", []):
-                fotos_map[rec["parlamentar_id"]] = rec.get("foto_url")
+    checkpoint_a_path = out_dir / f"parlamentares_ids_leg_{legislatura}.json"
+    
+    if not checkpoint_a_path.exists():
+        print(f"💀 Falha crítica: {checkpoint_a_path.name} não encontrado. Execute o Zidane-A primeiro.")
+        return
 
-    lista = scrape_lista()
+    with open(checkpoint_a_path, "r", encoding="utf-8") as f:
+        data_a = json.load(f)
+        lista = data_a.get("records", [])
+
     if not lista:
-        print("💀 Falha crítica: nenhum deputado detectado.")
+        print("💀 Falha crítica: nenhum deputado listado no arquivo do Zidane-A.")
         return
 
     alvos = lista[:limit] if limit > 0 else lista
-    print(f"\n🚀 Processando {len(alvos)} de {len(lista)} parlamentares...\n")
+    print(f"\n🚀 Verificando {len(alvos)} parlamentares da lista...\n")
 
     todos = []
-    for i, item in enumerate(alvos):
-        nome_raw = item["nome"]
-        url = item["url"]
-        partido = item["partido"]
-        p_id = url.rstrip("/").split("/")[-1]
+    processados = 0
+    ignorados = 0
 
-        foto_do_a = fotos_map.get(p_id)
+    for i, item in enumerate(alvos):
+        p_id = item["parlamentar_id"]
+        filename = out_dir / f"parlamentar_{p_id}_oficial.json"
+        
+        if filename.exists():
+            ignorados += 1
+            print(f"{C_CYAN}  ⏭️ SKIP:{C_END} {item['nome_parlamentar']} (Arquivo já existe)")
+            continue
+
+        nome_raw = item["nome_parlamentar"]
+        url = item["url_perfil"]
+        partido = item["partido_atual"]
+        foto_do_a = item.get("foto_url")
 
         # Normalização Prata
         nome_limpo = nome_raw.title().strip()
@@ -331,21 +267,19 @@ def run(limit: int = 0):
         # Checkpoint a cada 10
         if (i + 1) % 10 == 0:
             dump_checkpoint(todos, out_dir)
-            print(f"  💾 Checkpoint salvo ({i+1} deputados).")
-
+        processados += 1
         time.sleep(0.8)
 
-    # Checkpoint final
-    dump_checkpoint(todos, out_dir)
-    
+    # Checkpoint final apenas salva o que foi processado se quiser
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print_status(f"CONCLUÍDO! {C_BOLD}{len(todos)}{C_END} perfis extraídos com metadados PRISMA.", "success")
+    print_status(f"CONCLUÍDO! Novos Extraídos: {C_BOLD}{processados}{C_END} | Ignorados: {C_BOLD}{ignorados}{C_END}.", "success")
     print_status(f"Datalake: {C_WHITE}{out_dir}{C_END}", "info")
     print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--legislatura", type=str, default="20", choices=["17", "18", "19", "20"], help="Qual legislatura baixar")
     parser.add_argument("--limit", type=int, default=0, help="Limita nº de parlamentares (0=todos)")
     args = parser.parse_args()
-    run(limit=args.limit)
+    run(legislatura=args.legislatura, limit=args.limit)

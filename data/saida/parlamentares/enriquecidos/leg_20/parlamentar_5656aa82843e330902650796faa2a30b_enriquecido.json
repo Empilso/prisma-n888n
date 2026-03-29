@@ -1,0 +1,117 @@
+{
+  "prisma_id": "5656aa82843e330902650796faa2a30b",
+  "parlamentar_id": "932114",
+  "nome_eleitoral": "Penalva",
+  "nome_limpo": "Penalva",
+  "partido": "PDT",
+  "sigla_partido": "PDT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932114",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:penalva.jpg",
+  "biografia_completa": "Formação Educacional\nGraduou-se em Administração, pela Universidade Católica do Salvador.\nMandato Eletivo\nEleito vereador do município de Salvador para o período de 2021-2024, licenciou-se do mandato em 2022. Eleito deputado estadual, PDT, para o período de 2023-2027.\nFiliação Partidária\nPODE, 2020 - 2022;\nPDT, 2022 - ;\nAtividade Partidária\nNa Câmara Municipal de Salvador: Líder do Podemos, jan/2021 a mar/2022; presidente da Frente Parlamentar em Defesa do Terceiro Setor. Na Assembleia Legislativa da Bahia: Vice-líder da Bancada da Minoria, 2023. Líder do Bloco Parlamentar Republicanos/PSDB/PDT, fev.2025;\nAtividade Parlamentar\nNa Câmara Municipal de Salvador: Membro das Comissões: de Educação, Esporte e Lazer; Assistência Social e Direitos das Pessoas com Deficiência e Legislação Participativa. \r\nNa Assembleia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2023-2024, 2025. TITULAR DAS COMISSÕES: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2023-2024, 2025. SUPLENTE DAS COMISSÕES: de Finanças, Orçamento, Fiscalização e Controle, 2023-2024, 2025; Conselho de Ética e Decoro Parlamentar (mar. 2024)\nContato\nEndereço:\nPrédio Anexo, gab. 201W\nTel.:\n3115-0939 /\n3115-0979 /\n3115-2984 /\n3115-5595 /\n3115-7275\ndeputadopenalva@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "EMERSON PENALVA LOPES DOS SANTOS",
+    "Profissão": "Político, Administrador e Empresário",
+    "Nascimento": "14/06/1973, Esplanada, Bahia",
+    "Filiação": "Fernando Lopes dos Santos e Glaucia Maria Penalva dos Santos",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Keila Penalva",
+    "Filhos": "Matheus, Maria Fernanda e Maria Helena."
+  },
+  "mandatos": [
+    "Eleito vereador do município de Salvador para o período de 2021-2024, licenciou-se do mandato em 2022. Eleito deputado estadual, PDT, para o período de 2023-2027.",
+    "Filiação Partidária",
+    "PODE, 2020 - 2022;",
+    "PDT, 2022 - ;",
+    "Atividade Partidária",
+    "Na Câmara Municipal de Salvador: Líder do Podemos, jan/2021 a mar/2022; presidente da Frente Parlamentar em Defesa do Terceiro Setor. Na Assembleia Legislativa da Bahia: Vice-líder da Bancada da Minoria, 2023. Líder do Bloco Parlamentar Republicanos/PSDB/PDT, fev.2025;",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Salvador: Membro das Comissões: de Educação, Esporte e Lazer; Assistência Social e Direitos das Pessoas com Deficiência e Legislação Participativa.",
+    "Na Assembleia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2023-2024, 2025. TITULAR DAS COMISSÕES: de Infraestrutura, Desenvolvimento Econômico e Turismo, 2023-2024, 2025. SUPLENTE DAS COMISSÕES: de Finanças, Orçamento, Fiscalização e Controle, 2023-2024, 2025; Conselho de Ética e Decoro Parlamentar (mar. 2024)",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 201W",
+    "Tel.:",
+    "3115-0939 /",
+    "3115-0979 /",
+    "3115-2984 /",
+    "3115-5595 /",
+    "3115-7275",
+    "deputadopenalva@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "deputadopenalva@alba.ba.gov.br",
+    "telefones": [
+      "3115-0939",
+      "3115-0979",
+      "3115-2984",
+      "3115-5595",
+      "3115-7275"
+    ]
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932114",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:56.546354Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "EMERSON PENALVA LOPES DOS SANTOS",
+  "profissao": "Político, Administrador e Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Terceiro Setor",
+    "PDT",
+    "Bancada da Minoria",
+    "Educação",
+    "Experiência Legislativa Local"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Administração",
+      "sub": "Universidade Católica do Salvador — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador de Salvador",
+      "sub": "PODE — 2021-2022 (Licenciado)"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PDT — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Líder do Podemos",
+      "sub": "Câmara Municipal de Salvador — jan/2021 a mar/2022"
+    },
+    {
+      "label": "Presidente da Frente Parlamentar em Defesa do Terceiro Setor",
+      "sub": "Câmara Municipal de Salvador — Não especificado"
+    },
+    {
+      "label": "Vice-líder da Bancada da Minoria",
+      "sub": "Assembleia Legislativa da Bahia — 2023"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar Republicanos/PSDB/PDT",
+      "sub": "Assembleia Legislativa da Bahia — fev.2025"
+    },
+    {
+      "label": "Vice-Presidente da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público",
+      "sub": "Assembleia Legislativa da Bahia — 2023-2024, 2025"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Com formação em Administração, Penalva possui experiência prévia como Vereador em Salvador, onde liderou seu partido e focou no Terceiro Setor. Atualmente, como Deputado Estadual pelo PDT, atua na Minoria e preside a Comissão de Educação, demonstrando foco em políticas sociais e educacionais.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    20
+  ],
+  "flags_validacao": []
+}

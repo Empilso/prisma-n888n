@@ -1,0 +1,38 @@
+{
+  "prisma_id": "b6d6053613d9dc1a5079b9799c20f6d6",
+  "parlamentar_id": "916452",
+  "nome_eleitoral": "Joacy Dourado",
+  "nome_limpo": "Joacy Dourado",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/916452",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JoacyDourado.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o ensino fundamental no Ginásio Augusto Galvão, Campo Formoso-BA, 1954-1958, o ensino médio no Colégio 2 de Julho, Salvador, 1959-1961. Engenheiro Agrônomo formado pela Escola Agronômica da Bahia, Cruz das Almas-BA, 1962-1966.\nAtividade Profissional\nEm Irecê, foi chefe do setor de cadastramento do Instituto Brasileiro de Reforma Agrária, 1967-1968, fundador e  presidente da Cooperativa Mista Agropecuária, 1970-1972, secretário da Prefeitura Municipal , 1972-1976, gerente da Companhia de Desenvolvimento Regional-CAR, 1977-2008.\nMandato Eletivo\nVice prefeito de Irecê, 1997-2000,  prefeito de Irecê , pela Arena, 1977-1982. Eleito prefeito  de Irecê,   PT, 2005-2008. Suplente de deputado  estadual, PT, para o período 2011-2015, assumiu o mandato de fev.2011 a abr.2012. Assumiu o mandato de deputado em 21/07/2014, na vaga do deputado Capitão Tadeu .\nFiliação Partidária\nPT;\nARENA;\nAtividade Parlamentar\nNa Assembleia Legislativa, TITULAR das Comissões: Defesa do Consumidor e Relações de Trabalho (fev./out.2011, 2012), Agricultura e Política Rural (fev./out.2011,2012, ago. 2014-), Especial de Assuntos Territoriais e Emancipação (2011); SUPLENTE da Comissão:  Meio Ambiente, Seca e Recursos Hídricos (2011-2012); Coordenador da Sub-comissão Especial para Desenvolvimento de Est. do Lençol Freático do Semi-Árido Baiano (2011).\nCondecorações\nPrêmio da Criança UNICEF.",
+  "dados_pessoais": {
+    "Nome": "JOACY NUNES DOURADO",
+    "Profissão": "Engenheiro Agrônomo",
+    "Nascimento": "02/06/1940, João Dourado-BA.",
+    "Filiação": "Natanael Nunes Dourado e Geraldina Nunes Dourado",
+    "Sexo": "Masculino",
+    "Cônjuge": "Eneyda Regina Ribeiro Passos Dourado",
+    "Filhos": "Leonardo, Luciano e Davi"
+  },
+  "mandatos": [
+    "Vice prefeito de Irecê, 1997-2000,  prefeito de Irecê , pela Arena, 1977-1982. Eleito prefeito  de Irecê,   PT, 2005-2008. Suplente de deputado  estadual, PT, para o período 2011-2015, assumiu o mandato de fev.2011 a abr.2012. Assumiu o mandato de deputado em 21/07/2014, na vaga do deputado Capitão Tadeu .",
+    "Filiação Partidária",
+    "PT;",
+    "ARENA;",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa, TITULAR das Comissões: Defesa do Consumidor e Relações de Trabalho (fev./out.2011, 2012), Agricultura e Política Rural (fev./out.2011,2012, ago. 2014-), Especial de Assuntos Territoriais e Emancipação (2011); SUPLENTE da Comissão:  Meio Ambiente, Seca e Recursos Hídricos (2011-2012); Coordenador da Sub-comissão Especial para Desenvolvimento de Est. do Lençol Freático do Semi-Árido Baiano (2011)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/916452",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:13.665226Z"
+}

@@ -1,0 +1,53 @@
+{
+  "prisma_id": "0a3eaf9e37463967712c070704f2dcfc",
+  "parlamentar_id": "932101",
+  "nome_eleitoral": "Jordávio Ramos",
+  "nome_limpo": "Jordávio Ramos",
+  "partido": "PSDB",
+  "sigla_partido": "PSDB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932101",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:jordavioramos.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Recanto do Pequeno Príncipe e no Colégio Nossa Senhora Auxiliadora, ambos em Juazeiro e o ensino médio no Colégio Crescimento, em São Luís (MA). Graduando em Medicina pela UNIFTC, Salvador.\nAtividade Profissional\nEstudante de Medicina.\nMandato Eletivo\nEleito deputado estadual, PSDB, para o período 2023-2027.\nFiliação Partidária\nPSDB, 2016 - ;\nAtividade Partidária\nVice-líder do Bloco Parlamentar Republicanos/PSDB/PDT, 2023.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: VICE-PRESIDENTE DA COMISSÃO: de Saúde e Saneamento, 2025. TITULAR DAS COMISSÕES: de Saúde e Saneamento, 2023-2024; de Direitos Humanos e Segurança Pública, 2025. SUPLENTE DAS COMISSÕES: de Agricultura e Política Rural, 2023-2024, 10/02/2025-18/02/2025; Meio Ambiente, Seca e Recursos Hídricos, 2025.\nContato\nEndereço:\nPrédio Anexo, gab. 302, Wilson Lins\nTel.:\n3115-2904 /\n3115-4947 /\n3115-5286 /\n3115-5559 /\n3115-7012\ndeputadojordavioramos@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "JORDAVIO ALEXANDRE ESPINOLA RAMOS",
+    "Profissão": "Estudante de medicina",
+    "Nascimento": "24/12/1993, Juazeiro, Bahia",
+    "Filiação": "Joroastro Espinola Ramos e Suzana Alexandre de Carvalho Ramos",
+    "Sexo": "Masculino"
+  },
+  "mandatos": [
+    "Eleito deputado estadual, PSDB, para o período 2023-2027.",
+    "Filiação Partidária",
+    "PSDB, 2016 - ;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar Republicanos/PSDB/PDT, 2023.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: VICE-PRESIDENTE DA COMISSÃO: de Saúde e Saneamento, 2025. TITULAR DAS COMISSÕES: de Saúde e Saneamento, 2023-2024; de Direitos Humanos e Segurança Pública, 2025. SUPLENTE DAS COMISSÕES: de Agricultura e Política Rural, 2023-2024, 10/02/2025-18/02/2025; Meio Ambiente, Seca e Recursos Hídricos, 2025.",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 302, Wilson Lins",
+    "Tel.:",
+    "3115-2904 /",
+    "3115-4947 /",
+    "3115-5286 /",
+    "3115-5559 /",
+    "3115-7012",
+    "deputadojordavioramos@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "deputadojordavioramos@alba.ba.gov.br",
+    "telefones": [
+      "3115-2904",
+      "3115-4947",
+      "3115-5286",
+      "3115-5559",
+      "3115-7012"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 302, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932101",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:17.442043Z"
+}

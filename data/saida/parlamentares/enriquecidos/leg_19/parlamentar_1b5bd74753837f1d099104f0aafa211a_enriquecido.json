@@ -1,0 +1,86 @@
+{
+  "prisma_id": "1b5bd74753837f1d099104f0aafa211a",
+  "parlamentar_id": "926895",
+  "nome_eleitoral": "Jacó Lula da Silva",
+  "nome_limpo": "Jacó Lula Da Silva",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926895",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Jaco.jpg",
+  "biografia_completa": "Formação Educacional\nColégio Municipal de Jacobina (1976-1979). Escola de Agricultura da Região de Irecê - ESAGRI (1982-1984).\nAtividade Profissional\nCoordenador Executivo do Centro de Assessoria do Assuruá - CAA, 1990. Fundador e coordenador do Articulação do Semiárido Brasileiro - ASA, 1999. Coordenador do Colegiado Territorial de Irecê, 2004-2013. Membro do Fórum Baiano de Agricultura Familiar, 2009-2014.\nMandato Eletivo\nPrimeiro suplente do Partido dos Trabalhadores, 2014. Eleito deputado estadual pela Coligação Força do Trabalho pela Bahia, para o período de 2019-2023.\nFiliação Partidária\nPT, 2019 - ;\nAtividade Partidária\nVice-líder da Bancada do PT, ALBA, 2019-20.\nAtividade Parlamentar\nNa Assembleia Legislativa, PRESIDENTE da Comissão: Direitos Humanos e Segurança Pública (2021-2022); TITULAR das Comissões: Especial da Promoção da Igualdade (2019-2021), Saúde e Saneamento (2019-2022) Agricultura e Política Rural (2019-2022), Defesa do Consumidor e Relações de Trabalho ( mar.-2019-2022), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (2020-2021); SUPLENTE das Comissões:  Constituição e Justiça (dez. 2021-2022) Educação, Cultura, Ciência e Tec. e Serviço Público (2019-20, set.2021; 2022), Meio Ambiente, Seca e Recursos Hídricos (2019-2022), Defesa do Consumidor e Relações de Trabalho (fev.-mar.2019), Direitos da Mulher (2019-2022), Finanças , Orçamento, Fiscalização e Controle (2019-2022).",
+  "dados_pessoais": {
+    "Nome": "MARIO AUGUSTO DE ALMEIDA NETO",
+    "Profissão": "Técnico em Agroecologia",
+    "Nascimento": "17/07/1965, Jacobina - BA",
+    "Filiação": "Raimundo José de Souza e Angelina Lopes Almeida",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Jacira Chagas de Almeida"
+  },
+  "mandatos": [
+    "Primeiro suplente do Partido dos Trabalhadores, 2014. Eleito deputado estadual pela Coligação Força do Trabalho pela Bahia, para o período de 2019-2023.",
+    "Filiação Partidária",
+    "PT, 2019 - ;",
+    "Atividade Partidária",
+    "Vice-líder da Bancada do PT, ALBA, 2019-20.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa, PRESIDENTE da Comissão: Direitos Humanos e Segurança Pública (2021-2022); TITULAR das Comissões: Especial da Promoção da Igualdade (2019-2021), Saúde e Saneamento (2019-2022) Agricultura e Política Rural (2019-2022), Defesa do Consumidor e Relações de Trabalho ( mar.-2019-2022), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (2020-2021); SUPLENTE das Comissões:  Constituição e Justiça (dez. 2021-2022) Educação, Cultura, Ciência e Tec. e Serviço Público (2019-20, set.2021; 2022), Meio Ambiente, Seca e Recursos Hídricos (2019-2022), Defesa do Consumidor e Relações de Trabalho (fev.-mar.2019), Direitos da Mulher (2019-2022), Finanças , Orçamento, Fiscalização e Controle (2019-2022)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926895",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:17.541220Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MARIO AUGUSTO DE ALMEIDA NETO",
+  "profissao": "Técnico em Agroecologia",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Movimento Social",
+    "Agricultura Familiar",
+    "PT",
+    "Direitos Humanos",
+    "Semiárido"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Agricultura",
+      "sub": "Escola de Agricultura da Região de Irecê - ESAGRI — 1984"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Suplente",
+      "sub": "PT — 2014"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder da Bancada do PT",
+      "sub": "ALBA — 2019-2020"
+    },
+    {
+      "label": "Presidente da Comissão de Direitos Humanos e Segurança Pública",
+      "sub": "ALBA — 2021-2022"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Liderança oriunda de movimentos sociais e articulações do semiárido, Jacó Lula foi eleito deputado estadual pelo PT. Sua atuação parlamentar focou em Direitos Humanos, Segurança Pública e Agricultura, exercendo liderança na bancada petista.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "19",
+  "historico_legislaturas": [
+    19
+  ],
+  "flags_validacao": []
+}

@@ -1,0 +1,655 @@
+{
+  "total": 72,
+  "coletado_em": "2026-03-24T14:07:22.538109Z",
+  "metodo": "api",
+  "records": [
+    {
+      "parlamentar_id": 1032112,
+      "autor_id": 5028,
+      "nome_parlamentar": "Deputada Cláudia Oliveira",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/claudiaoliveira1.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032112"
+    },
+    {
+      "parlamentar_id": 1032777,
+      "autor_id": 5190,
+      "nome_parlamentar": "Deputada Fabíola Mansur",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/fabiolamansur.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032777"
+    },
+    {
+      "parlamentar_id": 1010636,
+      "autor_id": 4290,
+      "nome_parlamentar": "Deputada Fátima Nunes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/fatimanunes.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1010636"
+    },
+    {
+      "parlamentar_id": 1015867,
+      "autor_id": 4322,
+      "nome_parlamentar": "Deputada Ivana Bastos",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/ivanabastos.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015867"
+    },
+    {
+      "parlamentar_id": 1026898,
+      "autor_id": 4601,
+      "nome_parlamentar": "Deputada Kátia Oliveira",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/katiaoliveira.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026898"
+    },
+    {
+      "parlamentar_id": 1032107,
+      "autor_id": 5025,
+      "nome_parlamentar": "Deputada Ludmilla Fiscina",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/ludmillafiscina.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032107"
+    },
+    {
+      "parlamentar_id": 1015885,
+      "autor_id": 4327,
+      "nome_parlamentar": "Deputada Maria Del Carmen",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/mariadelcarmen.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015885"
+    },
+    {
+      "parlamentar_id": 1026908,
+      "autor_id": 4606,
+      "nome_parlamentar": "Deputada Olivia Santana",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/oliviasantana.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026908"
+    },
+    {
+      "parlamentar_id": 1032117,
+      "autor_id": 5033,
+      "nome_parlamentar": "Deputada Soane Galvão",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/soanegalvao.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032117"
+    },
+    {
+      "parlamentar_id": 1010629,
+      "autor_id": 4288,
+      "nome_parlamentar": "Deputado Adolfo Menezes",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/adolfomenezes.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1010629"
+    },
+    {
+      "parlamentar_id": 1021263,
+      "autor_id": 4418,
+      "nome_parlamentar": "Deputado Alex da Piatã",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/alexdapiata.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021263"
+    },
+    {
+      "parlamentar_id": 1032104,
+      "autor_id": 5022,
+      "nome_parlamentar": "Deputado Angelo Coronel Filho",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/angelocoronelfilho.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032104"
+    },
+    {
+      "parlamentar_id": 1021264,
+      "autor_id": 4213,
+      "nome_parlamentar": "Deputado Antônio Henrique Júnior",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/antoniohenriquejunior.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021264"
+    },
+    {
+      "parlamentar_id": 1032169,
+      "autor_id": 5052,
+      "nome_parlamentar": "Deputado Binho Galinha",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/binhogalinha.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032169"
+    },
+    {
+      "parlamentar_id": 1021283,
+      "autor_id": 4425,
+      "nome_parlamentar": "Deputado Bobô",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/bobo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021283"
+    },
+    {
+      "parlamentar_id": 1032181,
+      "autor_id": 5059,
+      "nome_parlamentar": "Deputado Cafu Barreto",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/cafubarreto.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032181"
+    },
+    {
+      "parlamentar_id": 1032099,
+      "autor_id": 5017,
+      "nome_parlamentar": "Deputado Dr. Diego Castro",
+      "partido_atual": "PL",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/drdiegocastro.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032099"
+    },
+    {
+      "parlamentar_id": 1026918,
+      "autor_id": 4608,
+      "nome_parlamentar": "Deputado Eduardo Alencar",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/eduardoalencar.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026918"
+    },
+    {
+      "parlamentar_id": 1021268,
+      "autor_id": 4422,
+      "nome_parlamentar": "Deputado Eduardo Salles",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/eduardosalles.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021268"
+    },
+    {
+      "parlamentar_id": 1010635,
+      "autor_id": 4289,
+      "nome_parlamentar": "Deputado Euclides Fernandes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/euclidesfernandes.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1010635"
+    },
+    {
+      "parlamentar_id": 1015868,
+      "autor_id": 4323,
+      "nome_parlamentar": "Deputado Fabrício Falcão",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/fabriciofalcao.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015868"
+    },
+    {
+      "parlamentar_id": 1032102,
+      "autor_id": 5020,
+      "nome_parlamentar": "Deputado Felipe Duarte",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/felipeduarte.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032102"
+    },
+    {
+      "parlamentar_id": 1032105,
+      "autor_id": 5023,
+      "nome_parlamentar": "Deputado Hassan",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/hassan.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032105"
+    },
+    {
+      "parlamentar_id": 1026902,
+      "autor_id": 4604,
+      "nome_parlamentar": "Deputado Hilton Coelho",
+      "partido_atual": "PSOL",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/hiltoncoelho.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026902"
+    },
+    {
+      "parlamentar_id": 1032101,
+      "autor_id": 5019,
+      "nome_parlamentar": "Deputado Jordávio Ramos",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/jordavioramos.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032101"
+    },
+    {
+      "parlamentar_id": 1015859,
+      "autor_id": 4321,
+      "nome_parlamentar": "Deputado José de Arimateia",
+      "partido_atual": "REPUBLICANOS",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/jose-arimateia.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015859"
+    },
+    {
+      "parlamentar_id": 1026901,
+      "autor_id": 4603,
+      "nome_parlamentar": "Deputado Júnior Muniz",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/juniormuniz.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026901"
+    },
+    {
+      "parlamentar_id": 1032103,
+      "autor_id": 5021,
+      "nome_parlamentar": "Deputado Júnior Nascimento",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/juniornaascimento.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032103"
+    },
+    {
+      "parlamentar_id": 1026897,
+      "autor_id": 4600,
+      "nome_parlamentar": "Deputado Jurailton Santos",
+      "partido_atual": "REPUBLICANOS",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/jurailtonsantos.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026897"
+    },
+    {
+      "parlamentar_id": 1026922,
+      "autor_id": 4610,
+      "nome_parlamentar": "Deputado Laerte do Vando",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/laertedovando.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026922"
+    },
+    {
+      "parlamentar_id": 1032100,
+      "autor_id": 5018,
+      "nome_parlamentar": "Deputado Leandro de Jesus",
+      "partido_atual": "PL",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/leandrodejesus.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032100"
+    },
+    {
+      "parlamentar_id": 1032106,
+      "autor_id": 5024,
+      "nome_parlamentar": "Deputado Luciano Araújo",
+      "partido_atual": "SOLIDARIEDADE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/lucianoaraujo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032106"
+    },
+    {
+      "parlamentar_id": 1021278,
+      "autor_id": 4424,
+      "nome_parlamentar": "Deputado Luciano Simões Filho",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/lucianosimoesfilho.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021278"
+    },
+    {
+      "parlamentar_id": 1032118,
+      "autor_id": 5034,
+      "nome_parlamentar": "Deputado Manuel Rocha",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/manuelrocha.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032118"
+    },
+    {
+      "parlamentar_id": 1026899,
+      "autor_id": 4602,
+      "nome_parlamentar": "Deputado Marcelinho Veiga",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/marceloveiga.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026899"
+    },
+    {
+      "parlamentar_id": 1034202,
+      "autor_id": 5365,
+      "nome_parlamentar": "Deputado Marcelino Galo",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/marcelinogalo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1034202"
+    },
+    {
+      "parlamentar_id": 1032147,
+      "autor_id": 5048,
+      "nome_parlamentar": "Deputado Marcinho Oliveira",
+      "partido_atual": "PRD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/marcinhooliveira.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032147"
+    },
+    {
+      "parlamentar_id": 1019329,
+      "autor_id": 4382,
+      "nome_parlamentar": "Deputado Marquinho Viana",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/marquinhoviana.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1019329"
+    },
+    {
+      "parlamentar_id": 1032109,
+      "autor_id": 5027,
+      "nome_parlamentar": "Deputado Matheus Ferreira",
+      "partido_atual": "MDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/matheusferreira.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032109"
+    },
+    {
+      "parlamentar_id": 1003706,
+      "autor_id": 4265,
+      "nome_parlamentar": "Deputado Nelson Leal",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/nelsonleal.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1003706"
+    },
+    {
+      "parlamentar_id": 1026913,
+      "autor_id": 4607,
+      "nome_parlamentar": "Deputado Niltinho",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/niltinho.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026913"
+    },
+    {
+      "parlamentar_id": 1032146,
+      "autor_id": 5047,
+      "nome_parlamentar": "Deputado Pancadinha",
+      "partido_atual": "SOLIDARIEDADE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/pancadinha.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032146"
+    },
+    {
+      "parlamentar_id": 1032113,
+      "autor_id": 5029,
+      "nome_parlamentar": "Deputado Patrick Lopes",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/patricklopes.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032113"
+    },
+    {
+      "parlamentar_id": 1035102,
+      "autor_id": 5554,
+      "nome_parlamentar": "Deputado Paulo Câmara",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/paulocamara.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1035102"
+    },
+    {
+      "parlamentar_id": 1015876,
+      "autor_id": 4325,
+      "nome_parlamentar": "Deputado Pedro Tavares",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/pedrotavares.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015876"
+    },
+    {
+      "parlamentar_id": 1032114,
+      "autor_id": 5030,
+      "nome_parlamentar": "Deputado Penalva",
+      "partido_atual": "PDT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/penalva.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032114"
+    },
+    {
+      "parlamentar_id": 1034726,
+      "autor_id": 5483,
+      "nome_parlamentar": "Deputado Radiovaldo Costa",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/radiovaldo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1034726"
+    },
+    {
+      "parlamentar_id": 1032119,
+      "autor_id": 5035,
+      "nome_parlamentar": "Deputado Raimundinho da JR",
+      "partido_atual": "PL",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/raimundojr.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032119"
+    },
+    {
+      "parlamentar_id": 1032108,
+      "autor_id": 5026,
+      "nome_parlamentar": "Deputado Ricardo Rodrigues",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/ricardorodrigues.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032108"
+    },
+    {
+      "parlamentar_id": 1007278,
+      "autor_id": 4271,
+      "nome_parlamentar": "Deputado Roberto Carlos",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/robertocarlos.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1007278"
+    },
+    {
+      "parlamentar_id": 1021265,
+      "autor_id": 4420,
+      "nome_parlamentar": "Deputado Robinho",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/robinho.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021265"
+    },
+    {
+      "parlamentar_id": 1026905,
+      "autor_id": 4605,
+      "nome_parlamentar": "Deputado Robinson Almeida",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/robinsonalmeida.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026905"
+    },
+    {
+      "parlamentar_id": 1032115,
+      "autor_id": 5031,
+      "nome_parlamentar": "Deputado Rogério Andrade",
+      "partido_atual": "MDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/rogerioandrade1.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032115"
+    },
+    {
+      "parlamentar_id": 1015881,
+      "autor_id": 4326,
+      "nome_parlamentar": "Deputado Rosemberg Pinto",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/rosembergpinto.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015881"
+    },
+    {
+      "parlamentar_id": 1023801,
+      "autor_id": 4506,
+      "nome_parlamentar": "Deputado Samuel Junior",
+      "partido_atual": "REPUBLICANOS",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/samueljunior.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1023801"
+    },
+    {
+      "parlamentar_id": 1007264,
+      "autor_id": 4270,
+      "nome_parlamentar": "Deputado Sandro Régis",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/sandroregis.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1007264"
+    },
+    {
+      "parlamentar_id": 1027093,
+      "autor_id": 4633,
+      "nome_parlamentar": "Deputado Tiago Correia",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/tiagocorreia.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1027093"
+    },
+    {
+      "parlamentar_id": 1032116,
+      "autor_id": 5032,
+      "nome_parlamentar": "Deputado Vitor Azevedo",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/vitorazevedo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032116"
+    },
+    {
+      "parlamentar_id": 1021274,
+      "autor_id": 4423,
+      "nome_parlamentar": "Deputado Vitor Bonfim",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/vitorbonfim.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021274"
+    },
+    {
+      "parlamentar_id": 1015869,
+      "autor_id": 4324,
+      "nome_parlamentar": "Deputado Zé Raimundo Fontes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/zeraimundofontes.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015869"
+    },
+    {
+      "parlamentar_id": 1021266,
+      "autor_id": 4421,
+      "nome_parlamentar": "Deputado Zó",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/zo.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021266"
+    },
+    {
+      "parlamentar_id": 1021276,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Luciano Ribeiro",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/luciano_ribeiro.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1021276"
+    },
+    {
+      "parlamentar_id": 1035240,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Marcone Amaral",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/marconi_amaral.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1035240"
+    },
+    {
+      "parlamentar_id": 1032367,
+      "autor_id": 5124,
+      "nome_parlamentar": "Deputada Neusa Cadore",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/neusacadore.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032367"
+    },
+    {
+      "parlamentar_id": 1015887,
+      "autor_id": 4328,
+      "nome_parlamentar": "Deputado Alan Sanches",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/alansanches.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1015887"
+    },
+    {
+      "parlamentar_id": 1029445,
+      "autor_id": 4779,
+      "nome_parlamentar": "Deputado Angelo Almeida",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/angeloalmeida.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1029445"
+    },
+    {
+      "parlamentar_id": 1032110,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Eures Ribeiro",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/euresribeiro1.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032110"
+    },
+    {
+      "parlamentar_id": 1035220,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Jusmari Oliveira",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/jusmarioliveira.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1035220"
+    },
+    {
+      "parlamentar_id": 1034727,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Lucinha do MST",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/lucinha.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1034727"
+    },
+    {
+      "parlamentar_id": 1026914,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Osni Cardoso",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/osnicardoso.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1026914"
+    },
+    {
+      "parlamentar_id": 1032111,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Pablo Roberto",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/pabloroberto.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1032111"
+    },
+    {
+      "parlamentar_id": 1008845,
+      "autor_id": null,
+      "nome_parlamentar": "Deputado(a) Paulo Rangel",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://albalegis.nopapercloud.com.brhttps://albalegis.nopapercloud.com.br/arquivo/documents/migracao/vereadores/fotos/paulorangel.jpg",
+      "url_perfil": "https://albalegis.nopapercloud.com.br/spl/parlamentar.aspx?id=1008845"
+    }
+  ]
+}

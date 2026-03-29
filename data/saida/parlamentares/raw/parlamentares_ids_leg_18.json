@@ -1,0 +1,630 @@
+{
+  "total": 69,
+  "coletado_em": "2026-03-29T15:34:03.867328Z",
+  "fonte": "al.ba.gov.br",
+  "metodo": "scraping_oficial",
+  "versao": "v5.0-prisma-ids-multileg",
+  "records": [
+    {
+      "parlamentar_id": "903708",
+      "nome_parlamentar": "Aderbal Caldas",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AderbalCaldas.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/903708",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "910629",
+      "nome_parlamentar": "Adolfo Menezes",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AdolfoMenezes.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/910629",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915860",
+      "nome_parlamentar": "Adolfo Viana",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AdolfoViana.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915860",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921261",
+      "nome_parlamentar": "Alan Castro",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AlanCastro.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921261",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915887",
+      "nome_parlamentar": "Alan Sanches",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:alansanches.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915887",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921263",
+      "nome_parlamentar": "Alex da Piatã",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AlexdaPiata.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921263",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921262",
+      "nome_parlamentar": "Alex Lima",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AlexLima.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921262",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "926882",
+      "nome_parlamentar": "Anderson Muniz",
+      "partido_atual": "PTN",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Anderson_Muniz.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926882",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "910630",
+      "nome_parlamentar": "Angela Sousa",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AngelaSousa.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/910630",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "929445",
+      "nome_parlamentar": "Angelo Almeida",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AngeloAlmeida.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929445",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "907281",
+      "nome_parlamentar": "Ângelo Coronel",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AngeloCoronel.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907281",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921264",
+      "nome_parlamentar": "Antonio Henrique Júnior",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AntonioHenriqueJunior.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921264",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915861",
+      "nome_parlamentar": "Augusto Castro",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AugustoCastro.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915861",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "929593",
+      "nome_parlamentar": "Bira Corôa Lula",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:BiraCoroa.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929593",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921283",
+      "nome_parlamentar": "Bobô",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Bobo.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921283",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915862",
+      "nome_parlamentar": "Bruno Reis",
+      "partido_atual": "MDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:BrunoReis.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915862",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "929540",
+      "nome_parlamentar": "Carlos Geilson",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:CarlosGeilson.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929540",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "929592",
+      "nome_parlamentar": "Carlos Ubaldino",
+      "partido_atual": "PDT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:CarlosUbaldino.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929592",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921267",
+      "nome_parlamentar": "David Rios",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:DavidRios.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921267",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921268",
+      "nome_parlamentar": "Eduardo Salles",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:EduardoSalles.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921268",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "910635",
+      "nome_parlamentar": "Euclides Fernandes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:euclidesfernandes.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/910635",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921269",
+      "nome_parlamentar": "Fábio Souto",
+      "partido_atual": "DEM",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Fabio_Souto1.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921269",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "932777",
+      "nome_parlamentar": "Fabíola Mansur",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:FabiolaMansur.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932777",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915868",
+      "nome_parlamentar": "Fabrício Falcão",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:FabricioFalcao.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915868",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "910636",
+      "nome_parlamentar": "Fátima Nunes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:fatimanunes.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/910636",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921271",
+      "nome_parlamentar": "Gika Lopes Lula",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Gika.jpg%20",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921271",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "923809",
+      "nome_parlamentar": "Heber Santana",
+      "partido_atual": "PSC",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:HeberSantana.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/923809",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921839",
+      "nome_parlamentar": "Herzem Gusmão",
+      "partido_atual": "MDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Herzem%20Gusmao.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921839",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921272",
+      "nome_parlamentar": "Hildécio Meireles",
+      "partido_atual": "PSC",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:HildecioMeireles.jpg%20",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921272",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915867",
+      "nome_parlamentar": "Ivana Bastos",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:IvanaBastos.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915867",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921273",
+      "nome_parlamentar": "Janio Natal",
+      "partido_atual": "PL",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JanioNatal.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921273",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915859",
+      "nome_parlamentar": "Jose de Arimateia",
+      "partido_atual": "REPUBLICANOS",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:jose-arimateia.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915859",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915880",
+      "nome_parlamentar": "Joseildo Ramos Lula",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JoseildoRamos.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915880",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "919328",
+      "nome_parlamentar": "Jurandy Oliveira",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JurandyOliveira.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/919328",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "910643",
+      "nome_parlamentar": "Leur Lomanto Júnior",
+      "partido_atual": "DEM",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LeurLomanto.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/910643",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921278",
+      "nome_parlamentar": "Luciano Simões Filho",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LucianoSimoesFilho.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921278",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "930496",
+      "nome_parlamentar": "Luiz Augusto",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LuizAugusto1.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/930496",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915878",
+      "nome_parlamentar": "Luiza Maia Lula",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LuizaMaia.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915878",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921281",
+      "nome_parlamentar": "Manassés",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Manasses.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921281",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "934202",
+      "nome_parlamentar": "Marcelino Galo",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:marcelinogalo.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/934202",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921279",
+      "nome_parlamentar": "Marcell dos Animais",
+      "partido_atual": "PSDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:MacellMoraes.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921279",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "900067",
+      "nome_parlamentar": "Marcelo Nilo",
+      "partido_atual": "PSB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:MarceloNilo.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/900067",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915885",
+      "nome_parlamentar": "Maria del Carmen",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:mariadelcarmen.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915885",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "919329",
+      "nome_parlamentar": "Marquinho Viana",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:MarquinhoViana.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/919329",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "923798",
+      "nome_parlamentar": "Mirela Macedo",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Mirela.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/923798",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "903706",
+      "nome_parlamentar": "Nelson Leal",
+      "partido_atual": "PP",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:NelsonLeal.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/903706",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "932367",
+      "nome_parlamentar": "Neusa Cadore",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:NeusaCadore.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932367",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921282",
+      "nome_parlamentar": "Pablo Barrozo",
+      "partido_atual": "DEM",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Pablo_Barroso.jpg%20",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921282",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915884",
+      "nome_parlamentar": "Pastor Sargento Isidório",
+      "partido_atual": "AVANTE",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:SargentoIsidorio.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915884",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "901255",
+      "nome_parlamentar": "Paulo Câmera",
+      "partido_atual": "PR",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:PauloCamera.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/901255",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "908845",
+      "nome_parlamentar": "Paulo Rangel",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:paulorangel.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/908845",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915876",
+      "nome_parlamentar": "Pedro Tavares",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:PedroTavares.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915876",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "931033",
+      "nome_parlamentar": "Reinaldo Braga",
+      "partido_atual": "PL",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:ReinaldoBraga.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/931033",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921277",
+      "nome_parlamentar": "Robério Oliveira",
+      "partido_atual": "PSD",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Roberio_Oliveira.jpg%20",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921277",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "907278",
+      "nome_parlamentar": "Roberto Carlos",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:RobertoCarlos.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907278",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921265",
+      "nome_parlamentar": "Robinho",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Robinho.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921265",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "932115",
+      "nome_parlamentar": "Rogério Andrade",
+      "partido_atual": "MDB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:rogerioandrade1.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932115",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915881",
+      "nome_parlamentar": "Rosemberg Pinto",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:rosembergpinto.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915881",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "923801",
+      "nome_parlamentar": "Samuel Junior",
+      "partido_atual": "REPUBLICANOS",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:SamuelJunior.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/923801",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "907264",
+      "nome_parlamentar": "Sandro Régis",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:SandroRegis.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907264",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915858",
+      "nome_parlamentar": "Sidelvan Nóbrega",
+      "partido_atual": "PSC",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:SidelvanNobrega.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915858",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921280",
+      "nome_parlamentar": "Soldado Prisco",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:SoldadoPrisco.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921280",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915883",
+      "nome_parlamentar": "Targino Machado",
+      "partido_atual": "DEM",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:TarginoMachado.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915883",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915871",
+      "nome_parlamentar": "Tom Araújo",
+      "partido_atual": "UNIÃO",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:TomAraujo.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915871",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915865",
+      "nome_parlamentar": "Vando",
+      "partido_atual": "PSC",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Vando.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915865",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921274",
+      "nome_parlamentar": "Vitor Bonfim",
+      "partido_atual": "PV",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:vitorbonfim.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921274",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "907274",
+      "nome_parlamentar": "Zé Neto Lula",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:ZeNeto.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907274",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "915869",
+      "nome_parlamentar": "Zé Raimundo Fontes",
+      "partido_atual": "PT",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:zeraimundofontes.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915869",
+      "observacao_mandato": null
+    },
+    {
+      "parlamentar_id": "921266",
+      "nome_parlamentar": "Zó",
+      "partido_atual": "PCdoB",
+      "status": "ativo",
+      "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Zo.jpg",
+      "url_perfil": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921266",
+      "observacao_mandato": null
+    }
+  ]
+}

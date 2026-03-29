@@ -1,0 +1,113 @@
+{
+  "prisma_id": "2fa134ee4c9ab5ba5bde6a5a9ed7fa06",
+  "parlamentar_id": "915871",
+  "nome_eleitoral": "Tom Araújo",
+  "nome_limpo": "Tom Araújo",
+  "partido": "UNIÃO",
+  "sigla_partido": "UNIÃO",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915871",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:TomAraujo.jpg",
+  "biografia_completa": "Formação Educacional\nSuperior completo.\nAtividade Profissional\nPecuarista.\nMandato Eletivo\nPrefeito de Conceição do Coité-BA, 2001-2004. Eleito deputado estadual pelo Democratas - DEM, para os períodos de   2011-2015 e 2015-2019. Reeleito para o período de 2019-2023.\nFiliação Partidária\nPP, 1995 - 2009;\nDEM, 2009 - 2022;\nUNIÃO, 2022 - ;\nAtividade Partidária\nVice-líder da Bancada da Minoria, ALBA, 2011; Vice-líder do Bloco  Parlamentar PMDB/DEM, ALBA, 2013. Vice-líder do DEM, ALBA, out.2013-2014.  Líder do Bloco Parlamentar DEM/PV,  ALBA, 2017-2018. Vice-líder do Bloco Parlamentar DEM/PRB, 2018; Vice-líder da Minoria, ALBA, 2021- mar. 2022. Líder do Bloco Parlamentar DEM/MDB, mar. 2022- abril. 2022. Líder do Bloco Parlamentar UNIÃO/PL, abril. 2022.\nAtividade Parlamentar\nNa Assembléia Legislativa:  2º VICE-PRESIDENTE da Mesa  Diretora ( 2015-2017); 2º SECRETÁRIO da Mesa Diretora (2019-2021);   PRESIDENTE da Comissão de  Infra-estrutura, Desenvolvimento Econômico e Turismo (2011);     VICE-PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2014); TITULAR das  Comissões:  Agricultura e Política Rural (fev.-out.2011, 2021-2022), Saúde e Saneamento (2013-2014), Meio Ambiente, seca e Recursos Hídricos (2017-2018), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2022);    SUPLENTE das Comissões: Educação, Cultura, Ciência e Tecnologia e Serviço Público (fev.-out.2011),  Extraordinária para Acompanhar a Privatização dos Cartórios (2012, 2014), Meio Ambiente, Seca e Recursos Hídricos (2013-2014), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2017-2018, 2021).\nCondecorações\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "TOM PASSOS DE ARAUJO",
+    "Nascimento": "04/04/1976, Conceição do Coité-BA.",
+    "Filiação": "Hamilton Rios de Araújo e Ana Maria Passos de Araújo",
+    "Sexo": "Masculino",
+    "Cônjuge": "Eméria Zuleika Resedá Araújo",
+    "Filhos": "Anna Maria e Lucas"
+  },
+  "mandatos": [
+    "Prefeito de Conceição do Coité-BA, 2001-2004. Eleito deputado estadual pelo Democratas - DEM, para os períodos de   2011-2015 e 2015-2019. Reeleito para o período de 2019-2023.",
+    "Filiação Partidária",
+    "PP, 1995 - 2009;",
+    "DEM, 2009 - 2022;",
+    "UNIÃO, 2022 - ;",
+    "Atividade Partidária",
+    "Vice-líder da Bancada da Minoria, ALBA, 2011; Vice-líder do Bloco  Parlamentar PMDB/DEM, ALBA, 2013. Vice-líder do DEM, ALBA, out.2013-2014.  Líder do Bloco Parlamentar DEM/PV,  ALBA, 2017-2018. Vice-líder do Bloco Parlamentar DEM/PRB, 2018; Vice-líder da Minoria, ALBA, 2021- mar. 2022. Líder do Bloco Parlamentar DEM/MDB, mar. 2022- abril. 2022. Líder do Bloco Parlamentar UNIÃO/PL, abril. 2022.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa:  2º VICE-PRESIDENTE da Mesa  Diretora ( 2015-2017); 2º SECRETÁRIO da Mesa Diretora (2019-2021);   PRESIDENTE da Comissão de  Infra-estrutura, Desenvolvimento Econômico e Turismo (2011);     VICE-PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2014); TITULAR das  Comissões:  Agricultura e Política Rural (fev.-out.2011, 2021-2022), Saúde e Saneamento (2013-2014), Meio Ambiente, seca e Recursos Hídricos (2017-2018), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2022);    SUPLENTE das Comissões: Educação, Cultura, Ciência e Tecnologia e Serviço Público (fev.-out.2011),  Extraordinária para Acompanhar a Privatização dos Cartórios (2012, 2014), Meio Ambiente, Seca e Recursos Hídricos (2013-2014), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2017-2018, 2021)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915871",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:46.568110Z",
+  "data_nascimento": "1976-04-04",
+  "municipio_nascimento": "Conceição do Coité",
+  "uf_nascimento": "BA",
+  "nome_civil": "TOM PASSOS DE ARAUJO",
+  "profissao": null,
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Pecuarista",
+    "DEM",
+    "UNIÃO",
+    "Liderança de Bloco",
+    "Mesa Diretora"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Superior completo",
+      "sub": "Não especificada — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Prefeito de Conceição do Coité-BA",
+      "sub": "Não especificado — 2001-2004"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "DEM — 2011-2015"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "DEM — 2015-2019"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "UNIÃO — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder da Bancada da Minoria",
+      "sub": "ALBA — 2011"
+    },
+    {
+      "label": "Vice-líder do Bloco Parlamentar PMDB/DEM",
+      "sub": "ALBA — 2013"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar DEM/PV",
+      "sub": "ALBA — 2017-2018"
+    },
+    {
+      "label": "2º Vice-Presidente da Mesa Diretora",
+      "sub": "ALBA — 2015-2017"
+    },
+    {
+      "label": "2º Secretário da Mesa Diretora",
+      "sub": "ALBA — 2019-2021"
+    },
+    {
+      "label": "Presidente da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo",
+      "sub": "ALBA — 2011"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Pecuarista com experiência no executivo municipal como Prefeito, Tom Araújo consolidou sua força no legislativo estadual, transitando por partidos como PP, DEM e União. É conhecido por sua participação ativa na liderança de blocos parlamentares e por ocupar cargos de destaque na Mesa Diretora da ALBA.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "18",
+  "historico_legislaturas": [
+    17,
+    18,
+    19
+  ],
+  "flags_validacao": []
+}

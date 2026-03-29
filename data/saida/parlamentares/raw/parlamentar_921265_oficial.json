@@ -1,0 +1,49 @@
+{
+  "prisma_id": "0a1e6057fe0dab1597937a87f20493d5",
+  "parlamentar_id": "921265",
+  "nome_eleitoral": "Robinho",
+  "nome_limpo": "Robinho",
+  "partido": "UNIÃO",
+  "sigla_partido": "UNIO",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/921265",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Robinho.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental no Colégio Santo Antônio, Nanuque, MG e o ensino médio no Instituto Petropolitano Adventista - IPAE, Rio de Janeiro,RJ.\nAtividade Profissional\nAgropecuarista. Presidente da APES- Associação de Prefeitos do Extremo Sul,2007-2008, reeleito presidente, 2009-2011.\nMandato Eletivo\nEleito prefeito do município de Nova Viçosa, BA, pelo Partido do Movimento Democrático Brasileiro- PMDB, 2005-2008 e 2009-2012. Eleito deputado estadual, pelo Partido Progressista-PP, 2015-2019. Reeleito pelo PP, Coligação Força do Trabalho pela Bahia, para o período de 2019-2023; reeleito deputado estadual pela União Brasil, para o período 2023-2027.\nFiliação Partidária\nPTB, 1998 - 1999;\nMDB, 1999 - 2012;\nPP, 2013 - 2022;\nUNIÃO, 2022 - ;\nAtividade Partidária\nVice-Líder do Bloco Parlamentar PP/PSL/PSB, ALBA, fev/2015. Vice-Líder do Bloco da Maioria , ALBA, 2016. Líder do Bloco Parlamentar PP/PODEMOS/PSB, ALBA, 2017. Líder do PP, 2018. Vice-líder do PP, 2022 -abril, 2022; Vice-líder do Bloco Parlamentar UNIÃO/PL, abril. 2022; Líder do União Brasil, mar. 2024.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2019-2021). TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (fev.-out.2015, 2023-2024, 2025); Infraestrutura, Desenvolvimento Econômico e Turismo (2015-2018); Especial de Desenvolvimento Regional (2015-2018); Especial da Promoção da Igualdade (2015-2018); Especial de Assuntos Territoriais e Emancipação (2019-2020); SUPLENTE da Comissão Especial de Assuntos Territoriais e Emancipação (2016-2018, 2020); Conselho de Ética e Decoro Parlamentar (mar. 2024).\nCondecorações\nTítulo de Cidadão Capixaba, 2010.\nContato\nEndereço:\nPrédio Anexo, gab. 304, Wilson Lins\nTel.:\n3115-4026 /\n3115-5369 /\n3115-5370 /\n3115-7018 /\n3115-7137\nrobinho@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "CARLOS ROBSON RODRIGUES DA SILVA",
+    "Profissão": "Agropecuarista",
+    "Nascimento": "14/10/1965, Nanuque -MG",
+    "Filiação": "Ananias Nunes e Ivanilde Nunes",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Luciana Souza Machado Rodrigues",
+    "Filhos": "Pedro Bernardo, Heitor Chácara, Laura e Raquel"
+  },
+  "mandatos": [
+    "Eleito prefeito do município de Nova Viçosa, BA, pelo Partido do Movimento Democrático Brasileiro- PMDB, 2005-2008 e 2009-2012. Eleito deputado estadual, pelo Partido Progressista-PP, 2015-2019. Reeleito pelo PP, Coligação Força do Trabalho pela Bahia, para o período de 2019-2023; reeleito deputado estadual pela União Brasil, para o período 2023-2027.",
+    "Filiação Partidária",
+    "PTB, 1998 - 1999;",
+    "MDB, 1999 - 2012;",
+    "PP, 2013 - 2022;",
+    "UNIÃO, 2022 - ;",
+    "Atividade Partidária",
+    "Vice-Líder do Bloco Parlamentar PP/PSL/PSB, ALBA, fev/2015. Vice-Líder do Bloco da Maioria , ALBA, 2016. Líder do Bloco Parlamentar PP/PODEMOS/PSB, ALBA, 2017. Líder do PP, 2018. Vice-líder do PP, 2022 -abril, 2022; Vice-líder do Bloco Parlamentar UNIÃO/PL, abril. 2022; Líder do União Brasil, mar. 2024.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE da Comissão de Finanças, Orçamento, Fiscalização e Controle (2019-2021). TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (fev.-out.2015, 2023-2024, 2025); Infraestrutura, Desenvolvimento Econômico e Turismo (2015-2018); Especial de Desenvolvimento Regional (2015-2018); Especial da Promoção da Igualdade (2015-2018); Especial de Assuntos Territoriais e Emancipação (2019-2020); SUPLENTE da Comissão Especial de Assuntos Territoriais e Emancipação (2016-2018, 2020); Conselho de Ética e Decoro Parlamentar (mar. 2024)."
+  ],
+  "contatos": {
+    "email": "robinho@alba.ba.gov.br",
+    "telefones": [
+      "3115-4026",
+      "3115-5369",
+      "3115-5370",
+      "3115-7018",
+      "3115-7137"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 304, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/921265",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:22:04.346357Z"
+}

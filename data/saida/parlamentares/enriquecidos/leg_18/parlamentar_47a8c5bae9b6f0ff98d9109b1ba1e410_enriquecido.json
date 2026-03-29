@@ -1,0 +1,95 @@
+{
+  "prisma_id": "47a8c5bae9b6f0ff98d9109b1ba1e410",
+  "parlamentar_id": "915865",
+  "nome_eleitoral": "Vando",
+  "nome_limpo": "Vando",
+  "partido": "PSC",
+  "sigla_partido": "PSC",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915865",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Vando.jpg",
+  "biografia_completa": "Formação Educacional\nLicenciatura em Geografia.\nAtividade Profissional\nSecretário Municipal de Infraestrutura do município de Monte Santo-BA.\nMandato Eletivo\nEleito deputado estadual pelo Partido Social Cristão - PSC, para os períodos de 2011-2015 e 2015-2019, renunciou em dezembro de 2016. Eleito prefeito de Monte Santo, para o período de  2017-2020.\nFiliação Partidária\nPSC, 2003 - 2016;\nAtividade Partidária\nVice-líder do Bloco Parlamentar PTN/PSC/PRP, ALBA, 2011- out.2013. Vice-líder do Bloco Parlamentar PV/PSC/PR/PRB, ALBA, 2013-2014. Vice-Líder do Bloco Parlamentar PSDB/PRB/PSC, ALBA, 2015; vice-líder do Bloco Parlamentar PRB/PSDB/PSC/PV, 2016.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia, TITULAR das Comissões:  Finanças, Orçamento, Fiscalização e Controle (fev.-out.2011), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2015-2016), Especial de Desenvolvimento Urbano (2015), Especial de Desporto, Paradesporto e Lazer (2015); SUPLENTE  das Comissões: Infra-estrutura, Desenvolvimento Economico e Turismo (2011, 2013), Finanças, Orçamento, Fiscalização e Controle (2011), Agricultura e Política Rural (2015-2016); coordenador da Sub-comissão Especial de Acompanhamento da Gestão Fiscal (2011); membro da Sub-comissão de Prevenção as Irregularidades nas Relações de Consumo (2011).\nCondecorações\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "EDIVAN FERNANDES DE ALMEIDA",
+    "Profissão": "Contador.",
+    "Nascimento": "16/06/1955,  Monte Santo-BA.",
+    "Filiação": "Antonia Fernandes de Almeida.",
+    "Sexo": "Masculino",
+    "Cônjuge": "Maria Almerinda de Araujo Fernandes.",
+    "Filhos": "Laís e Laerte."
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Social Cristão - PSC, para os períodos de 2011-2015 e 2015-2019, renunciou em dezembro de 2016. Eleito prefeito de Monte Santo, para o período de  2017-2020.",
+    "Filiação Partidária",
+    "PSC, 2003 - 2016;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar PTN/PSC/PRP, ALBA, 2011- out.2013. Vice-líder do Bloco Parlamentar PV/PSC/PR/PRB, ALBA, 2013-2014. Vice-Líder do Bloco Parlamentar PSDB/PRB/PSC, ALBA, 2015; vice-líder do Bloco Parlamentar PRB/PSDB/PSC/PV, 2016.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia, TITULAR das Comissões:  Finanças, Orçamento, Fiscalização e Controle (fev.-out.2011), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2015-2016), Especial de Desenvolvimento Urbano (2015), Especial de Desporto, Paradesporto e Lazer (2015); SUPLENTE  das Comissões: Infra-estrutura, Desenvolvimento Economico e Turismo (2011, 2013), Finanças, Orçamento, Fiscalização e Controle (2011), Agricultura e Política Rural (2015-2016); coordenador da Sub-comissão Especial de Acompanhamento da Gestão Fiscal (2011); membro da Sub-comissão de Prevenção as Irregularidades nas Relações de Consumo (2011)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915865",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:49.336536Z",
+  "data_nascimento": "1955-06-16",
+  "municipio_nascimento": "Monte Santo",
+  "uf_nascimento": "BA",
+  "nome_civil": "EDIVAN FERNANDES DE ALMEIDA",
+  "profissao": "Contador.",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "PSC",
+    "Retorno ao Executivo Municipal",
+    "Finanças e Orçamento",
+    "Atuação em Blocos",
+    "Geografia"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Licenciatura em Geografia",
+      "sub": "Não informado — Não informado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSC — 2011-2015"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSC — 2015-2016"
+    },
+    {
+      "label": "Prefeito de Monte Santo",
+      "sub": "Não informado — 2017-2020"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do Bloco Parlamentar PTN/PSC/PRP",
+      "sub": "ALBA — 2011-out.2013"
+    },
+    {
+      "label": "Vice-Líder do Bloco Parlamentar PSDB/PRB/PSC",
+      "sub": "ALBA — 2015"
+    },
+    {
+      "label": "TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle",
+      "sub": "ALBA — fev.-out.2011"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Deputado Estadual pelo PSC que renunciou ao mandato para assumir a prefeitura de Monte Santo, demonstrando forte base municipal. Sua passagem pela ALBA incluiu liderança em blocos e participação na Comissão de Finanças e Orçamento.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "18",
+  "historico_legislaturas": [
+    17,
+    18
+  ],
+  "flags_validacao": []
+}

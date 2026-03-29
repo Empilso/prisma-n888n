@@ -1,0 +1,40 @@
+{
+  "prisma_id": "6fc8cf43d3a568e63c09fd71c8eb9a61",
+  "parlamentar_id": "929454",
+  "nome_eleitoral": "Josafá Marinho",
+  "nome_limpo": "Josafá Marinho",
+  "partido": "PATRIOTA",
+  "sigla_partido": "PATRIOTA",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929454",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JosafaMarinho.jpg",
+  "biografia_completa": "Formação Educacional\nFormado em Direito pela Faculdade de Artes, Ciências e Tecnologias de Salvador - FACET (2004-2007). Especialista em Direito Público e Eleitoral (2007-2008).\nAtividade Profissional\nCoordenador do Departamento Nacional de Obras Contra as Secas na Bahia - DNOCS (2012-2015). Coordenador do Escritório de Federal de Aquicultura e Pesca na Bahia, vinculado à Secretaria Especial da Aquicultura e da Pesca da Secretaria Geral da Presidência da República (2016-2018).\nMandato Eletivo\nEleito suplente de Deputado Estadual pela coligação Patriota/Rede em 2018, tomou posse em 05/11/2020 em substituição ao Dep. Tom é meu Amigo (PSL), que teve perda de mandato declarada pelo TSE.\nFiliação Partidária\nPATRIOTA, 2018 - ;\nAtividade Partidária\nLíder do Bloco Parlamentar Patriota/PSL/PSC, 2020- abril. 2022; Líder do Bloco Parlamentar PCdoB/Avante/Patriota, abril 2022.\nAtividade Parlamentar\nNa Assembleia Legislativa: TITULAR DAS COMISSÕES: Meio ambiente, Seca e Recursos Hídricos (2021-2022).",
+  "dados_pessoais": {
+    "Nome": "JOSAFA MARINHO DE AGUIAR",
+    "Profissão": "Advogado",
+    "Nascimento": "19/11/1973, Presidente Jânio Quadros-BA",
+    "Filiação": "Marinho Gonçalves de Aguiar e Santa Ribeiro Lopes de Aguiar",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Jucyara",
+    "Filhos": "Sarah"
+  },
+  "mandatos": [
+    "Eleito suplente de Deputado Estadual pela coligação Patriota/Rede em 2018, tomou posse em 05/11/2020 em substituição ao Dep. Tom é meu Amigo (PSL), que teve perda de mandato declarada pelo TSE.",
+    "Filiação Partidária",
+    "PATRIOTA, 2018 - ;",
+    "Atividade Partidária",
+    "Líder do Bloco Parlamentar Patriota/PSL/PSC, 2020- abril. 2022; Líder do Bloco Parlamentar PCdoB/Avante/Patriota, abril 2022.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa: TITULAR DAS COMISSÕES: Meio ambiente, Seca e Recursos Hídricos (2021-2022)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929454",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:18.840179Z"
+}

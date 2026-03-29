@@ -1,0 +1,50 @@
+{
+  "prisma_id": "926b01269815ba1518408e93c7f599d5",
+  "parlamentar_id": "921263",
+  "nome_eleitoral": "Alex da Piatã",
+  "nome_limpo": "Alex Da Piatã",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/921263",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AlexdaPiata.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Chapeuzinho Vermelho e Escola Bem-Me-Quer, Conceição do Coité, 1978-1983 e 1984-1987, respectivamente. Ensino médio no Colégio Águia e Colégio Sartre, Salvador,1988 e 1989-1990. Bacharel em Ciências Econômicas pela Faculdade Católica de Ciências Econômicas da Bahia, Salvador, 1991-1996. Especialização  em Gestão Empresarial, Fundação Getúlio Vargas, 1998-2000.\nAtividade Profissional\nSecretário de Saúde de Conceição do Coité. Diretor-Presidente do Grupo Lopes Empreendimentos, Conceição do Coité, desde 1994.\nMandato Eletivo\nEleito vice-prefeito de Conceição do Coité, PMDB, 2013-2016, renunciou ao mandato em 2014. Eleito deputado estadual, PMDB, 2015-2019. Reeleito pelo PSD, Coligação Força do Trabalho pela Bahia, para o período 2019-2023. Reeleito deputado estadual, PSD, para o período 2023-2027.\nFiliação Partidária\nMDB, 2006 - 2016;\nPSD, 2016 - ;\nAtividade Partidária\nLíder da Bancada do PSD, ALBA, 2019-20.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: PRESIDENTE das Comissões: Especial de Desenvolvimento Regional (2015-maio2016-2018), Saúde e Saneamento (2016-2018, 2023, 2024, 2025); TITULAR DAS COMISSÕES: Saúde e Saneamento (2015, 2020-2022), Especial de Desenvolvimento Urbano (2015, jun.2016-2018), Conselho de Ética e Decoro Parlamentar (2017; mar. 2024), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (2020); SUPLENTE da Comissão Especial da Promoção da Igualdade (2015-2018).\nCondecorações\nTroféu Destaque Parlamentar, Comitê de Imprensa, Assembleia Legislativa da Bahia, 2015-2017, 2021, 2022; Prêmio Rui Barbosa,  Comitê de Imprensa, Assembleia Legislativa da Bahia, 2022.\nContato\nEndereço:\nPrédio Anexo, gab. 108, Wilson Lins\nTel.:\n3115-2926 /\n3115-4074 /\n3115-5243 /\n3115-5253 /\n3115-5542 /\n3115-7189 /\n3115-7374 /\n3115-7375\nalexdapiata@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "ALEX LOPES DA SILVA",
+    "Profissão": "Economista",
+    "Nascimento": "03/03/1974, Conceição do Coité-BA",
+    "Filiação": "Antonio Lopes da Silva Subrinho e Ana Rita Ferreira da Silva",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Genivalda Pinto da Silva",
+    "Filhos": "Lavínia, Letícia e Léo"
+  },
+  "mandatos": [
+    "Eleito vice-prefeito de Conceição do Coité, PMDB, 2013-2016, renunciou ao mandato em 2014. Eleito deputado estadual, PMDB, 2015-2019. Reeleito pelo PSD, Coligação Força do Trabalho pela Bahia, para o período 2019-2023. Reeleito deputado estadual, PSD, para o período 2023-2027.",
+    "Filiação Partidária",
+    "MDB, 2006 - 2016;",
+    "PSD, 2016 - ;",
+    "Atividade Partidária",
+    "Líder da Bancada do PSD, ALBA, 2019-20.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE das Comissões: Especial de Desenvolvimento Regional (2015-maio2016-2018), Saúde e Saneamento (2016-2018, 2023, 2024, 2025); TITULAR DAS COMISSÕES: Saúde e Saneamento (2015, 2020-2022), Especial de Desenvolvimento Urbano (2015, jun.2016-2018), Conselho de Ética e Decoro Parlamentar (2017; mar. 2024), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (2020); SUPLENTE da Comissão Especial da Promoção da Igualdade (2015-2018)."
+  ],
+  "contatos": {
+    "email": "alexdapiata@alba.ba.gov.br",
+    "telefones": [
+      "3115-2926",
+      "3115-4074",
+      "3115-5243",
+      "3115-5253",
+      "3115-5542",
+      "3115-7189",
+      "3115-7374",
+      "3115-7375"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 108, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/921263",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:20:51.851163Z"
+}

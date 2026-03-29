@@ -28,9 +28,9 @@ __PRISMA_MANIFEST__ = {
         "4. Integridade Referencial: Nenhum registro sem prisma_id é enviado.",
     ],
     "apuracao": {
-        "alvo": "Tabela 'parlamentares' no projeto DADOS-PRISMA (hrrzwhkosgzungqxlcps)",
-        "formato": "Relacional + JSONB (colunas dedicadas por campo de IA)",
-        "total_esperado": 63,
+        "safras_suportadas": ["17", "18", "19", "20 (Atual)"],
+        "entrada_esperada": "data/saida/parlamentares/parlamentares_hub_normalized.json",
+        "saida_esperada": "Supabase PRISMA DADOS (Tabela parlamentares)"
     }
 }
 
@@ -65,23 +65,20 @@ def main():
         print(f"{C_RED}❌ ERRO: Chave do Supabase não encontrada no .env{C_END}")
         sys.exit(1)
 
-    # 2. Carregar Hub
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    hub_path = base_dir / "data" / "saida" / "parlamentares" / "parlamentares_hub_normalized.json"
-
-    if not hub_path.exists():
-        print(f"{C_RED}❌ ERRO: {hub_path.name} não encontrado.{C_END}")
-        sys.exit(1)
-
-    with open(hub_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    records = data.get("parlamentares", [])
-    if not records:
-        print(f"{C_YELLOW}⚠️ Nenhum parlamentar encontrado no Hub.{C_END}")
+    import glob
+    enriquecidos_dir = base_dir / "data" / "saida" / "parlamentares" / "enriquecidos"
+    
+    json_files = glob.glob(str(enriquecidos_dir / "**" / "*.json"), recursive=True)
+    if not json_files:
+        print(f"{C_YELLOW}⚠️ Nenhum parlamentar encontrado em {enriquecidos_dir}.{C_END}")
         sys.exit(0)
 
-    print(f"{C_CYAN}📦 {len(records)} parlamentares carregados do Hub Normalizado.{C_END}")
+    records = []
+    for fp in json_files:
+        with open(fp, "r", encoding="utf-8") as f:
+            records.append(json.load(f))
+
+    print(f"{C_CYAN}📦 {len(records)} biografias carregadas de {enriquecidos_dir}.{C_END}")
     print(f"{C_CYAN}🎯 Alvo: {supa_url}/rest/v1/parlamentares{C_END}\n")
     sys.stdout.flush()
 
@@ -101,14 +98,34 @@ def main():
     for r in records:
         nome_urna  = r.get("nome_eleitoral") or r.get("nome_limpo") or r.get("nome_civil") or "Desconhecido"
         nome_civil = r.get("nome_civil") or r.get("nome_limpo") or r.get("nome_eleitoral") or "Parlamentar ALBA"
+        
         prisma_id  = r.get("prisma_id")
 
         if not prisma_id:
-            print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Ignorado {nome_urna} (sem prisma_id){C_END}")
+            print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Ignorado {nome_urna} (sem prisma_id_base){C_END}")
             erros += 1
             continue
 
-        contatos = r.get("contatos", {}) or {}
+        telefone = r.get("contatos", {}) or {}
+        # ---- GOLDEN RECORD: PRE-CHECK IDENTIDADE NO BANDO ----
+        q_nome = r.get("nome_limpo")
+        db_legislaturas = []
+        if q_nome:
+            try:
+                # Busca exata pelo nome normalizado
+                check_url = f"{endpoint}?nome_normalizado=eq.{requests.utils.quote(q_nome)}&select=prisma_id,legislaturas"
+                check_resp = requests.get(check_url, headers=headers, timeout=10)
+                if check_resp.status_code == 200:
+                    matches = check_resp.json()
+                    if matches and len(matches) > 0:
+                        # Achou! Vamos herdar o ID existente em vez de criar duplicata
+                        old_id = prisma_id
+                        prisma_id = matches[0]["prisma_id"]
+                        db_legislaturas = matches[0].get("legislaturas") or []
+                        if old_id != prisma_id:
+                            print(f"{C_CYAN}[ZIDANE-D] 🔗 Golden Record (Match): {q_nome} ➔ Herdado ID: {prisma_id[:8]}{C_END}")
+            except Exception as e:
+                print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Erro no Pre-Check de Identidade: {e}{C_END}")
         sexo_bruto = r.get("sexo", "")
         sexo_tratado = (
             sexo_bruto[0].upper()
@@ -149,9 +166,10 @@ def main():
             "biografia_completa":   r.get("biografia_completa"),
             "biografia_resumo":     r.get("biografia_resumo"),
 
-            # Mandatos
+            # Mandatos e Legislaturas
             "mandatos":             r.get("mandatos", []),
             "mandatos_count":       r.get("mandatos_count", 0),
+            "legislaturas":         list(set(db_legislaturas + ([str(r.get("legislatura"))] if r.get("legislatura") else []))),
 
             # Contato
             "email":                contatos.get("email") if isinstance(contatos, dict) else None,

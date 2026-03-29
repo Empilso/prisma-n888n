@@ -6,6 +6,10 @@ export default {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                condensed: ['"Barlow Condensed"', 'ui-sans-serif', 'sans-serif'],
+                ui: ['Barlow', 'ui-sans-serif', 'sans-serif'],
+            },
             colors: {
                 opal: {
                     50: '#f0f7f7',

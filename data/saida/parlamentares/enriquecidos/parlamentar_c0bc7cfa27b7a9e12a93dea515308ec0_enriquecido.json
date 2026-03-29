@@ -1,0 +1,86 @@
+{
+  "prisma_id": "c0bc7cfa27b7a9e12a93dea515308ec0",
+  "parlamentar_id": "926917",
+  "nome_eleitoral": "Tum",
+  "nome_limpo": "Tum",
+  "partido": "AVANTE",
+  "sigla_partido": "AVANTE",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926917",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Tum.jpg",
+  "biografia_completa": "Formação Educacional\nBacharel em Turismo, UNICALDAS, Caldas Novas.\nAtividade Profissional\nAssessor do deputado federal Bebeto Galvão (PSB), empresário. Secretário de Agricultura, Irrigação, Pesca e Aquicultura do Estado da Bahia, 2023.\nMandato Eletivo\nEleito deputado estadual pela Coligação Bahia Livre, para o período 2019-2023. Licenciou-se do cargo para assumir a Secretaria de Agricultura, Pecuária, Pesca e Aquicultura (Seagri) em 03/01/2023.\nFiliação Partidária\nPSC, 2018 - 2022;\nAVANTE, 2022 - ;\nAtividade Partidária\nVice-líder do Bloco Parlamentar PSDB/PSC, ALBA, 2019-20;  Vice-líder do Bloco Parlamentar Patriota/PSL/PSC, 2020.\nAtividade Parlamentar\nNa Assembléia Legislativa da Bahia, TITULAR DA COMISSÃO: Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I) (abril 2019/-);  SUPLENTE DA COMISSÃO: Especial de Acompanhamento e Fiscalização das Barragens (2019-2020), Meio Ambiente, Seca e Recursos Hídricos ( abr.2019-2022), Infraestrutura, Desenvolvimento Econômico e Turismo (abr. 2019-2022)",
+  "dados_pessoais": {
+    "Nome": "WALLISON OLIVEIRA TORRES",
+    "Nascimento": "11/02/1981, Petrolina - PE",
+    "Filiação": "Almir Torres da Silva e Maria Auxiliadora Oliveira Torres",
+    "Sexo": "Masculino",
+    "Estado Civil": "solteiro",
+    "Filhos": "Antonela, Davi, Valentina"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pela Coligação Bahia Livre, para o período 2019-2023. Licenciou-se do cargo para assumir a Secretaria de Agricultura, Pecuária, Pesca e Aquicultura (Seagri) em 03/01/2023.",
+    "Filiação Partidária",
+    "PSC, 2018 - 2022;",
+    "AVANTE, 2022 - ;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar PSDB/PSC, ALBA, 2019-20;  Vice-líder do Bloco Parlamentar Patriota/PSL/PSC, 2020.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa da Bahia, TITULAR DA COMISSÃO: Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I) (abril 2019/-);  SUPLENTE DA COMISSÃO: Especial de Acompanhamento e Fiscalização das Barragens (2019-2020), Meio Ambiente, Seca e Recursos Hídricos ( abr.2019-2022), Infraestrutura, Desenvolvimento Econômico e Turismo (abr. 2019-2022)"
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926917",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:29.431949Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "WALLISON OLIVEIRA TORRES",
+  "profissao": null,
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Secretariado Estadual",
+    "Turismo",
+    "Infraestrutura",
+    "Liderança de Bloco",
+    "Empresário"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Bacharel em Turismo",
+      "sub": "UNICALDAS, Caldas Novas — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Secretário de Agricultura, Irrigação, Pesca e Aquicultura do Estado da Bahia",
+      "sub": "Não especificado — 2023"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "Coligação Bahia Livre — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do Bloco Parlamentar",
+      "sub": "PSDB/PSC, ALBA — 2019-2020"
+    },
+    {
+      "label": "Vice-líder do Bloco Parlamentar",
+      "sub": "Patriota/PSL/PSC, 2020"
+    },
+    {
+      "label": "Titular da Comissão",
+      "sub": "Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I) — abril 2019/-"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Com formação em Turismo, Tum transitou entre o legislativo estadual e o executivo, atuando como Secretário de Agricultura. Sua passagem pela ALBA foi marcada por liderança em blocos parlamentares e participação em comissões de desenvolvimento econômico.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

@@ -1,0 +1,80 @@
+{
+  "prisma_id": "86167cdce4ed11d5aeb61bcf43413bba",
+  "parlamentar_id": "926970",
+  "nome_eleitoral": "Talita Oliveira",
+  "nome_limpo": "Talita Oliveira",
+  "partido": "REPUBLICANOS",
+  "sigla_partido": "REPUBLICAN",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926970",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:TalitaOliveira.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental  no Colégio Adventista, Brasília-DF, e no Colégio São Jorge, Ilhéus, 1992. Concluiu o o segundo grau no Colégio São Jorge, Ilhéus, 2003. Curso incompleto de Direito, Universidade Católica do Salvador. Cursos: Gestão de Políticas Sociais, Empreendedorismo em Países Emergentes e Gestão Pública.\nAtividade Profissional\nEmpresária. Idealizadora da \"Força da Mulher Empreendedora\", AFME. Coordenadora de projetos, Universidade Católica do Salvador.\nMandato Eletivo\nEleita deputada estadual, pela Coligação Renova Bahia, para o período 2019-2023.\nFiliação Partidária\nPSL, 2018 - 2022;\nREPUBLICANOS, 2022 - ;\nAtividade Parlamentar\nNa Assembleia Legislativa, 3ª SECRETÁRIA da Mesa Diretora, 2019-2021. SUPLENTE da MESA DIRETORA, 2021-2023. VICE-PRESIDENTE DAS COMISSÕES de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2021-2022; Especial para Avaliação do Impacto da Pandemia do Covid-19, 2021; TITULAR DAS COMISSÕES: Especial da Promoção da Igualdade, 2019-2020; Direitos da Mulher, 2019-2022; Educação, Cultura, Ciência e Tecnologia e Serviço Público, maio 2019-20. SUPLENTE DAS COMISSÕES: Defesa do Consumidor e Relações de Trabalho, 2021-2022. Ouvidora Parlamentar, 2021-2023.",
+  "dados_pessoais": {
+    "Nome": "TALITA SANTOS DE OLIVEIRA PEIXOTO",
+    "Profissão": "Gestora pública",
+    "Nascimento": "20/08/1985, Brasília - DF",
+    "Filiação": "Raimundo Santos de Oliveira e Sueli Santos de Oliveira",
+    "Sexo": "Feminino",
+    "Estado Civil": "Casada"
+  },
+  "mandatos": [
+    "Eleita deputada estadual, pela Coligação Renova Bahia, para o período 2019-2023.",
+    "Filiação Partidária",
+    "PSL, 2018 - 2022;",
+    "REPUBLICANOS, 2022 - ;",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa, 3ª SECRETÁRIA da Mesa Diretora, 2019-2021. SUPLENTE da MESA DIRETORA, 2021-2023. VICE-PRESIDENTE DAS COMISSÕES de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2021-2022; Especial para Avaliação do Impacto da Pandemia do Covid-19, 2021; TITULAR DAS COMISSÕES: Especial da Promoção da Igualdade, 2019-2020; Direitos da Mulher, 2019-2022; Educação, Cultura, Ciência e Tecnologia e Serviço Público, maio 2019-20. SUPLENTE DAS COMISSÕES: Defesa do Consumidor e Relações de Trabalho, 2021-2022. Ouvidora Parlamentar, 2021-2023."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926970",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:26.716894Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "TALITA SANTOS DE OLIVEIRA PEIXOTO",
+  "profissao": "Gestora pública",
+  "sexo": "Feminino",
+  "tags_estrategicas": [
+    "Empreendedorismo",
+    "Mesa Diretora",
+    "Educação",
+    "Direitos da Mulher",
+    "REPUBLICANOS"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Curso incompleto de Direito",
+      "sub": "Universidade Católica do Salvador — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputada Estadual",
+      "sub": "Coligação Renova Bahia — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "3ª Secretária da Mesa Diretora",
+      "sub": "ALBA — 2019-2021"
+    },
+    {
+      "label": "Suplente da Mesa Diretora",
+      "sub": "ALBA — 2021-2023"
+    },
+    {
+      "label": "Vice-Presidente da Comissão",
+      "sub": "Educação, Cultura, Ciência e Tecnologia e Serviço Público — 2021-2022"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Empresária e idealizadora de movimentos femininos, Talita Oliveira ocupou cargos de destaque na Mesa Diretora da ALBA, incluindo a 3ª Secretaria. Sua atuação parlamentar concentrou-se nas comissões de Educação e Direitos da Mulher.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

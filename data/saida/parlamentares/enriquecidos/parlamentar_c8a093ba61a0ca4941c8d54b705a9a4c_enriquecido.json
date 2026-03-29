@@ -1,0 +1,83 @@
+{
+  "prisma_id": "c8a093ba61a0ca4941c8d54b705a9a4c",
+  "parlamentar_id": "915888",
+  "nome_eleitoral": "Luizinho Sobral",
+  "nome_limpo": "Luizinho Sobral",
+  "partido": "PTN",
+  "sigla_partido": "PTN",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915888",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LuizinhoSobral.jpg",
+  "biografia_completa": "Formação Educacional\nEstuda Direito na Universidade Católica de Salvador - UCSAL.\nAtividade Profissional\nComerciante.\nMandato Eletivo\nEm Salvador eleito vereador, pelo Partido Trabalhista Nacional - PTN, 2009-2012, renunciou ao mandato em janeiro de 2011. Suplente de deputado estadual - PTN, 2011-2015, assumiu o mandato em 02 de fevereiro de 2011.  Renunciou ao mandato de deputado estadual (dez./2012), para assumir o cargo de Prefeito do município de Irecê, 2013-2016.\nFiliação Partidária\nPTN;\nAtividade Partidária\nVice-líder do Bloco Parlamentar - PSC / PTN, ALBA - 2011.\nAtividade Parlamentar\nNa Câmara Municipal de Salvador, titular das Comissões: Transporte, Trânsito e Serviços Municipais, Planejamento Urbano e Meio Ambiente. Na Assembléia Legislativa, PRESIDENTE da Comissão Especial da Copa de 2014 (2011-2012); TITULAR das Comissões: Agricultura e Política Rural (2011-2012),  Direitos da Mulher (2011-2012), Meio Ambiente, Seca e Recursos Hídricos (2011-2012), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011); SUPLENTE das Comissões: Especial da Promoção da Igualdade (2011-2012).\nCondecorações\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "LUIZ PIMENTEL SOBRAL",
+    "Profissão": "Nascimento:",
+    "08/06/1978, Irecê-BA": "Filiação:",
+    "Luiz Bezerra Sobral e Ivone Pimentel Sobral": "Estado Civil:"
+  },
+  "mandatos": [
+    "Em Salvador eleito vereador, pelo Partido Trabalhista Nacional - PTN, 2009-2012, renunciou ao mandato em janeiro de 2011. Suplente de deputado estadual - PTN, 2011-2015, assumiu o mandato em 02 de fevereiro de 2011.  Renunciou ao mandato de deputado estadual (dez./2012), para assumir o cargo de Prefeito do município de Irecê, 2013-2016.",
+    "Filiação Partidária",
+    "PTN;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar - PSC / PTN, ALBA - 2011.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Salvador, titular das Comissões: Transporte, Trânsito e Serviços Municipais, Planejamento Urbano e Meio Ambiente. Na Assembléia Legislativa, PRESIDENTE da Comissão Especial da Copa de 2014 (2011-2012); TITULAR das Comissões: Agricultura e Política Rural (2011-2012),  Direitos da Mulher (2011-2012), Meio Ambiente, Seca e Recursos Hídricos (2011-2012), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011); SUPLENTE das Comissões: Especial da Promoção da Igualdade (2011-2012)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915888",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:26.997256Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "LUIZ PIMENTEL SOBRAL",
+  "profissao": "Nascimento:",
+  "sexo": null,
+  "tags_estrategicas": [
+    "Mandato Executivo Local",
+    "Comerciante",
+    "PTN/PFL Alinhado",
+    "Foco em Copa do Mundo",
+    "Suplente Efetivado"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito (Estudante)",
+      "sub": "Universidade Católica de Salvador - UCSAL — Cursando"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador",
+      "sub": "PTN — 2009-2012"
+    },
+    {
+      "label": "Deputado Estadual (Suplente)",
+      "sub": "PTN — 2011-2015"
+    },
+    {
+      "label": "Prefeito de Irecê",
+      "sub": "Não informado — 2013-2016"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do Bloco Parlamentar",
+      "sub": "PSC / PTN, ALBA - 2011"
+    },
+    {
+      "label": "PRESIDENTE da Comissão Especial da Copa de 2014",
+      "sub": "ALBA — 2011-2012"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Político com experiência executiva como Prefeito de Irecê e legislativa como Vereador e Deputado Estadual. Sua carreira demonstra alinhamento com o bloco PTN/PSC na ALBA. Sua trajetória inclui a renúncia de mandatos para assumir cargos executivos locais.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

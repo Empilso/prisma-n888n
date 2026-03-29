@@ -1,0 +1,36 @@
+{
+  "prisma_id": "82096170224b6c1debffa697f19dfe62",
+  "parlamentar_id": "915860",
+  "nome_eleitoral": "Adolfo Viana",
+  "nome_limpo": "Adolfo Viana",
+  "partido": "PSDB",
+  "sigla_partido": "PSDB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915860",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AdolfoViana.jpg",
+  "biografia_completa": "Formação Educacional\nFez o 2º grau no Colégio São Paulo e curso incompleto de Administração de Empresas, Salvador-BA.\nMandato Eletivo\nEleito deputado estadual pelo Partido da Social Democracia Brasileira - PSDB, 2011-2015, reeleito pelo mesmo partido, 2015-2019. Eleito deputado federal, 2019-2023.\nFiliação Partidária\nPSDB, 2007 - 2018;\nAtividade Partidária\nLider do Bloco Parlamentar PSDB/PR, ALBA, 2013. Líder do Bloco Parlamentar PSDB/PTN/PRP, ALBA,  out. 2013-2014; líder do Bloco PRB/PSDB/PSC/PV, ALBA, 2016. Líder do Bloco Parlamentar PSDB/PRB/, PV, ALBA, 2016; Lider do Bloco Parlamentar PSDB/PRB/PPS, ALBA,2017. Vice-líder do Bloco Parlamentar PSDB/PSC, abr.2018-\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia,  PRESIDENTE da Comissão: Meio Ambiente, Seca e Recursos Hídricos (2011), ; VICE-PRESIDENTE: Comissão Especial de Desenvolvimento Urbano (2014- mar.2015); Procurador Parlamentar (2015);  TITULAR das Comissões: Meio Ambiente, Seca e Recursos Hídricos (2011, 2013-2014), Defesa do Consumidor e Relações de Trabalho (2011, 2015-maio2016), Especial de Desenvolvimento Urbano (2013), Conselho de Ética e Decoro Parlamentar (2015-2017), Direitos Humanos e Segurança Pública (maio 2016-2018); SUPLENTE das Comissões de Infraestrutura, Desenvolvimento Econômico e Turismo (2011), Especial da Copa de 2014 (2013-2014), Meio Ambiente, Seca e Recursos Hídricos (2015-2018). Representante da ALBA, para integrar a Agenda de discussões do Fórum União pelo Nordeste, 2015.\nCondecorações\nTroféu Destaque Parlamentar, Comitê de Imprensa, Assembléia Legislativa da Bahia, 2016, 2017 e 2018.\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "ADOLFO VIANA DE CASTRO NETO",
+    "Profissão": "Nascimento:",
+    "02/02/1981, Salvador-BA": "Filiação:",
+    "Antonio Honorato de Castro Neto e Italva Maria Almeida Castro": "Sexo:"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido da Social Democracia Brasileira - PSDB, 2011-2015, reeleito pelo mesmo partido, 2015-2019. Eleito deputado federal, 2019-2023.",
+    "Filiação Partidária",
+    "PSDB, 2007 - 2018;",
+    "Atividade Partidária",
+    "Lider do Bloco Parlamentar PSDB/PR, ALBA, 2013. Líder do Bloco Parlamentar PSDB/PTN/PRP, ALBA,  out. 2013-2014; líder do Bloco PRB/PSDB/PSC/PV, ALBA, 2016. Líder do Bloco Parlamentar PSDB/PRB/, PV, ALBA, 2016; Lider do Bloco Parlamentar PSDB/PRB/PPS, ALBA,2017. Vice-líder do Bloco Parlamentar PSDB/PSC, abr.2018-",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia,  PRESIDENTE da Comissão: Meio Ambiente, Seca e Recursos Hídricos (2011), ; VICE-PRESIDENTE: Comissão Especial de Desenvolvimento Urbano (2014- mar.2015); Procurador Parlamentar (2015);  TITULAR das Comissões: Meio Ambiente, Seca e Recursos Hídricos (2011, 2013-2014), Defesa do Consumidor e Relações de Trabalho (2011, 2015-maio2016), Especial de Desenvolvimento Urbano (2013), Conselho de Ética e Decoro Parlamentar (2015-2017), Direitos Humanos e Segurança Pública (maio 2016-2018); SUPLENTE das Comissões de Infraestrutura, Desenvolvimento Econômico e Turismo (2011), Especial da Copa de 2014 (2013-2014), Meio Ambiente, Seca e Recursos Hídricos (2015-2018). Representante da ALBA, para integrar a Agenda de discussões do Fórum União pelo Nordeste, 2015."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915860",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:27:14.118946Z"
+}

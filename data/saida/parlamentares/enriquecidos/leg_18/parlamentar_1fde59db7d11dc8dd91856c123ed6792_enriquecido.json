@@ -1,0 +1,97 @@
+{
+  "prisma_id": "1fde59db7d11dc8dd91856c123ed6792",
+  "parlamentar_id": "921281",
+  "nome_eleitoral": "Manassés",
+  "nome_limpo": "Manassés",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921281",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Manasses.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Municipal Sergio Milliet, 1974-1980, e o  2º grau na E.E. Caramuru,1981-1984, São Paulo.\nAtividade Profissional\nDiretor Presidente  da ONSOCCER Brasil, 2001-2015, Florianópolis - SC. Presidente do Instituto Social Manassés, 1998-2010, Salvador - BA.\nMandato Eletivo\nEleito deputado estadual, pelo PSB, 2015-2019.\nFiliação Partidária\nPSB;\nPSL, 2016 - 2017;\nPROS, 2017 - 2018;\nPSD, 2018 - ;\nAtividade Partidária\nVice-Líder da Maioria, ALBA, 2015-2016.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia,  4º   VICE-PRESIDENTE da Mesa Diretora, 2017-2019; VICE-PRESIDENTE da Comissão Especial de Desporto, Paradesporto e Lazer (2015-2018);     TITULAR DAS COMISSÕES:  Educação, Cultura, Ciência e Tecnologia (2018) , Direitos Humanos e Segurança Pública (2015-2016), Especial da Promoção da Igualdade ( fev.-abr.2015-), Especial de Desporto, Paradesporto e Lazer (2018-);     SUPLENTE DAS COMISSÕES: Saúde e Saneamento (2015-2016), Especial da Promoção da Igualdade (2015-2018-).\nCondecorações\nCidadão Lauro Freitense.  Revista Omnira e União Baiana de Escritores, serviços prestados a filantropia do país, personalidade de importância comunitária. Título de Cidadão Baiano, ALBA, ago.2017.",
+  "dados_pessoais": {
+    "Nome": "MARCOS ANTONIO NOVAIS",
+    "Profissão": "Empresário",
+    "Nascimento": "13/02/1963, Campinas - SP",
+    "Filiação": "Jose Antonio de Lima Novais e Hedith Loureiro Novais",
+    "Sexo": "Masculino",
+    "Estado Civil": "solteiro",
+    "Cônjuge": "Maria Elaide",
+    "Filhos": "Caio, Igor, Felipe, Marcos Filho"
+  },
+  "mandatos": [
+    "Eleito deputado estadual, pelo PSB, 2015-2019.",
+    "Filiação Partidária",
+    "PSB;",
+    "PSL, 2016 - 2017;",
+    "PROS, 2017 - 2018;",
+    "PSD, 2018 - ;",
+    "Atividade Partidária",
+    "Vice-Líder da Maioria, ALBA, 2015-2016.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia,  4º   VICE-PRESIDENTE da Mesa Diretora, 2017-2019; VICE-PRESIDENTE da Comissão Especial de Desporto, Paradesporto e Lazer (2015-2018);     TITULAR DAS COMISSÕES:  Educação, Cultura, Ciência e Tecnologia (2018) , Direitos Humanos e Segurança Pública (2015-2016), Especial da Promoção da Igualdade ( fev.-abr.2015-), Especial de Desporto, Paradesporto e Lazer (2018-);     SUPLENTE DAS COMISSÕES: Saúde e Saneamento (2015-2016), Especial da Promoção da Igualdade (2015-2018-)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921281",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:50.657300Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MARCOS ANTONIO NOVAIS",
+  "profissao": "Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Filantropia",
+    "PSB",
+    "Mesa Diretora",
+    "Direitos Humanos",
+    "Liderança de Bloco"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ensino Fundamental/2º Grau",
+      "sub": "Escola Municipal Sergio Milliet/E.E. Caramuru — Não informado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSB — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Diretor Presidente da ONSOCCER Brasil",
+      "sub": "Não informado — 2001-2015"
+    },
+    {
+      "label": "Presidente do Instituto Social Manassés",
+      "sub": "Não informado — 1998-2010"
+    },
+    {
+      "label": "Vice-Líder da Maioria",
+      "sub": "ALBA — 2015-2016"
+    },
+    {
+      "label": "4º Vice-Presidente da Mesa Diretora",
+      "sub": "Assembleia Legislativa da Bahia — 2017-2019"
+    }
+  ],
+  "condecoracoes": [
+    "Cidadão Lauro Freitense",
+    "Título de Cidadão Baiano (2017)"
+  ],
+  "biografia_resumo": "Com experiência prévia em gestão de organizações sociais e empresariais, Manassés ingressou na ALBA pelo PSB, onde rapidamente ascendeu a posições de destaque na Mesa Diretora. Sua atuação parlamentar abrangeu direitos humanos e igualdade, indicando alinhamento com pautas progressistas.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "18",
+  "historico_legislaturas": [
+    18
+  ],
+  "flags_validacao": []
+}

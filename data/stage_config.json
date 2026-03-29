@@ -5,8 +5,8 @@
       "y": -1000
     },
     "1_2": {
-      "x": -2180,
-      "y": -1060
+      "x": -2220,
+      "y": -1040
     },
     "1_3": {
       "x": -800,
@@ -41,8 +41,8 @@
       "y": 440
     },
     "2_3": {
-      "x": 300,
-      "y": 100
+      "x": 480,
+      "y": -120
     },
     "2_4": {
       "x": 780,
@@ -130,29 +130,47 @@
         "animated": false
       },
       {
+        "id": "e-2-3",
+        "source": "2",
+        "target": "3",
         "type": "smoothstep",
         "style": {
           "strokeWidth": 2,
-          "stroke": "rgba(255,255,255,0.15)"
+          "stroke": "rgba(255,255,255,0.08)"
         },
-        "source": "2",
-        "sourceHandle": null,
-        "target": "ronaldo",
-        "targetHandle": null,
-        "id": "reactflow__edge-2-ronaldo",
         "animated": false
       },
       {
+        "id": "e-3-ronaldo",
+        "source": "3",
+        "target": "ronaldo",
         "type": "smoothstep",
         "style": {
           "strokeWidth": 2,
-          "stroke": "rgba(255,255,255,0.15)"
+          "stroke": "rgba(255,255,255,0.08)"
         },
+        "animated": false
+      },
+      {
+        "id": "e-ronaldo-dunga",
         "source": "ronaldo",
-        "sourceHandle": null,
+        "target": "dunga",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
+        "animated": false
+      },
+      {
+        "id": "e-dunga-zidane_d",
+        "source": "dunga",
         "target": "zidane_d",
-        "targetHandle": null,
-        "id": "reactflow__edge-ronaldo-zidane_d",
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.08)"
+        },
         "animated": false
       }
     ],

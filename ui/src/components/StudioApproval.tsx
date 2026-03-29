@@ -329,19 +329,7 @@ const StudioApproval = ({ isOpen, onClose, activeLayer, onLayerChange }: StudioA
                         </button>
                     </div>
 
-                    <div className="flex p-1 bg-white/[0.03] border border-white/[0.06] rounded-2xl mb-6">
-                        {layers.map(l => (
-                            <button
-                                key={l.key}
-                                onClick={() => onLayerChange(l.key)}
-                                className={`flex-1 flex flex-col items-center py-2.5 rounded-xl transition-all ${activeLayer === l.key ? 'bg-white/10 shadow-lg text-white' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'}`}
-                                title={l.desc}
-                            >
-                                <span className="text-lg mb-1">{l.icon}</span>
-                                <span className="text-[9px] font-black uppercase tracking-wider">{l.label}</span>
-                            </button>
-                        ))}
-                    </div>
+
 
                     <div className="flex-1 flex flex-col min-h-0">
                         <div className="flex items-center justify-between px-2 mb-4 shrink-0">

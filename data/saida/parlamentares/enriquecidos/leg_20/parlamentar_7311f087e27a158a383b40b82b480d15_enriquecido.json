@@ -1,0 +1,109 @@
+{
+  "prisma_id": "7311f087e27a158a383b40b82b480d15",
+  "parlamentar_id": "932118",
+  "nome_eleitoral": "Manuel Rocha",
+  "nome_limpo": "Manuel Rocha",
+  "partido": "UNIÃO",
+  "sigla_partido": "UNIÃO",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932118",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:manuelrocha.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental no Colégio São Paulo, entre 1990 e 1994, e o ensino médio no Colégio Marista, entre 1995 e 2000; graduado em Direito pela Faculdade Jorge Amado, 2007; concluiu o MBA em Gestão Empresarial, na Fundação Getúlio Vargas, entre 2019 e 2020.\nAtividade Profissional\nAssessor Jurídico de Desembargador, Tribunal de Justiça da Bahia, 2008-2012.\nMandato Eletivo\nEleito prefeito do município de Coribe, PR, 2013-2016. Reeleito prefeito do município de Coribe, PR, 2016-2020. Eleito deputado estadual, União Brasil, 2019-2023.\nFiliação Partidária\nPFL, 2008 - 2012;\nPR, 2010 - 2022;\nUNIÃO, 2022 - ;\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO: de Agricultura e Política Rural, 2023-2024, 2025.\nObras e Trabalhos\nO potencial do Agro na Bahia precisa ser aproveitado, Jornal A Tarde, 18/03/2023.\nContato\nEndereço:\nPrédio Anexo, gab. 103, Wilson Lins\nTel.:\n3115-7295\nmanuelrocha@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "MANUEL AZEVEDO ROCHA",
+    "Profissão": "Advogado",
+    "Nascimento": "27/12/1983, Salvador, Bahia",
+    "Filiação": "José Alves Rocha e Noelma Cleia Bastos Azevedo Rocha",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Marcela Drummond de Andrade Rocha",
+    "Filhos": "Maitê e Manuel"
+  },
+  "mandatos": [
+    "Eleito prefeito do município de Coribe, PR, 2013-2016. Reeleito prefeito do município de Coribe, PR, 2016-2020. Eleito deputado estadual, União Brasil, 2019-2023.",
+    "Filiação Partidária",
+    "PFL, 2008 - 2012;",
+    "PR, 2010 - 2022;",
+    "UNIÃO, 2022 - ;",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO: de Agricultura e Política Rural, 2023-2024, 2025.",
+    "Obras e Trabalhos",
+    "O potencial do Agro na Bahia precisa ser aproveitado, Jornal A Tarde, 18/03/2023.",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 103, Wilson Lins",
+    "Tel.:",
+    "3115-7295",
+    "manuelrocha@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "manuelrocha@alba.ba.gov.br",
+    "telefones": [
+      "3115-7295"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 103, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932118",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:35.072326Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MANUEL AZEVEDO ROCHA",
+  "profissao": "Advogado",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Ex-Prefeito",
+    "União Brasil",
+    "Agronegócio",
+    "Poder Executivo Local",
+    "Comissão de Agricultura"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Faculdade Jorge Amado — 2007"
+    },
+    {
+      "label": "MBA em Gestão Empresarial",
+      "sub": "Fundação Getúlio Vargas (FGV) — 2020"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Prefeito de Coribe",
+      "sub": "PR — 2013-2016"
+    },
+    {
+      "label": "Prefeito de Coribe",
+      "sub": "PR — 2016-2020"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "União Brasil — 2019-2023"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "União Brasil — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Assessor Jurídico de Desembargador",
+      "sub": "Tribunal de Justiça da Bahia — 2008-2012"
+    },
+    {
+      "label": "Presidente da Comissão de Agricultura e Política Rural",
+      "sub": "Assembleia Legislativa da Bahia — 2023-2024, 2025"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Com formação em Direito e MBA em Gestão, Manuel Rocha possui sólida experiência como Prefeito de Coribe por dois mandatos. Atualmente Deputado Estadual pelo União Brasil, ele concentra sua influência na Assembleia através da presidência da Comissão de Agricultura e Política Rural, ligando sua base política ao setor agropecuário.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    20
+  ],
+  "flags_validacao": []
+}

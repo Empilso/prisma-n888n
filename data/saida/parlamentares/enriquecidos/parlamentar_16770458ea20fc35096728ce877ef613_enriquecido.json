@@ -1,0 +1,87 @@
+{
+  "prisma_id": "16770458ea20fc35096728ce877ef613",
+  "parlamentar_id": "921277",
+  "nome_eleitoral": "Robério Oliveira",
+  "nome_limpo": "Robério Oliveira",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921277",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Roberio_Oliveira.jpg%20",
+  "biografia_completa": "Formação Educacional\nEnsino fundamental completo.\nAtividade Profissional\nSecretário de Relações Institucionais de Porto Seguro, BA\nMandato Eletivo\nEleito prefeito de Eunápolis  pelo Partido Renovador  Trabalhista Brasileiro -PRTB, 2005-2008 e reeleito 2009-2012. Eleito prefeito de Eunápolis,  2017-2020.Eleito deputado estadual pelo PSD- Partido Social Democrático, 2015-2019, renunciou em dez.2016.\nFiliação Partidária\nPRTB;\nPSD;\nAtividade Partidária\n2º Vice-Líder da Bancada do  PSD, ALBA, fev/2015-2016.\nAtividade Parlamentar\nNa Assembléia Legislativa da Bahia: TITULAR da Comissão de Constituição e Justiça (2015-2016); SUPLENTE da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2016), Especial da Ferrovia de Integração Oeste Leste (2015).",
+  "dados_pessoais": {
+    "Nome": "JOSE ROBERIO BATISTA DE OLIVEIRA",
+    "Profissão": "Empresário",
+    "Nascimento": "12/03/1964, Prado",
+    "Filiação": "Antonio Batista de Oliveira e Alzira Batista de Oliveira",
+    "Sexo": "Masculino",
+    "Cônjuge": "Claudia Silva Santos Oliveira",
+    "Filhos": "Larissa"
+  },
+  "mandatos": [
+    "Eleito prefeito de Eunápolis  pelo Partido Renovador  Trabalhista Brasileiro -PRTB, 2005-2008 e reeleito 2009-2012. Eleito prefeito de Eunápolis,  2017-2020.Eleito deputado estadual pelo PSD- Partido Social Democrático, 2015-2019, renunciou em dez.2016.",
+    "Filiação Partidária",
+    "PRTB;",
+    "PSD;",
+    "Atividade Partidária",
+    "2º Vice-Líder da Bancada do  PSD, ALBA, fev/2015-2016.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa da Bahia: TITULAR da Comissão de Constituição e Justiça (2015-2016); SUPLENTE da Comissão de Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2016), Especial da Ferrovia de Integração Oeste Leste (2015)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921277",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:55.887609Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "JOSE ROBERIO BATISTA DE OLIVEIRA",
+  "profissao": "Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Prefeito de Eunápolis",
+    "PSD",
+    "Foco em Executivo",
+    "Constituição e Justiça",
+    "Base Aliada"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ensino Fundamental",
+      "sub": "Completo — Não informado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Prefeito de Eunápolis",
+      "sub": "PRTB — 2005-2012"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSD — 2015-2016"
+    },
+    {
+      "label": "Prefeito de Eunápolis",
+      "sub": "Não informado — 2017-2020"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "2º Vice-Líder da Bancada do PSD",
+      "sub": "ALBA — 2015-2016"
+    },
+    {
+      "label": "Titular da Comissão de Constituição e Justiça",
+      "sub": "Assembleia Legislativa da Bahia — 2015-2016"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Figura política dominante no executivo de Eunápolis, tendo sido prefeito por dois mandatos distintos. Sua passagem pela Assembleia Legislativa pelo PSD foi breve, mas incluiu participação na importante Comissão de Constituição e Justiça, indicando alinhamento com o centro-direita baiano.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

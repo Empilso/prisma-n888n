@@ -1,0 +1,61 @@
+{
+  "prisma_id": "4712a2323590059959e1dc97940bcdd4",
+  "parlamentar_id": "926901",
+  "nome_eleitoral": "Júnior Muniz",
+  "nome_limpo": "Júnior Muniz",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/926901",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:JuniorMuniz.jpg",
+  "biografia_completa": "Formação Educacional\nFormou-se em Direito pela Faculdade de Artes e Tecnologia, 2001; cursa Especialização em Administração, Gestão de Pessoas e Projetos, na Faculdade Jorge Amado, 2019-.\nAtividade Profissional\nAdvogado. Assessor da Prefeitura de Umburanas, na gestão do prefeito Joel Muniz. Assessor parlamentar na Câmara dos Deputados; assessor especial da Prefeitura de Camaçari, 2008-2011, na administração do prefeito Luiz Caetano. Superintendente da União dos Municípios da Bahia - UPB, 2011. Presidente do Partido Humanista da Solidariedade - PHS, 2014-2019.\nMandato Eletivo\nSuplente de vereador da cidade de Salvador, PT, 2012-2016. Eleito deputado estadual, pelo Partido Humanista da Solidariedade, PHS, Coligação Renova Bahia, para o período de 2019-2023. Reeleito deputado estadual pelo PT, Federação Brasil da Esperança - FE BRASIL (PT/PC do B/PV), para o período 2023-2027.\nFiliação Partidária\nPP, 2019 - 2022;\nPT, 2022 - ;\nAtividade Partidária\nPresidente do PHS. Vice-líder  do Bloco da Maioria, ALBA, 2019-20.\nAtividade Parlamentar\nNa Assembleia Legislativa: 1º SECRETÁRIO da MESA DIRETORA (2021-2023); PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2023-2024, 2025); VICE-PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2019-2020); TITULAR das Comissões: Especial de Desenvolvimento Urbano (2019-2021), Especial de Acompanhamento e Fiscalização de Barragens (2019-2021), Defesa do Consumidor e Relações de Trabalho (2021-2022). SUPLENTE das Comissões: Constituição e Justiça ( fev.-abr.2019), Saúde e Saneamento (2023-2024, 2025). Faz parte do Conselho Frente Parlamentar do Setor Produtivo e se integrou à Unale - União Nacional dos Legisladores e Legislativos Estaduais.\nContato\nEndereço:\nPrédio Anexo, gab. 301, Nelson David Ribeiro\nTel.:\n3115-0974 /\n3115-2930 /\n3115-4090 /\n3115-5449 /\n3115-5453 /\n3115-5502 /\n3115-7190\njuniormuniz@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "DENIVALDO MUNIZ LOPES JUNIOR",
+    "Profissão": "Advogado",
+    "Nascimento": "10/03/1980, Jacobina - BA",
+    "Filiação": "Denivaldo Muniz Lopes e Nair Maria de Souza Lopes",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Izabella Sarmento Almeida",
+    "Filhos": "Társsila, Melissa, Bernardo (in memorian), Antonella e Lorenzo"
+  },
+  "mandatos": [
+    "Suplente de vereador da cidade de Salvador, PT, 2012-2016. Eleito deputado estadual, pelo Partido Humanista da Solidariedade, PHS, Coligação Renova Bahia, para o período de 2019-2023. Reeleito deputado estadual pelo PT, Federação Brasil da Esperança - FE BRASIL (PT/PC do B/PV), para o período 2023-2027.",
+    "Filiação Partidária",
+    "PP, 2019 - 2022;",
+    "PT, 2022 - ;",
+    "Atividade Partidária",
+    "Presidente do PHS. Vice-líder  do Bloco da Maioria, ALBA, 2019-20.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa: 1º SECRETÁRIO da MESA DIRETORA (2021-2023); PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2023-2024, 2025); VICE-PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (2019-2020); TITULAR das Comissões: Especial de Desenvolvimento Urbano (2019-2021), Especial de Acompanhamento e Fiscalização de Barragens (2019-2021), Defesa do Consumidor e Relações de Trabalho (2021-2022). SUPLENTE das Comissões: Constituição e Justiça ( fev.-abr.2019), Saúde e Saneamento (2023-2024, 2025). Faz parte do Conselho Frente Parlamentar do Setor Produtivo e se integrou à Unale - União Nacional dos Legisladores e Legislativos Estaduais.",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 301, Nelson David Ribeiro",
+    "Tel.:",
+    "3115-0974 /",
+    "3115-2930 /",
+    "3115-4090 /",
+    "3115-5449 /",
+    "3115-5453 /",
+    "3115-5502 /",
+    "3115-7190",
+    "juniormuniz@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "juniormuniz@alba.ba.gov.br",
+    "telefones": [
+      "3115-0974",
+      "3115-2930",
+      "3115-4090",
+      "3115-5449",
+      "3115-5453",
+      "3115-5502",
+      "3115-7190"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 301, Nelson David Ribeiro",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/926901",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:20.402367Z"
+}

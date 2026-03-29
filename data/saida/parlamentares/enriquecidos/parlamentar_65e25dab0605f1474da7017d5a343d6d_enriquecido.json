@@ -1,0 +1,97 @@
+{
+  "prisma_id": "65e25dab0605f1474da7017d5a343d6d",
+  "parlamentar_id": "915882",
+  "nome_eleitoral": "Kelly Magalhães",
+  "nome_limpo": "Kelly Magalhães",
+  "partido": "PCdoB",
+  "sigla_partido": "PCDOB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915882",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:KellyMagalhaes.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Estadual Ant. Geraldo e no Colégio Polivalente Professor Alexandre Leal Costa, em Barreiras e o ensino médio no Colégio Pe. Vieira e Colégio Folk Rocha. Graduou-se em Letras Vernáculas pela UNEB, 1998-2002, Barreiras. Atuou no Movimento Estudantil e foi Coordenadora do DCE - Campus IX.\nAtividade Profissional\nComerciária, 1986-1992. Assessora sindical no Sindicato dos Bancários, 1992-2009, Barreiras.\nMandato Eletivo\nEleita vereadora em Barreiras pelo PCdoB, 2005-2008 e 2009-2012, renunciou em 2010. Eleita deputada estadual pelo PCdoB, 2011-2015.\nFiliação Partidária\nPCdoB;\nAtividade Partidária\nNa Assembleia Legislativa da Bahia: Vice-líder da Bancada da Maioria, 2014.\nAtividade Parlamentar\nNa Câmara de Vereadores de Barreiras: PRESIDENTE, 2004-2005 e 2009-2010. TITULAR da Comissão de Planejamento, Trânsito, 2006-2007.\r\n Na Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2011. TITULAR DAS COMISSÃO: Direitos da Mulher, 2011, 2013-2014; Especial da Promoção da Igualdade, 2011-2014; Especial da Ferrovia de Integração Oeste-Leste, 2011-2014; Meio Ambiente, Seca e Recursos Hídricos, 2013-2014; Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2013-2014; CPI Tráfico de Pessoas, out/2013-2014. SUPLENTE DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos, fev./out.2011, Educação, Cultura, Ciência e Tecnologia e Serviço Público, fev-ago/2013; Especial de Desenvolvimento Urbano, 2013-2014; membro da Subcomissão Especial de Águas e Bacias Hidrográficas Baianas, 2011; membro efetivo do Código de Ética e Decoro Parlamentar, set.2012.\nCondecorações\nColaboradora Emérita do Exército Brasileiro - 10º BCE, 2006. Troféu Soja de Ouro pelo Country Club de Rio de Ondas, 2009. Comenda Mérito Legislativo pela UVB, 2006.\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "KELLY ADRIANA MAGALHAES",
+    "Profissão": "Professora",
+    "Nascimento": "02/04/1969, Barreiras",
+    "Falecimento": "23/01/2022",
+    "Filiação": "Nelza Iracema Magalhães",
+    "Sexo": "Feminino",
+    "Estado Civil": "Casada",
+    "Cônjuge": "Jorge Correia de Araújo",
+    "Filhos": "Maria Eduarda e Felipe"
+  },
+  "mandatos": [
+    "Eleita vereadora em Barreiras pelo PCdoB, 2005-2008 e 2009-2012, renunciou em 2010. Eleita deputada estadual pelo PCdoB, 2011-2015.",
+    "Filiação Partidária",
+    "PCdoB;",
+    "Atividade Partidária",
+    "Na Assembleia Legislativa da Bahia: Vice-líder da Bancada da Maioria, 2014.",
+    "Atividade Parlamentar",
+    "Na Câmara de Vereadores de Barreiras: PRESIDENTE, 2004-2005 e 2009-2010. TITULAR da Comissão de Planejamento, Trânsito, 2006-2007.",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE DA COMISSÃO de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2011. TITULAR DAS COMISSÃO: Direitos da Mulher, 2011, 2013-2014; Especial da Promoção da Igualdade, 2011-2014; Especial da Ferrovia de Integração Oeste-Leste, 2011-2014; Meio Ambiente, Seca e Recursos Hídricos, 2013-2014; Educação, Cultura, Ciência e Tecnologia e Serviço Público, 2013-2014; CPI Tráfico de Pessoas, out/2013-2014. SUPLENTE DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos, fev./out.2011, Educação, Cultura, Ciência e Tecnologia e Serviço Público, fev-ago/2013; Especial de Desenvolvimento Urbano, 2013-2014; membro da Subcomissão Especial de Águas e Bacias Hidrográficas Baianas, 2011; membro efetivo do Código de Ética e Decoro Parlamentar, set.2012."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915882",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:20.446410Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "KELLY ADRIANA MAGALHAES",
+  "profissao": "Professora",
+  "sexo": "Feminino",
+  "tags_estrategicas": [
+    "PCdoB",
+    "Educação",
+    "Movimento Estudantil",
+    "Sindicato",
+    "Base do Governo"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Letras Vernáculas",
+      "sub": "UNEB — 1998-2002"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereadora em Barreiras",
+      "sub": "PCdoB — 2005-2008"
+    },
+    {
+      "label": "Vereadora em Barreiras",
+      "sub": "PCdoB — 2009-2012"
+    },
+    {
+      "label": "Deputada Estadual",
+      "sub": "PCdoB — 2011-2015"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente da Câmara de Vereadores de Barreiras",
+      "sub": "Câmara de Vereadores de Barreiras — 2004-2005"
+    },
+    {
+      "label": "Presidente da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público",
+      "sub": "ALBA — 2011"
+    },
+    {
+      "label": "Vice-líder da Bancada da Maioria",
+      "sub": "ALBA — 2014"
+    }
+  ],
+  "condecoracoes": [
+    "Colaboradora Emérita do Exército Brasileiro - 10º BCE (2006)",
+    "Troféu Soja de Ouro (Country Club de Rio de Ondas, 2009)",
+    "Comenda Mérito Legislativo (UVB, 2006)"
+  ],
+  "biografia_resumo": "Com formação em Letras e histórico de atuação sindical e estudantil, Kelly Magalhães construiu sua carreira política pelo PCdoB, iniciando na Câmara de Barreiras antes de se eleger deputada estadual. Sua atuação parlamentar focou em educação e pautas sociais, chegando a liderar a bancada da maioria em determinado período.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

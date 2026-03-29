@@ -1,0 +1,105 @@
+{
+  "prisma_id": "56b30ea0da0769736c7606b85bbcf22c",
+  "parlamentar_id": "915878",
+  "nome_eleitoral": "Luiza Maia Lula",
+  "nome_limpo": "Luiza Maia Lula",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915878",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:LuizaMaia.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o ensino fundamental no Grupo Escolar Carneiro Ribeiro e Ginásio Anísio Teixeira em Ruy Barbosa, o segundo grau no Colégio Central da Bahia, Salvador. Formou-se em Letras com  Espanhol pela Universidade Federal da Bahia (UFBA) Salvador.\nAtividade Profissional\nNa Companhia Baiana de Fibras (Polo Petroquímico), trabalhou como encarregada da Comunicação, 1979-1980. Professora concursada do Estado da Bahia, 1990  e da Prefeitura Municipal de Camaçari, 1992. Secretária de Educação da Prefeitura Municipal de Camaçari, 1986-1987. Diretora de Habitação da Prefeitura de Camaçari, 1994-1995.\nMandato Eletivo\nEleita vereadora em Camaçari pelo PMDB, 1983-1988 e pelo PT, 2005-2008. Reeleita pelo PT, 2009-2012, renunciou ao mandato em 2010. Eleita deputada estatual pelo PT, 2011-2015. Reeleita deputada estadual pelo PT, 2015-2019. Afastou-se do mandato de deputada para assumir o cargo de Secretária de Desenvolvimento Econômico do Estado da Bahia, maio 2018-2019.\nFiliação Partidária\nMDB;\nPT;\nAtividade Partidária\nNa Assembleia Legislativa da Bahia: Vice-líder da Bancada do PT, 2013-2016, ago.2017-.\nAtividade Parlamentar\nNa Câmara Municipal de Camaçari: Presidente, 2006-2008 e 2009-2010. PRESIDENTE DA COMISSÃO de Educação, Saúde e Assistência Social, 2005-2006; relatora da Comissão de Justiça, 2005-2006. \r\nNa Assembleia Legislativa da Bahia: PRESIDENTE DAS COMISSÕES de Direitos da Mulher, 2011, 2017-2018; CPI Tráfico de Pessoas, out/2013 - 2014.  VICE-PRESIDENTE DAS COMISSÕES: Extraordinária para Discussão/Análise da Reforma Política, 2011- 2014; Direitos da Mulher, 2014. TITULAR DAS COMISSÕES de Direitos da Mulher, 2013; Direitos Humanos e Segurança Pública; 2015- set.2017. SUPLENTE DAS COMISSÕES de Constituição e Justiça, 2013-2014; Direitos da Mulher, 2015-2016.\nCondecorações\nTroféu Destaque 2013, Comitê de Imprensa da Assembleia Legislativa da Bahia.\nObras e Trabalhos\nPublicou alguns artigos entre eles: O novo mundo do trabalho; Preservação da água: responsabilidade individual e e coletiva; Consciência negra: avanços e demandas da luta histórica.\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "LUIZA COSTA MAIA",
+    "Profissão": "Professora",
+    "Nascimento": "20/12/1951, Ruy Barbosa",
+    "Filiação": "Otaviano Oliveira Maia e Edelvita Costa Maia",
+    "Sexo": "Feminino",
+    "Estado Civil": "Cônjuge:"
+  },
+  "mandatos": [
+    "Eleita vereadora em Camaçari pelo PMDB, 1983-1988 e pelo PT, 2005-2008. Reeleita pelo PT, 2009-2012, renunciou ao mandato em 2010. Eleita deputada estatual pelo PT, 2011-2015. Reeleita deputada estadual pelo PT, 2015-2019. Afastou-se do mandato de deputada para assumir o cargo de Secretária de Desenvolvimento Econômico do Estado da Bahia, maio 2018-2019.",
+    "Filiação Partidária",
+    "MDB;",
+    "PT;",
+    "Atividade Partidária",
+    "Na Assembleia Legislativa da Bahia: Vice-líder da Bancada do PT, 2013-2016, ago.2017-.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Camaçari: Presidente, 2006-2008 e 2009-2010. PRESIDENTE DA COMISSÃO de Educação, Saúde e Assistência Social, 2005-2006; relatora da Comissão de Justiça, 2005-2006.",
+    "Na Assembleia Legislativa da Bahia: PRESIDENTE DAS COMISSÕES de Direitos da Mulher, 2011, 2017-2018; CPI Tráfico de Pessoas, out/2013 - 2014.  VICE-PRESIDENTE DAS COMISSÕES: Extraordinária para Discussão/Análise da Reforma Política, 2011- 2014; Direitos da Mulher, 2014. TITULAR DAS COMISSÕES de Direitos da Mulher, 2013; Direitos Humanos e Segurança Pública; 2015- set.2017. SUPLENTE DAS COMISSÕES de Constituição e Justiça, 2013-2014; Direitos da Mulher, 2015-2016."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915878",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:25.641306Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "LUIZA COSTA MAIA",
+  "profissao": "Professora",
+  "sexo": "Feminino",
+  "tags_estrategicas": [
+    "PT",
+    "Educação",
+    "Direitos da Mulher",
+    "Camaçari",
+    "Liderança Partidária"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Letras com Espanhol",
+      "sub": "Universidade Federal da Bahia (UFBA) — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereadora em Camaçari",
+      "sub": "PMDB — 1983-1988"
+    },
+    {
+      "label": "Vereadora em Camaçari",
+      "sub": "PT — 2005-2008"
+    },
+    {
+      "label": "Vereadora em Camaçari",
+      "sub": "PT — 2009-2012"
+    },
+    {
+      "label": "Deputada Estadual",
+      "sub": "PT — 2011-2015"
+    },
+    {
+      "label": "Deputada Estadual",
+      "sub": "PT — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente da Câmara Municipal de Camaçari",
+      "sub": "Câmara Municipal de Camaçari — 2006-2008"
+    },
+    {
+      "label": "Vice-líder da Bancada do PT",
+      "sub": "ALBA — 2013-2016, ago.2017-"
+    },
+    {
+      "label": "Presidente das Comissões de Direitos da Mulher",
+      "sub": "ALBA — 2011, 2017-2018"
+    },
+    {
+      "label": "Vice-Presidente da Comissão Extraordinária para Discussão/Análise da Reforma Política",
+      "sub": "ALBA — 2011- 2014"
+    }
+  ],
+  "condecoracoes": [
+    "Troféu Destaque 2013 (Comitê de Imprensa da Assembleia Legislativa da Bahia)"
+  ],
+  "biografia_resumo": "Figura proeminente do PT, Luiza Maia Lula possui uma longa trajetória política iniciada no executivo municipal de Camaçari, onde foi vereadora e presidente da Câmara. Como Deputada Estadual, consolidou-se como líder de bancada e focou em pautas sociais, especialmente Direitos da Mulher, além de ter ocupado cargo de Secretária Estadual.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

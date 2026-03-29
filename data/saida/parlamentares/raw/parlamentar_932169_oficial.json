@@ -1,0 +1,30 @@
+{
+  "prisma_id": "f2ab6e06819f78db9d4358d7f0564deb",
+  "parlamentar_id": "932169",
+  "nome_eleitoral": "Binho Galinha",
+  "nome_limpo": "Binho Galinha",
+  "partido": "PATRIOTA",
+  "sigla_partido": "PATRIOTA",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932169",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:binhogalinha.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Ensino Médio no Colégio Assis Chateaubriand, Feira de Santana, 1992.\nFiliação Partidária\nPATRIOTA, 2023 - 2025;\nS/PART, 2025 - 2026;\nAVANTE, 2026 - ;\nAtividade Partidária\nVice-líder do Bloco Parlamentar MDB/PSB/Patriota/PSC/Avante, 2023-.\nContato\nEndereço:\nPrédio Anexo, gab. 208, Wilson Lins\nTel.:\ndepbinhogalinha@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "KLEBER CRISTIAN ESCOLANO DE ALMEIDA",
+    "Profissão": "Empresário",
+    "Nascimento": "17/11/1977, Milagres, Bahia",
+    "Filiação": "Jose Pedro Vieira de Almeida e Rosy Mairy Santos Escolano de Almeida",
+    "Sexo": "Masculino",
+    "Estado Civil": "solteiro"
+  },
+  "mandatos": [],
+  "contatos": {
+    "email": "depbinhogalinha@alba.ba.gov.br",
+    "telefones": []
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 208, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932169",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:20:56.133907Z"
+}

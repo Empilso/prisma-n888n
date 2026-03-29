@@ -1,0 +1,48 @@
+{
+  "prisma_id": "bf6894429c7285614e6489284feb672d",
+  "parlamentar_id": "932112",
+  "nome_eleitoral": "Cláudia Oliveira",
+  "nome_limpo": "Cláudia Oliveira",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932112",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:claudiaoliveira1.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o primário e o segundo grau no Colégio James Wright, Eunápolis.\nAtividade Profissional\nSócia-diretora da Axé Eventos Ltda desde 1994. Secretária de Ação Social da Prefeitura Municipal de Eunápolis, 2005-2008.\nMandato Eletivo\nEleita deputada estadual pelo PTdoB, 2011-2015. Eleita prefeita de Porto Seguro pelo PSD, 2013-2016. Renunciou ao mandato de deputada estadual (dez./2012), para assumir o cargo de prefeita do município de Porto Seguro, 2013-2016. Eleita Deputada Estadual pelo PSD para o período 2023-2027.\nFiliação Partidária\nPT do B2011;\nPSD, 2011 - ;\nAtividade Partidária\nNa Assembleia Legislativa da Bahia: Vice-líder do Bloco Parlamentar PSL/PRB/PTdoB, fev.-out./2011.Vice líder do Bloco da Maioria, 2011, 2023-2025.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Infraestrutura, Desenvolvimento Econômico e Turismo (fev.-out.2011); TITULAR DAS COMISSÕES: Direitos da Mulher (2011, fev-mar 2023, fev. 2024), Especial do Porto Sul (2011-2012), Infraestrutura, Desenvolvimento Econômico e Turismo (2011, mar. 2023-2024, 2025); SUPLENTE DAS COMISSÕES: de Defesa do Consumidor e Relações de Trabalho (2011), Infraestrutura, Desenvolvimento Econômico e Turismo (mar. 2023, fev.2024, fev. 2025); dos Direitos da Mulher (mar. 2023, ). MEMBRO DA SUBCOMISSÃO Especial de Desenvolvimento Urbano (2011). Suplente da Mesa Diretora, 2023-2025. Terceira Procuradora Adjunta Especial da Mulher, 2023-2025; Primeira Procuradora Adjunta Especial da Mulher, mar. 2025\nCondecorações\nMedalha do Mérito Três Marias - Heroínas do Brasil, Polícia Militar da Bahia (PMBA), 2026.\nContato\nEndereço:\nPrédio Anexo, gab. 307, Nelson David Ribeiro\nTel.:\n3115-0940 /\n3115-0962 /\n3115-2940 /\n3115-2957 /\n3115-4930 /\n3115-4978 /\n3115-5298 /\n3115-7084 /\n3115-7085 /\n3115-7208\ndeputadaclaudiaoliveira@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "CLAUDIA SILVA SANTOS OLIVEIRA",
+    "Profissão": "Empresária",
+    "Nascimento": "17/06/1968, Itabuna",
+    "Sexo": "Feminino"
+  },
+  "mandatos": [
+    "Eleita deputada estadual pelo PTdoB, 2011-2015. Eleita prefeita de Porto Seguro pelo PSD, 2013-2016. Renunciou ao mandato de deputada estadual (dez./2012), para assumir o cargo de prefeita do município de Porto Seguro, 2013-2016. Eleita Deputada Estadual pelo PSD para o período 2023-2027.",
+    "Filiação Partidária",
+    "PT do B2011;",
+    "PSD, 2011 - ;",
+    "Atividade Partidária",
+    "Na Assembleia Legislativa da Bahia: Vice-líder do Bloco Parlamentar PSL/PRB/PTdoB, fev.-out./2011.Vice líder do Bloco da Maioria, 2011, 2023-2025.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Infraestrutura, Desenvolvimento Econômico e Turismo (fev.-out.2011); TITULAR DAS COMISSÕES: Direitos da Mulher (2011, fev-mar 2023, fev. 2024), Especial do Porto Sul (2011-2012), Infraestrutura, Desenvolvimento Econômico e Turismo (2011, mar. 2023-2024, 2025); SUPLENTE DAS COMISSÕES: de Defesa do Consumidor e Relações de Trabalho (2011), Infraestrutura, Desenvolvimento Econômico e Turismo (mar. 2023, fev.2024, fev. 2025); dos Direitos da Mulher (mar. 2023, ). MEMBRO DA SUBCOMISSÃO Especial de Desenvolvimento Urbano (2011). Suplente da Mesa Diretora, 2023-2025. Terceira Procuradora Adjunta Especial da Mulher, 2023-2025; Primeira Procuradora Adjunta Especial da Mulher, mar. 2025"
+  ],
+  "contatos": {
+    "email": "deputadaclaudiaoliveira@alba.ba.gov.br",
+    "telefones": [
+      "3115-0940",
+      "3115-0962",
+      "3115-2940",
+      "3115-2957",
+      "3115-4930",
+      "3115-4978",
+      "3115-5298",
+      "3115-7084",
+      "3115-7085",
+      "3115-7208"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 307, Nelson David Ribeiro",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932112",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:00.394914Z"
+}

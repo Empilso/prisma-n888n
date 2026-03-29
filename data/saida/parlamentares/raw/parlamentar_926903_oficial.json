@@ -1,0 +1,40 @@
+{
+  "prisma_id": "862f789a48fc93bfd185f808268eb4b1",
+  "parlamentar_id": "926903",
+  "nome_eleitoral": "Zé Cocá",
+  "nome_limpo": "Zé Cocá",
+  "partido": "PP",
+  "sigla_partido": "PP",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926903",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:ZeCoca.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o fundamental no Centro Educacional Ministro Spínola - CEMS e no Centro Educacional Técnico de Jequié (CETEJE), Jequié, 1981-1993, e o secundário no Colégio Estadual Raphael Serravalle, 1994-1996.  Formou-se em Gestão Pública, na UNOPAR, Jequié, 2017-2018.\nAtividade Profissional\nFoi presidente do Consórcio de Desenvolvimento Sustentável do Vale do Jiquiriça. Coordenador dos Consórcios da Bahia, 2017-2018.  Diretor de Desenvolvimento da Prefeitura de Lafaiete Coutinho, 2005. Chefe de gabinete da Prefeitura de Lafaiete Coutinho, 2006-2008.\nMandato Eletivo\nPrefeito de Lafaiete Coutinho por 2 mandatos, 2009-2012 e 2013-2016. Eleito deputado estadual pela Coligação Força do Trabalho pela Bahia,para o período 2019-2023; renunciou o mandato em 31/12/2020, para assumir a prefeitura de Jequié em 01/01/2021 (2021-2024).\nFiliação Partidária\nPP;\nAtividade Partidária\nVice-líder do Bloco da Maioria, ALBA, 2019-20.\nAtividade Parlamentar\nNa Assembleia Legislativa,  TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (2019-20), Infraestrutura, Desenvolvimento Econômico e Turismo (2019-20), Especial para Regulamentação do Transporte Complementar da Bahia (2019-2020); SUPLENTE da Comissão de Agricultura e Política Rural (2019-20)\nCondecorações\nPremio de Melhor Prefeito da Bahia.",
+  "dados_pessoais": {
+    "Nome": "ZENILDO BRANDAO SANTANA",
+    "Profissão": "Agropecuarista",
+    "Nascimento": "24/04/1976, Itiruçu-BA",
+    "Filiação": "José Joaquim de Santana e Maria da Glória Brandão Santana",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Patrícia Miranda Brandão Santana",
+    "Filhos": "João Arthur e Beatriz"
+  },
+  "mandatos": [
+    "Prefeito de Lafaiete Coutinho por 2 mandatos, 2009-2012 e 2013-2016. Eleito deputado estadual pela Coligação Força do Trabalho pela Bahia,para o período 2019-2023; renunciou o mandato em 31/12/2020, para assumir a prefeitura de Jequié em 01/01/2021 (2021-2024).",
+    "Filiação Partidária",
+    "PP;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco da Maioria, ALBA, 2019-20.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa,  TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (2019-20), Infraestrutura, Desenvolvimento Econômico e Turismo (2019-20), Especial para Regulamentação do Transporte Complementar da Bahia (2019-2020); SUPLENTE da Comissão de Agricultura e Política Rural (2019-20)"
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926903",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:31.932479Z"
+}

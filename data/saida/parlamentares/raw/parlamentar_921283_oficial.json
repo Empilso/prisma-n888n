@@ -1,0 +1,50 @@
+{
+  "prisma_id": "f909c1dfd207a88d456d8c98f36e938d",
+  "parlamentar_id": "921283",
+  "nome_eleitoral": "Bobô",
+  "nome_limpo": "Bobô",
+  "partido": "PCdoB",
+  "sigla_partido": "PCDOB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/921283",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Bobo.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental no Colégio Senhor do Bonfim e o 2º grau no Colégio Professora Izabel de Queiróz, Senhor do Bonfim.\nAtividade Profissional\nJogador de futebol da Catuense, do Bahia, São Paulo, Flamengo, Fluminense, Corinthians. Campeão baiano nos anos de 1986/87/88 pelo Esporte Clube Bahia.  Campeão Brasileiro, 1989. Comentarista de televisão e técnico de futebol. Diretor geral da Superintendência de Desportos da Bahia- SUDESB.\nMandato Eletivo\nEleito deputado estadual pelo Partido Comunista do Brasil, PCdoB, 2015-2019, 2019-2023. Reeleito pelo PCdoB, Federação Brasil da Esperança - FE BRASIL (PT/PC do B/PV), para o período 2023-2027.\nFiliação Partidária\nPCdoB, 2011 - ;\nAtividade Partidária\nVice-líder da Maioria, Assembleia Legislativa da Bahia, 2023.\nAtividade Parlamentar\nNa Assembléia Legislativa da Bahia: 3º VICE-PRESIDENTE da MESA DIRETORA (2021-2023); PRESIDENTE da Comissão Especial de Desporto, Paradesporto e Lazer (2015-2019-2020, 2023-2024);  TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (2015-2018, 2020, 2023-2024, 2025), Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2018, 2023-2024, 2025), Conselho de Ética e Decoro Parlamentar (2015-2017);    SUPLENTE das Comissões: Defesa do Consumidor e Relações de Trabalho (2015-2018), Especial de Desenvolvimento Regional (2015-2018).\nCondecorações\nBola de Prata , Revista Placar,1988, 1989; Medalha da Aviação Policial Militar, Polícia Militar do Estado da Bahia, 2022; Medalha Amigo do Detran, Detran-BA, 2025.\nContato\nEndereço:\nPrédio Anexo, gab. 202, Nelson David Ribeiro\nTel.:\n3115-4043 /\n3115-5314 /\n3115-5351 /\n3115-5523 /\n3115-5524 /\n3115-7269 /\n3115-7378 /\n3115-7390 /\n3115-7391\ndeputadoboboo@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "RAIMUNDO NONATO TAVARES DA SILVA",
+    "Profissão": "Empresário",
+    "Nascimento": "28/11/1962, Senhor do Bonfim- BA",
+    "Filiação": "Florisvaldo Tavares da Silva e Antonieta Soares da Silva",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Andrea de Freitas Rodrigues da Silva",
+    "Filhos": "Maria Clara e Mariana"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Comunista do Brasil, PCdoB, 2015-2019, 2019-2023. Reeleito pelo PCdoB, Federação Brasil da Esperança - FE BRASIL (PT/PC do B/PV), para o período 2023-2027.",
+    "Filiação Partidária",
+    "PCdoB, 2011 - ;",
+    "Atividade Partidária",
+    "Vice-líder da Maioria, Assembleia Legislativa da Bahia, 2023.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa da Bahia: 3º VICE-PRESIDENTE da MESA DIRETORA (2021-2023); PRESIDENTE da Comissão Especial de Desporto, Paradesporto e Lazer (2015-2019-2020, 2023-2024);  TITULAR das Comissões: Finanças, Orçamento, Fiscalização e Controle (2015-2018, 2020, 2023-2024, 2025), Infra-estrutura, Desenvolvimento Econômico e Turismo (2015-2018, 2023-2024, 2025), Conselho de Ética e Decoro Parlamentar (2015-2017);    SUPLENTE das Comissões: Defesa do Consumidor e Relações de Trabalho (2015-2018), Especial de Desenvolvimento Regional (2015-2018)."
+  ],
+  "contatos": {
+    "email": "deputadoboboo@alba.ba.gov.br",
+    "telefones": [
+      "3115-4043",
+      "3115-5314",
+      "3115-5351",
+      "3115-5523",
+      "3115-5524",
+      "3115-7269",
+      "3115-7378",
+      "3115-7390",
+      "3115-7391"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 202, Nelson David Ribeiro",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/921283",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:20:57.538397Z"
+}

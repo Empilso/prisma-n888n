@@ -1,0 +1,84 @@
+{
+  "prisma_id": "6d762b03cd8a207e4f52981c7fbf6d36",
+  "parlamentar_id": "926915",
+  "nome_eleitoral": "Dal",
+  "nome_limpo": "Dal",
+  "partido": "UNIÃO",
+  "sigla_partido": "UNIÃO",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926915",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Dal.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o  fundamental na Escola Estadual Santa Bernadete, Amargosa e o secundário na Escola Estadual Pedro Calmon, Amargosa.\nAtividade Profissional\nEmpresário de postos de gasolina.\nMandato Eletivo\nEleito deputado Estadual pelo PCdoB, 2019-2023.\nFiliação Partidária\nPCdoB;\nPP, 2019 - 2022;\nUNIÃO, 2022 - ;\nAtividade Partidária\nVice-líder do PP, ALBA, 2019-20. Vice-líder do Bloco da Maioria, 2021-2022. Vice-líder do Bloco Parlamentar UNIÃO/PL, 2022.\nAtividade Parlamentar\nNa Assembleia legislativa, SUPLENTE da Comissão de Meio Ambiente, Seca e Recursos Hídricos (2019).",
+  "dados_pessoais": {
+    "Nome": "ADALBERTO ROSA BARRETO",
+    "Profissão": "Empresário",
+    "Nascimento": "16/03/1979, Amargosa-BA",
+    "Filiação": "Alcides Assunção Barreto e Nilzete Rosa Barreto",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Maira Moraes Barreto",
+    "Filhos": "João Pedro, João Gabriel, João Lucas"
+  },
+  "mandatos": [
+    "Eleito deputado Estadual pelo PCdoB, 2019-2023.",
+    "Filiação Partidária",
+    "PCdoB;",
+    "PP, 2019 - 2022;",
+    "UNIÃO, 2022 - ;",
+    "Atividade Partidária",
+    "Vice-líder do PP, ALBA, 2019-20. Vice-líder do Bloco da Maioria, 2021-2022. Vice-líder do Bloco Parlamentar UNIÃO/PL, 2022.",
+    "Atividade Parlamentar",
+    "Na Assembleia legislativa, SUPLENTE da Comissão de Meio Ambiente, Seca e Recursos Hídricos (2019)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926915",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:14.828829Z",
+  "data_nascimento": "1979-03-16",
+  "municipio_nascimento": "Amargosa",
+  "uf_nascimento": "BA",
+  "nome_civil": "ADALBERTO ROSA BARRETO",
+  "profissao": "Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "PCdoB/PP/União",
+    "Empresário",
+    "Base do Governo",
+    "Mudança de Partido",
+    "Bloco Parlamentar"
+  ],
+  "formacao_academica": [],
+  "carreira_politica": [
+    {
+      "label": "Empresário de postos de gasolina",
+      "sub": "Não informado"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PCdoB/PP/UNIÃO — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do PP",
+      "sub": "ALBA — 2019-2020"
+    },
+    {
+      "label": "Vice-líder do Bloco da Maioria",
+      "sub": "ALBA — 2021-2022"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Empresário do setor de combustíveis que ingressou na ALBA pelo PCdoB, mas rapidamente migrou para o PP e, posteriormente, para o União. Manteve-se alinhado à base governista, exercendo funções de vice-liderança em blocos majoritários.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "19",
+  "historico_legislaturas": [
+    19
+  ],
+  "flags_validacao": []
+}

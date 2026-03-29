@@ -1,0 +1,42 @@
+{
+  "prisma_id": "a6f67c53c1e88e91d9c05eeadc0fa29f",
+  "parlamentar_id": "929592",
+  "nome_eleitoral": "Carlos Ubaldino",
+  "nome_limpo": "Carlos Ubaldino",
+  "partido": "PDT",
+  "sigla_partido": "PDT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929592",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:CarlosUbaldino.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Ginásio na Escola Joana Angélica, 1963, Ribeira do Pombal-BA; o Secundário no Colégio Agrícola de Ribeira do Pombal, 1967. Formou-se em Teologia pela Escola Teológica das Assembléias de Deus do Brasil - ESTEADEB, 1992.\nAtividade Profissional\nProprietário da Comercial de Estivas Buril Ltda, 1978-1989; fotógrafo, 1970-1981; pastor evangélico da Igreja Assembléia de Deus, 1988-2006, Olindina-BA.\nMandato Eletivo\nEleito vereador pelo Partido Democrático Social - PDS, 1982-1984, reeleito pelo PDS, 1985-1988, Olindina. Deputado estadual pelo Partido Social Cristão - PSC, 2007-2011, reeleito pelo PSC, 2011-2015. Reeleito deputado estadual, pelo PSD, para o período 2015-2019. Assumiu como deputado estadual em 04/01/2021, em decorrência da renúncia do Dep. Jânio Natal, eleito prefeito de Porto Seguro (2021-2024).\nFiliação Partidária\nPSC, 2007 - 2010;\nPSD, 2011 - 2022;\nPDT, 2022 - ;\nAtividade Partidária\nVice-líder da Bancada da Maioria, ALBA, 2007-2009, 2014; representante do PSC, 2009-2010. Vice-Líder da Maioria, ALBA, 2015-2018. Vice-líder da Maioria, ALBA, 2021- abril.2022.\nAtividade Parlamentar\nNa Câmara Municipal de Olindina, presidente da Mesa Diretora (1986-1988).  Na Assembléia Legislativa, 3º SUPLENTE da Mesa Diretora (2007-2009), 3º VICE-PRESIDENTE da Mesa Diretora (2011-2013);   TITULAR das Comissões: Saúde e Saneamento (2007-2009), CPI para investigar crise financeira da Empresa Baiana de Alimentos, EBAL ( set.-dez. 2007), Agricultura e Política Rural (2009-2010, 2015-2018), Educação, Cultura, Ciencia e Tecnologia e Serviço Publico (2013-2018), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2013-2014); SUPLENTE das Comissões: Agricultura e Política Rural (2007-2008), Defesa ao Consumidor (mar./abr. 2007), Meio Ambiente, Seca e Recursos Hídricos (2009), Finanças, Orçamento, Fiscalização e Controle (2013-2014); Comissão Especial para Avaliação\r\ndos Impactos da Pandemia do COVID-19 (jan. 2021).",
+  "dados_pessoais": {
+    "Nome": "CARLOS UBALDINO DE SANTANA",
+    "Profissão": "Comerciante e Pastor",
+    "Nascimento": "12/06/1948, Cipó-BA",
+    "Filiação": "Ubaldino José de Santana e Maria Alice de Santana",
+    "Sexo": "Masculino",
+    "Cônjuge": "Celina Santos de Santana",
+    "Filhos": "Débora e Carlos Ubaldino Filho"
+  },
+  "mandatos": [
+    "Eleito vereador pelo Partido Democrático Social - PDS, 1982-1984, reeleito pelo PDS, 1985-1988, Olindina. Deputado estadual pelo Partido Social Cristão - PSC, 2007-2011, reeleito pelo PSC, 2011-2015. Reeleito deputado estadual, pelo PSD, para o período 2015-2019. Assumiu como deputado estadual em 04/01/2021, em decorrência da renúncia do Dep. Jânio Natal, eleito prefeito de Porto Seguro (2021-2024).",
+    "Filiação Partidária",
+    "PSC, 2007 - 2010;",
+    "PSD, 2011 - 2022;",
+    "PDT, 2022 - ;",
+    "Atividade Partidária",
+    "Vice-líder da Bancada da Maioria, ALBA, 2007-2009, 2014; representante do PSC, 2009-2010. Vice-Líder da Maioria, ALBA, 2015-2018. Vice-líder da Maioria, ALBA, 2021- abril.2022.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Olindina, presidente da Mesa Diretora (1986-1988).  Na Assembléia Legislativa, 3º SUPLENTE da Mesa Diretora (2007-2009), 3º VICE-PRESIDENTE da Mesa Diretora (2011-2013);   TITULAR das Comissões: Saúde e Saneamento (2007-2009), CPI para investigar crise financeira da Empresa Baiana de Alimentos, EBAL ( set.-dez. 2007), Agricultura e Política Rural (2009-2010, 2015-2018), Educação, Cultura, Ciencia e Tecnologia e Serviço Publico (2013-2018), Infra-Estrutura, Desenvolvimento Econômico e Turismo (2013-2014); SUPLENTE das Comissões: Agricultura e Política Rural (2007-2008), Defesa ao Consumidor (mar./abr. 2007), Meio Ambiente, Seca e Recursos Hídricos (2009), Finanças, Orçamento, Fiscalização e Controle (2013-2014); Comissão Especial para Avaliação",
+    "dos Impactos da Pandemia do COVID-19 (jan. 2021)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929592",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:30:59.634703Z"
+}

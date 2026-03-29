@@ -1,0 +1,115 @@
+{
+  "prisma_id": "d881074096691543da91745a68bb0f11",
+  "parlamentar_id": "907274",
+  "nome_eleitoral": "Zé Neto Lula",
+  "nome_limpo": "Zé Neto Lula",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907274",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:ZeNeto.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Primário na Escola Ubaldina Régis, o Ginasial na Escola Assis Chateaubriand e o Secundário na Escola Áureo Filho, em Feira de Santana. Formou-se em Direito pela Universidade Federal da Bahia, UFBA, 1989.\nAtividade Profissional\nAdvogado autônomo, 1991-2001, Feira de Santana.\nMandato Eletivo\nEleito vereador  pelo Partido dos Trabalhadores, PT, 2001-2004 em Feira de Santana, renunciou em 2003. Deputado estadual, PT, 2003-2007; reeleito deputado estadual, PT,  para os períodos de 2007-2011, 2011-2015 e 2015-2019. Eleito deputado federal, 2019-2023.\nFiliação Partidária\nPT, 1989 - 2018;\nAtividade Partidária\nLíder do PT, CM, Feira de Santana, BA, 2001-2002; 2º vice-líder do PT, ALBA, fev./abr.2004; líder da Bancada   da Maioria, ALBA, 2011-2015, 2015-2018.\nAtividade Parlamentar\nNa Assembléia Legislativa, presidente das Comissões:  Proteção ao Meio Ambiente (2005-2006), Constituição e Justiça (2007-2010); vice-presidente das Comissões: Saúde e Saneamento (2003-2004,2006), Especial para Reforma do Regimento Interno (abr./ago.2003), Constituição e Justiça (2005-2006); relator da  CPI para Proceder Investig. Acerca da Crise Finan. da Ebal (2007); titular das Comissões: Finanças e Orçamento (2003-2004), Saúde e Saneamento (2005, 2007-2008), Proteção ao Meio Ambiente (2005), Especial para Atualização e Reforma do Regimento Interno (2005), Especial para Reforma do Regimento (2007), Meio Ambiente, Seca e Recursos Hídricos (2009); suplente das Comissões: Constituição e Justiça (2003-2004), CPI para Apurar Denúncias de Escuta Telefônica de Determinadas Autoridades (mar./abr.2003), Especial de Desenvolvimento Urbano e Habitação (abr./set. 2003), Especial para Reforma do Regimento Interno (ago.2003, 2005), Especial de Combate à Fome (2005-2006), Proteção ao Meio Ambiente (mar./abr. 2007), Meio Ambiente, Seca e Recursos Hídricos (jun.2007-2008, 2009-2010), Saúde e Saneamento (2008-2010), Finanças, Orçamento, Fiscalização e Controle (2009).\nCondecorações\nLaureado com o Prêmio Quem é Quem, Jornal Tribuna da Bahia, Feira de Santana, nov.2017.",
+  "dados_pessoais": {
+    "Nome": "JOSE CERQUEIRA DE SANTANA NETO",
+    "Profissão": "Advogado",
+    "Nascimento": "30/03/1964, Feira de Santana-BA",
+    "Filiação": "Epifânio Ferreira e Maria Santana Ferreira",
+    "Sexo": "Masculino"
+  },
+  "mandatos": [
+    "Eleito vereador  pelo Partido dos Trabalhadores, PT, 2001-2004 em Feira de Santana, renunciou em 2003. Deputado estadual, PT, 2003-2007; reeleito deputado estadual, PT,  para os períodos de 2007-2011, 2011-2015 e 2015-2019. Eleito deputado federal, 2019-2023.",
+    "Filiação Partidária",
+    "PT, 1989 - 2018;",
+    "Atividade Partidária",
+    "Líder do PT, CM, Feira de Santana, BA, 2001-2002; 2º vice-líder do PT, ALBA, fev./abr.2004; líder da Bancada   da Maioria, ALBA, 2011-2015, 2015-2018.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, presidente das Comissões:  Proteção ao Meio Ambiente (2005-2006), Constituição e Justiça (2007-2010); vice-presidente das Comissões: Saúde e Saneamento (2003-2004,2006), Especial para Reforma do Regimento Interno (abr./ago.2003), Constituição e Justiça (2005-2006); relator da  CPI para Proceder Investig. Acerca da Crise Finan. da Ebal (2007); titular das Comissões: Finanças e Orçamento (2003-2004), Saúde e Saneamento (2005, 2007-2008), Proteção ao Meio Ambiente (2005), Especial para Atualização e Reforma do Regimento Interno (2005), Especial para Reforma do Regimento (2007), Meio Ambiente, Seca e Recursos Hídricos (2009); suplente das Comissões: Constituição e Justiça (2003-2004), CPI para Apurar Denúncias de Escuta Telefônica de Determinadas Autoridades (mar./abr.2003), Especial de Desenvolvimento Urbano e Habitação (abr./set. 2003), Especial para Reforma do Regimento Interno (ago.2003, 2005), Especial de Combate à Fome (2005-2006), Proteção ao Meio Ambiente (mar./abr. 2007), Meio Ambiente, Seca e Recursos Hídricos (jun.2007-2008, 2009-2010), Saúde e Saneamento (2008-2010), Finanças, Orçamento, Fiscalização e Controle (2009)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907274",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:51.933257Z",
+  "data_nascimento": "1964-03-30",
+  "municipio_nascimento": "Feira de Santana",
+  "uf_nascimento": "BA",
+  "nome_civil": "JOSE CERQUEIRA DE SANTANA NETO",
+  "profissao": "Advogado",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "PT",
+    "Liderança na Maioria",
+    "Feira de Santana",
+    "Advogado",
+    "Mandato Federal"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Universidade Federal da Bahia, UFBA — 1989"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador em Feira de Santana",
+      "sub": "PT — 2001-2004"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2003-2007"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2007-2011"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2011-2015"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2015-2019"
+    },
+    {
+      "label": "Deputado Federal",
+      "sub": "PT — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Líder do PT",
+      "sub": "CM, Feira de Santana, BA — 2001-2002"
+    },
+    {
+      "label": "Líder da Bancada da Maioria",
+      "sub": "ALBA — 2011-2015"
+    },
+    {
+      "label": "Líder da Bancada da Maioria",
+      "sub": "ALBA — 2015-2018"
+    },
+    {
+      "label": "Presidente da Comissão de Proteção ao Meio Ambiente",
+      "sub": "ALBA — 2005-2006"
+    },
+    {
+      "label": "Presidente da Comissão de Constituição e Justiça",
+      "sub": "ALBA — 2007-2010"
+    }
+  ],
+  "condecoracoes": [
+    "Prêmio Quem é Quem (Jornal Tribuna da Bahia, Feira de Santana, nov.2017)"
+  ],
+  "biografia_resumo": "Advogado formado pela UFBA, Zé Neto Lula construiu sua carreira política no PT, iniciando em Feira de Santana e ascendendo a deputado estadual por múltiplos mandatos. Sua influência se consolidou ao liderar a Bancada da Maioria na ALBA por vários anos, mantendo-se fiel à sigla até sua transição para a Câmara Federal.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "17",
+  "historico_legislaturas": [
+    17,
+    18
+  ],
+  "flags_validacao": []
+}

@@ -1,0 +1,102 @@
+{
+  "prisma_id": "4864bfd9620061c464d8ac3676b95943",
+  "parlamentar_id": "929540",
+  "nome_eleitoral": "Carlos Geilson",
+  "nome_limpo": "Carlos Geilson",
+  "partido": "PSDB",
+  "sigla_partido": "PSDB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929540",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:CarlosGeilson.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o primário na Escola Oliveira Brito, 1972 e o 2º grau no Colégio Estadual de Feira de Santana-BA, 1973-1979. Formou-se em Letras Vernáculas pela Universidade Estadual de Feira de Santana, 2000-2004.\nAtividade Profissional\nLocutor da Rádio Subaé AM e Rádio Carioca, 1978-2011, Feira de Santana; chefe de Redação da Câmara Municipal de Feira de Santana, 1992-1994. Ouvidor Geral do Estado, 2019-2020.\nMandato Eletivo\nEleito deputado estadual pelo Partido Trabalhista Nacional - PTN, 2011-2015. Reeleito  pelo PTN, 2015-2019.  Suplente de Deputado para o período 2019-2023, foi empossado em 25/11/2020 substituindo o deputado licenciado Leo Prates (PDT) até 29 de mar. 2022.\nFiliação Partidária\nPTN, 2011 - 2015;\nPSDB, 2015 - 2018;\nPODE, 2019 - 2020;\nPSDB, 2020 - 2022;\nAtividade Partidária\nVice-líder do Bloco PTN / PSC, 2011; Vice-líder da Bancada da Minoria, ALBA, 2011-2014, 2022.\nAtividade Parlamentar\nNa Assembléia Legislativa, 2º vice-presidente da Mesa Diretora, 2017-2019; 3º vice-presidente da Mesa Diretora, 2015-2017; SUPLENTE da Mesa Diretora (2013-2015). VICE-PRESIDENTE das Comissões: Especial da Promoção da Igualdade (2011-2014), Constituição e Justiça (2012-2014), Especial da Promoção da Igualdade (2011-2014); TITULAR das Comissões: Constituição e Justiça (2011), Educação, Cultura , Ciência e Tecnologia e Serviço Público (2011, 2013-2014), Direitos da Mulher (2013-2014, fev.-maio 2017), Defesa do Consumidor e das Relações de Trabalho (dez. 2020); SUPLENTE das Comissões: Comissão de Defesa do Consumidor e Relações de Trabalho (2011), Comissão Extraordinária para Discursão/Análise da Reforma Política (2011-2014), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011-2012), Saúde e Saneamento (2021-2022).\nCondecorações\nComenda Maria Quitéria, outorgada pela Câmara Municipal de Feira de Santana, 1998. Laureado com o Premio Quem é Quem, Jornal Tribuna da Bahia, Feira de Santana, nov. 2017.\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "CARLOS GEILSON DOS SANTOS SILVA",
+    "Profissão": "Radialista.",
+    "Nascimento": "21/02/1960, Feira de Santana-BA.",
+    "Filiação": "Carlos Gomes da Silva e Gilcelia dos Santos Silva.",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Ana Maria Santana Silva."
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Trabalhista Nacional - PTN, 2011-2015. Reeleito  pelo PTN, 2015-2019.  Suplente de Deputado para o período 2019-2023, foi empossado em 25/11/2020 substituindo o deputado licenciado Leo Prates (PDT) até 29 de mar. 2022.",
+    "Filiação Partidária",
+    "PTN, 2011 - 2015;",
+    "PSDB, 2015 - 2018;",
+    "PODE, 2019 - 2020;",
+    "PSDB, 2020 - 2022;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco PTN / PSC, 2011; Vice-líder da Bancada da Minoria, ALBA, 2011-2014, 2022.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, 2º vice-presidente da Mesa Diretora, 2017-2019; 3º vice-presidente da Mesa Diretora, 2015-2017; SUPLENTE da Mesa Diretora (2013-2015). VICE-PRESIDENTE das Comissões: Especial da Promoção da Igualdade (2011-2014), Constituição e Justiça (2012-2014), Especial da Promoção da Igualdade (2011-2014); TITULAR das Comissões: Constituição e Justiça (2011), Educação, Cultura , Ciência e Tecnologia e Serviço Público (2011, 2013-2014), Direitos da Mulher (2013-2014, fev.-maio 2017), Defesa do Consumidor e das Relações de Trabalho (dez. 2020); SUPLENTE das Comissões: Comissão de Defesa do Consumidor e Relações de Trabalho (2011), Comissão Extraordinária para Discursão/Análise da Reforma Política (2011-2014), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2011-2012), Saúde e Saneamento (2021-2022)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/929540",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:30:58.363215Z",
+  "data_nascimento": "1960-02-21",
+  "municipio_nascimento": "Feira de Santana",
+  "uf_nascimento": "BA",
+  "nome_civil": "CARLOS GEILSON DOS SANTOS SILVA",
+  "profissao": "Radialista.",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Comunicação/Mídia",
+    "Mesa Diretora",
+    "Minoria Parlamentar",
+    "PSDB",
+    "Feira de Santana"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Formado em Letras Vernáculas",
+      "sub": "Universidade Estadual de Feira de Santana — 2004"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PTN — 2011-2015"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PTN — 2015-2019"
+    },
+    {
+      "label": "Deputado Estadual (Suplente)",
+      "sub": "PODE — 2020-2022 (Posse)"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "2º Vice-presidente da Mesa Diretora",
+      "sub": "ALBA — 2017-2019"
+    },
+    {
+      "label": "Vice-líder da Bancada da Minoria",
+      "sub": "ALBA — 2011-2014, 2022"
+    },
+    {
+      "label": "Vice-presidente da Comissão",
+      "sub": "Especial da Promoção da Igualdade — 2011-2014"
+    }
+  ],
+  "condecoracoes": [
+    "Comenda Maria Quitéria (Câmara Municipal de Feira de Santana, 1998)",
+    "Premio Quem é Quem (Jornal Tribuna da Bahia, 2017)"
+  ],
+  "biografia_resumo": "Com forte histórico como radialista, Carlos Geilson construiu sua carreira política com mandatos sucessivos, ocupando posições de destaque na Mesa Diretora da ALBA. Atuou como vice-líder da minoria e focou em comissões de Justiça e Promoção da Igualdade.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "17",
+  "historico_legislaturas": [
+    17,
+    18,
+    19
+  ],
+  "flags_validacao": []
+}

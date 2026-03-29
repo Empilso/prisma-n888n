@@ -1,0 +1,103 @@
+{
+  "prisma_id": "4d86a992ead3aeffe79eb84bfdb9b15f",
+  "parlamentar_id": "907261",
+  "nome_eleitoral": "Elmar Nascimento",
+  "nome_limpo": "Elmar Nascimento",
+  "partido": "DEM",
+  "sigla_partido": "DEM",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907261",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:ElmarNascimento.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Primário e o Ginasial no Instituto Educacional Nossa Senhora de Fátima, Campo Formoso, 1984, o Secundário no Colégio Antônio Vieira, 1987, Salvador-BA. Formou-se em Direito pela Universidade Católica do Salvador, UCSAL, 1992; pós-graduação em Direito Eleitoral, Fundação Faculdade de Direito da Bahia, 1996. Cursou Inglês na Escola Baiana de Expansão Cultural, EBEC, 1985-1987.\nAtividade Profissional\nAdvogado.\nMandato Eletivo\nEleito vereador em Campo Formoso, Partido do Movimento Democrático Brasileiro, PMDB, 1997-2000, reeleito para o período de 2001-2004, renunciou em 2003. Deputado estadual, PMDB, 2003-2007; reeleito pelo Partido Liberal, PL, 2007-2011. Eleito deputado estadual pelo Partido da Republica - PR, 2011-2015. Eleito  deputado federal, 2015-2019.\nFiliação Partidária\nMDB, 1989 - 2003;\nPFL, 2003 - 2003;\nPL, 2003 - 2006;\nPR, 2006 - 2013;\nDEM, 2013 - 2014;\nAtividade Partidária\nLíder do PMDB, CM, 1997-1998, Campo Formoso; membro do diretório do PMDB, 1995-2003; presidente da executiva do PMDB, 2001-2003; membro do diretório regional do PMDB, Salvador-BA, 2002-2003; líder do Bloco Parlamentar, PR/PTN, ALBA, fev.2007; líder do Bloco  Parlamentar PR/PSB, ALBA, 2008, líder do Bloco Parlamentar PR/PRTB,ALBA, a partir de ago.2008 . Líder da Bancada da Minoria, ALBA, 2013-2014.\nAtividade Parlamentar\nNa Câmara de Vereadores de Campo Formoso, presidente da Mesa Diretora (1999-2000), (2001-2002).    Na Assembléia Legislativa: 2º secretário da Mesa Diretora (2011-2013) ; PRESIDENTE das Comissões: Constituição e Justiça (2005-2006), Especial do São Francisco (2009-2010); VICE-PRESIDENTE das Comissões: Defesa ao Consumidor (dez.2003),  Minas, Energia, Ciência e Tecnologia (2003-2004), Meio Ambiente, Seca e Recursos Hídricos (2011) ; TITULAR das Comissões: Educação, Esportes e Serviço Público (dez.2003-2004, 2005-2006), Seca, dos Recursos Hídricos e da Irrigação (2003-2005, dez.2006), Especial da Infância, Adolescência e Juventude (2003-2004), Defesa ao Consumidor (fev./maio 2005), Minas, Energia, Ciência e Tecnologia (fev./mar.2005, ago.2005-2006), Finanças, Orçamento, Fiscalização e Controle (2007-2010), Especial para Reforma do Regimento (2007), Especial do São Francisco (2007-2008), Constituição e Justiça (2008, 2012), Meio Ambiente, Seca e Recursos Hídricos (2008), CPI para Apurar Irregularidades do Metrô de Salvador (2010); SUPLENTE das Comissões: Defesa ao Consumidor (mar./dez.2003-2004), Especial de Relações do Trabalho, Emprego e Renda (2003-2005), Especial para Reforma do Regimento Interno (ago./dez.2003), Especial Para Atualização e Reforma do Regimento Interno (dez.2003-2005), Saúde e Saneamento (2003-2004), Proteção ao Meio Ambiente (dez.2003-2006, mar./abr. 2007), Especial de Desenvolvimento Urbano e Habitação (mar.2004-fev.2005), Constituição e Justiça, (2004, 2013-2014), Finanças e Orçamento (2005-2006), CPI dos Combustíveis (set. 2005-2006), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2008).",
+  "dados_pessoais": {
+    "Nome": "ELMAR JOSE VIEIRA NASCIMENTO",
+    "Profissão": "Advogado",
+    "Nascimento": "06/07/1970, Campo Formoso-BA",
+    "Filiação": "José Aluizio Nascimento e Maria Anita Vieira Nascimento",
+    "Cônjuge": "Luciana de Olivaes Lacerda Nascimento",
+    "Filhos": "Mariana e Juliana"
+  },
+  "mandatos": [
+    "Eleito vereador em Campo Formoso, Partido do Movimento Democrático Brasileiro, PMDB, 1997-2000, reeleito para o período de 2001-2004, renunciou em 2003. Deputado estadual, PMDB, 2003-2007; reeleito pelo Partido Liberal, PL, 2007-2011. Eleito deputado estadual pelo Partido da Republica - PR, 2011-2015. Eleito  deputado federal, 2015-2019.",
+    "Filiação Partidária",
+    "MDB, 1989 - 2003;",
+    "PFL, 2003 - 2003;",
+    "PL, 2003 - 2006;",
+    "PR, 2006 - 2013;",
+    "DEM, 2013 - 2014;",
+    "Atividade Partidária",
+    "Líder do PMDB, CM, 1997-1998, Campo Formoso; membro do diretório do PMDB, 1995-2003; presidente da executiva do PMDB, 2001-2003; membro do diretório regional do PMDB, Salvador-BA, 2002-2003; líder do Bloco Parlamentar, PR/PTN, ALBA, fev.2007; líder do Bloco  Parlamentar PR/PSB, ALBA, 2008, líder do Bloco Parlamentar PR/PRTB,ALBA, a partir de ago.2008 . Líder da Bancada da Minoria, ALBA, 2013-2014.",
+    "Atividade Parlamentar",
+    "Na Câmara de Vereadores de Campo Formoso, presidente da Mesa Diretora (1999-2000), (2001-2002).    Na Assembléia Legislativa: 2º secretário da Mesa Diretora (2011-2013) ; PRESIDENTE das Comissões: Constituição e Justiça (2005-2006), Especial do São Francisco (2009-2010); VICE-PRESIDENTE das Comissões: Defesa ao Consumidor (dez.2003),  Minas, Energia, Ciência e Tecnologia (2003-2004), Meio Ambiente, Seca e Recursos Hídricos (2011) ; TITULAR das Comissões: Educação, Esportes e Serviço Público (dez.2003-2004, 2005-2006), Seca, dos Recursos Hídricos e da Irrigação (2003-2005, dez.2006), Especial da Infância, Adolescência e Juventude (2003-2004), Defesa ao Consumidor (fev./maio 2005), Minas, Energia, Ciência e Tecnologia (fev./mar.2005, ago.2005-2006), Finanças, Orçamento, Fiscalização e Controle (2007-2010), Especial para Reforma do Regimento (2007), Especial do São Francisco (2007-2008), Constituição e Justiça (2008, 2012), Meio Ambiente, Seca e Recursos Hídricos (2008), CPI para Apurar Irregularidades do Metrô de Salvador (2010); SUPLENTE das Comissões: Defesa ao Consumidor (mar./dez.2003-2004), Especial de Relações do Trabalho, Emprego e Renda (2003-2005), Especial para Reforma do Regimento Interno (ago./dez.2003), Especial Para Atualização e Reforma do Regimento Interno (dez.2003-2005), Saúde e Saneamento (2003-2004), Proteção ao Meio Ambiente (dez.2003-2006, mar./abr. 2007), Especial de Desenvolvimento Urbano e Habitação (mar.2004-fev.2005), Constituição e Justiça, (2004, 2013-2014), Finanças e Orçamento (2005-2006), CPI dos Combustíveis (set. 2005-2006), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2008)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907261",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:03.457214Z",
+  "data_nascimento": "1970-07-06",
+  "municipio_nascimento": "Campo Formoso",
+  "uf_nascimento": "BA",
+  "nome_civil": "ELMAR JOSE VIEIRA NASCIMENTO",
+  "profissao": "Advogado",
+  "sexo": null,
+  "tags_estrategicas": [
+    "Advogado",
+    "Transição Municipal/Estadual",
+    "PR/DEM",
+    "Liderança de Bloco",
+    "Constituição e Justiça"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Universidade Católica do Salvador, UCSAL — 1992"
+    },
+    {
+      "label": "Direito Eleitoral (Pós-graduação)",
+      "sub": "Fundação Faculdade de Direito da Bahia — 1996"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador",
+      "sub": "PMDB — 1997-2003"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PMDB/PL — 2003-2015"
+    },
+    {
+      "label": "Deputado Federal",
+      "sub": "— 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente da Mesa Diretora",
+      "sub": "Câmara de Vereadores de Campo Formoso — 1999-2002"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar PR/PTN",
+      "sub": "ALBA — 2007"
+    },
+    {
+      "label": "Líder da Bancada da Minoria",
+      "sub": "ALBA — 2013-2014"
+    },
+    {
+      "label": "Presidente da Comissão de Constituição e Justiça",
+      "sub": "ALBA — 2005-2006"
+    }
+  ],
+  "condecoracoes": [
+    "Destaque Parlamentar - Troféu Imprensa (Assembléia Legislativa do Estado da Bahia, 2004, 2007, 2008 e 2009)"
+  ],
+  "biografia_resumo": "Advogado com experiência consolidada no poder municipal antes de ascender ao Legislativo Estadual e Federal. Elmar Nascimento demonstrou habilidade em liderar blocos parlamentares e presidir comissões importantes como a de Constituição e Justiça, mantendo-se relevante através de sucessivas trocas partidárias no espectro do centro-direita.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

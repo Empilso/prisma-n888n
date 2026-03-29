@@ -1,0 +1,38 @@
+{
+  "prisma_id": "26a1954773bc9d35324a6d9bcd5adf0d",
+  "parlamentar_id": "919330",
+  "nome_eleitoral": "Uziel Bueno",
+  "nome_limpo": "Uziel Bueno",
+  "partido": "PTN",
+  "sigla_partido": "PTN",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/919330",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:UzielBueno.jpg",
+  "biografia_completa": "Formação Educacional\nFormou-se em Jornalismo pela Universidade Federal da Bahia, UFBA.\nAtividade Profissional\nFoi estagiário da TV-Aratu, Salvador, BA, depois exerceu as funções de produtor, editor e diretor de programas, além de repórter local , repórter da Rede. Apresentador do programa policial Na Mira , TV Aratu. Passou a integrar o Grupo Bandeirantes de Comunicação, responsável pelo programa Brasil Urgente com alcance na Bahia e Sergipe, além de um programa diário na Rede Tudo FM e um site de notícias.\nMandato Eletivo\nSuplente de deputado estadual pelo Partido Trabalhista Nacional,  PTN, 2011-2015, assumiu o mandato de  dez.2012/ jul.2013.\nFiliação Partidária\nPTN, 2010 - 2013;\nAtividade Partidária\nVice-líder do Bloco Parlamentar PTN/PSC/ PRP, ALBA, fev./mar. 2013.\nAtividade Parlamentar\nNa Assembléia Legislativa , PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (fev-ago/2013); TITULAR da Comissão de Direitos Humanos e Segurança Pública (fev-ago/2013) .\nCondecorações\nAmigo da Polícia Militar, 2008.",
+  "dados_pessoais": {
+    "Nome": "UZIEL BUENO BARBOSA DE SANTANA JUNIOR",
+    "Profissão": "Jornalista",
+    "Nascimento": "22/11/1976, Natal, RN",
+    "Filiação": "Uziel Bueno Barbosa de Santana e Maria Nóbrega Araújo de Santana",
+    "Cônjuge": "Fatima Aline Ramos Soares",
+    "Filhos": "Hanna"
+  },
+  "mandatos": [
+    "Suplente de deputado estadual pelo Partido Trabalhista Nacional,  PTN, 2011-2015, assumiu o mandato de  dez.2012/ jul.2013.",
+    "Filiação Partidária",
+    "PTN, 2010 - 2013;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar PTN/PSC/ PRP, ALBA, fev./mar. 2013.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa , PRESIDENTE da Comissão de Defesa do Consumidor e Relações de Trabalho (fev-ago/2013); TITULAR da Comissão de Direitos Humanos e Segurança Pública (fev-ago/2013) ."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/919330",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:48.078284Z"
+}

@@ -1,0 +1,100 @@
+{
+  "prisma_id": "31f867216b62434ad7e72a48b1e04dc0",
+  "parlamentar_id": "915870",
+  "nome_eleitoral": "Mario Negromonte Júnior",
+  "nome_limpo": "Mario Negromonte Júnior",
+  "partido": "PP",
+  "sigla_partido": "PP",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915870",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:MarioNegromonte.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Ensino Fundamental na Escola Boa Ideia, Paulo Afonso-BA, e o secundário no Colégio Nobel ,  Colegio Antonio Pedreira e no Colegio Anchieta  , Salvador-BA. Formou-se em Direito pela Faculdade Jorge Amado, Salvador, 2005. Extensão Business  na Universidade de Harvard, Cambridge, Massachussets, EUA, 2008.\nAtividade Profissional\nEstagiario na Defensoria Pública do Estado da Bahia, 2002-2003; assessor jurídico da Secretaria de Economia, Emprego e Renda de Salvador, 2008;  assessor da Secretaria de Desenvolvimento Urbano, Habitação e Meio Ambiente de Salvador, 2009; assessor especial da Secretaria de Infraestrutura  do Estado da Bahia, 2009- abr.2010.\nMandato Eletivo\nEleito deputado estadual pelo Partido Progressista - PP, para o período de 2011-2015. Eleito deputado federal, 2015-2019.\nFiliação Partidária\nPP, 2003 - 2014;\nAtividade Partidária\nVice presidente  Nacional da Juventude Progressista, 2005/2010; presidente estadual da Juventude Progressista, 2005/2008; presidente Nacional  da Juventude Progressista, 2011/2013.  Vice-líder do PP,ALBA, fev./out. 2011; vice líder do Bloco Parlamentar PP/PRB/PSL, out.2011-set.2012. Vice-líder da Bancada da Maioria, ALBA, 2014.\nAtividade Parlamentar\nNa Assembleia Legislativa ,  Corregedor Parlamentar, set.2012; PRESIDENTE  da Comissão  Extraordinária para Acompanhar a Privatização dos Cartórios (2012-2014); VICE-PRESIDENTE da CPI da Telefonia (2013-2014); TITULAR das Comissões: Constituição e Justiça (2011-2014), Saúde e Saneamento (2011-2012) , Especial da Promoção da Igualdade (2011-2012), Extraordinária para Desenvolvimento/Análise da Reforma Política (2011-2014), Agricultura e Política Rural (2011-2014), CPI da Telefonia (ago/2013 - );  SUPLENTE das Comissões: Infraestrutura, Desenvolvimento Econômico e Turismo (fev.-mar.2011), Agricultura e Política Rural (2011), Especial do Porto Sul (2011-2014), Saúde e Saneamento (2013-2014).\nMissões Oficiais",
+  "dados_pessoais": {
+    "Nome": "MARIO SILVIO MENDES NEGROMONTE JUNIOR",
+    "Profissão": "Advogado",
+    "Nascimento": "31/08/1980, Paulo Afonso-BA.",
+    "Filiação": "Mário Silvio Mendes Negromonte e Ena Vilma Pereira de Souza Negromonte"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Progressista - PP, para o período de 2011-2015. Eleito deputado federal, 2015-2019.",
+    "Filiação Partidária",
+    "PP, 2003 - 2014;",
+    "Atividade Partidária",
+    "Vice presidente  Nacional da Juventude Progressista, 2005/2010; presidente estadual da Juventude Progressista, 2005/2008; presidente Nacional  da Juventude Progressista, 2011/2013.  Vice-líder do PP,ALBA, fev./out. 2011; vice líder do Bloco Parlamentar PP/PRB/PSL, out.2011-set.2012. Vice-líder da Bancada da Maioria, ALBA, 2014.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa ,  Corregedor Parlamentar, set.2012; PRESIDENTE  da Comissão  Extraordinária para Acompanhar a Privatização dos Cartórios (2012-2014); VICE-PRESIDENTE da CPI da Telefonia (2013-2014); TITULAR das Comissões: Constituição e Justiça (2011-2014), Saúde e Saneamento (2011-2012) , Especial da Promoção da Igualdade (2011-2012), Extraordinária para Desenvolvimento/Análise da Reforma Política (2011-2014), Agricultura e Política Rural (2011-2014), CPI da Telefonia (ago/2013 - );  SUPLENTE das Comissões: Infraestrutura, Desenvolvimento Econômico e Turismo (fev.-mar.2011), Agricultura e Política Rural (2011), Especial do Porto Sul (2011-2014), Saúde e Saneamento (2013-2014).",
+    "Missões Oficiais"
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915870",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:32.203433Z",
+  "data_nascimento": "1980-08-31",
+  "municipio_nascimento": "Paulo Afonso",
+  "uf_nascimento": "BA",
+  "nome_civil": "MARIO SILVIO MENDES NEGROMONTE JUNIOR",
+  "profissao": "Advogado",
+  "sexo": null,
+  "tags_estrategicas": [
+    "PP",
+    "Juventude Progressista",
+    "Direito",
+    "Infraestrutura",
+    "Poder Executivo Municipal"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Faculdade Jorge Amado — 2005"
+    },
+    {
+      "label": "Business (Extensão)",
+      "sub": "Universidade de Harvard — 2008"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2011-2015"
+    },
+    {
+      "label": "Deputado Federal",
+      "sub": "PP — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-presidente Nacional da Juventude Progressista",
+      "sub": "Juventude Progressista — 2005/2010"
+    },
+    {
+      "label": "Presidente Estadual da Juventude Progressista",
+      "sub": "Juventude Progressista — 2005/2008"
+    },
+    {
+      "label": "Presidente Nacional da Juventude Progressista",
+      "sub": "Juventude Progressista — 2011/2013"
+    },
+    {
+      "label": "Vice-líder do Bloco Parlamentar PP/PRB/PSL",
+      "sub": "ALBA — out.2011-set.2012"
+    },
+    {
+      "label": "Corregedor Parlamentar",
+      "sub": "ALBA — set.2012"
+    },
+    {
+      "label": "Presidente da Comissão Extraordinária para Acompanhar a Privatização dos Cartórios",
+      "sub": "ALBA — 2012-2014"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Advogado com formação executiva em Harvard, Mario Negromonte Júnior construiu sua carreira política majoritariamente dentro do Partido Progressista (PP), destacando-se na liderança da juventude partidária. Sua trajetória inclui mandatos como Deputado Estadual e Federal, com atuação em comissões chave como Constituição e Justiça.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

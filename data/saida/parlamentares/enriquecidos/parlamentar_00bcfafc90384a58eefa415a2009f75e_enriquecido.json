@@ -1,0 +1,103 @@
+{
+  "prisma_id": "00bcfafc90384a58eefa415a2009f75e",
+  "parlamentar_id": "932110",
+  "nome_eleitoral": "Eures Ribeiro",
+  "nome_limpo": "Eures Ribeiro",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932110",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:euresribeiro1.jpg",
+  "biografia_completa": "Formação Educacional\nConcluiu o ensino fundamental no Colégio Centro Educacional São Vicente de Paula, Bom Jesus da Lapa-BA, em 1991 e o segundo grau no Colégio Estadual Monsenhor Turibio Vila Nova, Bom Jesus da Lapa-BA, em 1994. Gradou-se em Direito pela Universidade São Francisco, Bragança Paulista-SP, 1998-1999. Foi presidente do Grêmio Estudantil-Bom Jesus da Lapa.\nAtividade Profissional\nAssessor especial da Secretaria Estadual do Meio Ambiente (SEMA), 2009-2010. Presidente da União dos Municípios da Bahia (UPB), 2017.\nMandato Eletivo\nEleito vereador do município de Bom Jesus da Lapa, PSDB, 2001-2004. Reeleito vereador do município de Bom Jesus da Lapa, PV, 2005-2008. Eleito deputado estadual, PV, 2011-2015. Renunciou ao mandato de deputado estadual (dez./2012), para assumir o cargo de prefeito do município de Bom Jesus da Lapa, 2013-2016. Reeleito prefeito do município de Bom Jesus da Lapa, 2017-2020. Eleito deputado estadual, PSD, 2023-2027, renunciou ao mandato parlamentar em 27/12/2024, para assumir o mandato de prefeito de Bom Jesus da Lapa, a partir de 01º/01/2025.\nFiliação Partidária\nPSDB;\nPV;\nPSD, 2017 - ;\nAtividade Partidária\nVice-líder da Maioria, Assembleia Legislativa da Bahia, 2023.\nAtividade Parlamentar\nNa Câmara Municipal de Bom Jesus da Lapa: Presidente da Câmara.\r\nNa Assembleia Legislativa da Bahia: vice-presidente da Comissão de Meio Ambiente e Recursos Hídricos (fev.-out. 2011). TITULAR DAS COMISSÕES: de Saúde e Saneamento (2011); de Meio Ambiente e Recursos Hídricos (2011); de Infraestrutura, Desenvolvimento Econômico e Turismo (2023, 2024). SUPLENTE DAS COMISSÕES: de Direitos Humanos e Segurança Pública (2011); de Saúde e Saneamento (fev-maio 2023). Coordenador da Subcomissão Especial de Bacias Hidrográficas Baianas (2011).",
+  "dados_pessoais": {
+    "Nome": "EURES RIBEIRO PEREIRA",
+    "Profissão": "Técnico em Contabilidade",
+    "Nascimento": "19/11/1973, Bom Jesus da Lapa-BA",
+    "Filiação": "Cândido José Pereira e Evacy Ribeiro Pereira",
+    "Sexo": "Masculino"
+  },
+  "mandatos": [
+    "Eleito vereador do município de Bom Jesus da Lapa, PSDB, 2001-2004. Reeleito vereador do município de Bom Jesus da Lapa, PV, 2005-2008. Eleito deputado estadual, PV, 2011-2015. Renunciou ao mandato de deputado estadual (dez./2012), para assumir o cargo de prefeito do município de Bom Jesus da Lapa, 2013-2016. Reeleito prefeito do município de Bom Jesus da Lapa, 2017-2020. Eleito deputado estadual, PSD, 2023-2027, renunciou ao mandato parlamentar em 27/12/2024, para assumir o mandato de prefeito de Bom Jesus da Lapa, a partir de 01º/01/2025.",
+    "Filiação Partidária",
+    "PSDB;",
+    "PV;",
+    "PSD, 2017 - ;",
+    "Atividade Partidária",
+    "Vice-líder da Maioria, Assembleia Legislativa da Bahia, 2023.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Bom Jesus da Lapa: Presidente da Câmara.",
+    "Na Assembleia Legislativa da Bahia: vice-presidente da Comissão de Meio Ambiente e Recursos Hídricos (fev.-out. 2011). TITULAR DAS COMISSÕES: de Saúde e Saneamento (2011); de Meio Ambiente e Recursos Hídricos (2011); de Infraestrutura, Desenvolvimento Econômico e Turismo (2023, 2024). SUPLENTE DAS COMISSÕES: de Direitos Humanos e Segurança Pública (2011); de Saúde e Saneamento (fev-maio 2023). Coordenador da Subcomissão Especial de Bacias Hidrográficas Baianas (2011)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932110",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:04.748174Z",
+  "data_nascimento": "1973-11-19",
+  "municipio_nascimento": "Bom Jesus da Lapa",
+  "uf_nascimento": "BA",
+  "nome_civil": "EURES RIBEIRO PEREIRA",
+  "profissao": "Técnico em Contabilidade",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Prefeito",
+    "Direito",
+    "PSD",
+    "Ciclo Executivo/Legislativo",
+    "Liderança Municipal"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Universidade São Francisco — 1998-1999"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador em Bom Jesus da Lapa",
+      "sub": "PSDB — 2001-2004"
+    },
+    {
+      "label": "Vereador em Bom Jesus da Lapa",
+      "sub": "PV — 2005-2008"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PV — 2011-2015"
+    },
+    {
+      "label": "Prefeito de Bom Jesus da Lapa",
+      "sub": "Não informado — 2013-2016"
+    },
+    {
+      "label": "Prefeito de Bom Jesus da Lapa",
+      "sub": "Não informado — 2017-2020"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSD — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente da Câmara Municipal",
+      "sub": "Bom Jesus da Lapa — Período não especificado"
+    },
+    {
+      "label": "Vice-líder da Maioria",
+      "sub": "ALBA — 2023"
+    },
+    {
+      "label": "Vice-presidente da Comissão de Meio Ambiente e Recursos Hídricos",
+      "sub": "ALBA — fev.-out. 2011"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Advogado com forte trajetória no executivo municipal de Bom Jesus da Lapa, onde foi prefeito por dois mandatos após iniciar como vereador. Possui experiência como Deputado Estadual, transitando entre PV e PSD, e demonstrou capacidade de articulação ao assumir a vice-liderança da maioria na ALBA.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

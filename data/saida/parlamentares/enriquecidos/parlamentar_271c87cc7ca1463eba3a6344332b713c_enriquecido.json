@@ -1,0 +1,78 @@
+{
+  "prisma_id": "271c87cc7ca1463eba3a6344332b713c",
+  "parlamentar_id": "926916",
+  "nome_eleitoral": "Pastor Isidório Filho",
+  "nome_limpo": "Pastor Isidório Filho",
+  "partido": "AVANTE",
+  "sigla_partido": "AVANTE",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926916",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:PastorIsidorioFilho.jpg",
+  "biografia_completa": "Formação Educacional\nEnsino médio completo.\nAtividade Profissional\nCantor, compositor, coordenador da Fundação Dr. Jesus.\nMandato Eletivo\nEleito deputado estadual, 2019-2023.\nAtividade Partidária\nVice-líder do Bloco da Maioria, ALBA, 2019-2021.\nAtividade Parlamentar\nNa Assembleia Legislativa,  TITULAR das Comissões:  Defesa do Consumidor e Relações de Trabalho (fev-mar.2019), Direitos Humanos e Segurança Pública ( fev.-ago.2019) ; SUPLENTE das Comissões: Especial da Promoção da Igualdade (2019-2021), Defesa do Consumidor e Relações de Trabalho (mar.2019-2021),  Direitos Humanos e Segurança Pública ( ago.2019-2021), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (jan. 2021), Constituição e Justiça (2021).",
+  "dados_pessoais": {
+    "Nome": "JOAO PAULO SANTOS DE SANTANA",
+    "Profissão": "Cantor e Compositor",
+    "Nascimento": "26/01/1992, Candeias - BA",
+    "Filiação": "Manoel Isidório de Santana Júnior e Maria das Graças Reis Santos",
+    "Sexo": "Masculino"
+  },
+  "mandatos": [
+    "Eleito deputado estadual, 2019-2023.",
+    "Atividade Partidária",
+    "Vice-líder do Bloco da Maioria, ALBA, 2019-2021.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa,  TITULAR das Comissões:  Defesa do Consumidor e Relações de Trabalho (fev-mar.2019), Direitos Humanos e Segurança Pública ( fev.-ago.2019) ; SUPLENTE das Comissões: Especial da Promoção da Igualdade (2019-2021), Defesa do Consumidor e Relações de Trabalho (mar.2019-2021),  Direitos Humanos e Segurança Pública ( ago.2019-2021), Especial para Avaliação dos Impactos da Pandemia do COVID-19 (jan. 2021), Constituição e Justiça (2021)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926916",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:24.098391Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "JOAO PAULO SANTOS DE SANTANA",
+  "profissao": "Cantor e Compositor",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Religioso",
+    "Cantor",
+    "Base Governamental",
+    "Comissões de Direitos",
+    "Liderança de Bloco"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ensino Médio Completo",
+      "sub": "Não especificada — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "Não especificado — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do Bloco da Maioria",
+      "sub": "ALBA — 2019-2021"
+    },
+    {
+      "label": "Titular da Comissão",
+      "sub": "Defesa do Consumidor e Relações de Trabalho — fev-mar.2019"
+    },
+    {
+      "label": "Titular da Comissão",
+      "sub": "Direitos Humanos e Segurança Pública — fev.-ago.2019"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Pastor e cantor, iniciou sua carreira política como Deputado Estadual, atuando em comissões focadas em direitos e relações de trabalho. Manteve posição de liderança em bloco parlamentar durante seu mandato.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

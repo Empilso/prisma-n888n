@@ -1,0 +1,93 @@
+{
+  "prisma_id": "5b08e074510ced8b71199b29d51bccbb",
+  "parlamentar_id": "926923",
+  "nome_eleitoral": "Tom é Meu Amigo",
+  "nome_limpo": "Tom É Meu Amigo",
+  "partido": "PSL",
+  "sigla_partido": "PSL",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926923",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:PastorTom.jpg",
+  "biografia_completa": "Formação Educacional\nSuperior incompleto.\nAtividade Profissional\nPolicial militar. Pastor da Igreja do Evangelho Quadrangular.\nMandato Eletivo\nEleito vereador da Câmara Municipal de Feira de Santana, 2013-2016 (PTN), reeleito 2017-2020. Renunciou o cargo, para assumir como deputado estadual. Eleito deputado estadual, pela Coligação Rede Patriota da Bahia, para o período de 2019-2023. Teve a perda de mandato declarada pelo TSE em 28/10/2020, com a convocação do Deputado Josafá Marinho de Aguiar (Patriota).\nFiliação Partidária\nPATRIOTA, 2018 - 2019;\nPSL, 2019 - 2020;\nAtividade Partidária\nLíder do Bloco Parlamentar PSL/PRB/MDB/Patriota, ALBA, 2019. Líder do Bloco Parlamentar PSL/ Republicanos/MDB, ALBA, 2020.\nAtividade Parlamentar\nNa Assembleia Legislativa, TITULAR  da Comissão: Especial de Acompanhamento e Fiscalização das Barragens (2019-2020), Especial para Regulamentação do Transporte Complementar da Bahia (2019-2020); SUPLENTE das Comissâo: Direitos Humanos  e Segurança Pública (2019-20).",
+  "dados_pessoais": {
+    "Nome": "EWERTON CARNEIRO DA COSTA",
+    "Profissão": "Policial militar",
+    "Nascimento": "06/01/1975, Feira de Santana - BA",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado"
+  },
+  "mandatos": [
+    "Eleito vereador da Câmara Municipal de Feira de Santana, 2013-2016 (PTN), reeleito 2017-2020. Renunciou o cargo, para assumir como deputado estadual. Eleito deputado estadual, pela Coligação Rede Patriota da Bahia, para o período de 2019-2023. Teve a perda de mandato declarada pelo TSE em 28/10/2020, com a convocação do Deputado Josafá Marinho de Aguiar (Patriota).",
+    "Filiação Partidária",
+    "PATRIOTA, 2018 - 2019;",
+    "PSL, 2019 - 2020;",
+    "Atividade Partidária",
+    "Líder do Bloco Parlamentar PSL/PRB/MDB/Patriota, ALBA, 2019. Líder do Bloco Parlamentar PSL/ Republicanos/MDB, ALBA, 2020.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa, TITULAR  da Comissão: Especial de Acompanhamento e Fiscalização das Barragens (2019-2020), Especial para Regulamentação do Transporte Complementar da Bahia (2019-2020); SUPLENTE das Comissâo: Direitos Humanos  e Segurança Pública (2019-20)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926923",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:28.091276Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "EWERTON CARNEIRO DA COSTA",
+  "profissao": "Policial militar",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Policial Militar",
+    "Pastor Evangélico",
+    "Perda de Mandato",
+    "Liderança de Bloco",
+    "Segurança Pública"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Superior Incompleto",
+      "sub": "Não especificada — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador",
+      "sub": "PTN — 2013-2016"
+    },
+    {
+      "label": "Vereador",
+      "sub": "Não especificado — 2017-2020"
+    },
+    {
+      "label": "Deputado Estadual (Perda de Mandato)",
+      "sub": "Rede Patriota da Bahia — 2019-2023 (até 28/10/2020)"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Líder do Bloco Parlamentar",
+      "sub": "PSL/PRB/MDB/Patriota, ALBA — 2019"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar",
+      "sub": "PSL/ Republicanos/MDB, ALBA — 2020"
+    },
+    {
+      "label": "Titular da Comissão",
+      "sub": "Especial de Acompanhamento e Fiscalização das Barragens — 2019-2020"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Com histórico como policial militar e pastor, Tom É Meu Amigo teve uma breve passagem como Deputado Estadual após mandato como vereador, sendo líder de bloco em 2019/2020. Seu mandato foi encerrado por decisão do TSE.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "19",
+  "historico_legislaturas": [
+    19
+  ],
+  "flags_validacao": []
+}

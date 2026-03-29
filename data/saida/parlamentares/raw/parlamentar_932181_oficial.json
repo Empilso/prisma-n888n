@@ -1,0 +1,43 @@
+{
+  "prisma_id": "a6d7d8546f1777b15a8fd606b367a85e",
+  "parlamentar_id": "932181",
+  "nome_eleitoral": "Cafu Barreto",
+  "nome_limpo": "Cafu Barreto",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/932181",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:cafubarreto.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Etelvina Dourado Matos - Canoão; estudou o ensino médio no Centro E. Luiz Viana Filho - Irecê.\nMandato Eletivo\nEleito prefeito do município de Ibitita, PSD, 2013-2020. Eleito deputado estadual, PSD, 2023-2027.\nFiliação Partidária\nPSD, 2011 - ;\nAtividade Partidária\nNa Assembleia Legislativa da Bahia: vice-líder da Bancada da Maioria, 2023-dez.2025\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia: TITULAR DA COMISSÃO: Meio Ambiente, seca e recursos hídricos, (2023-2024, 2025).\nContato\nEndereço:\nPrédio Anexo, gab. 108, Nelson David Ribeiro\nTel.:\ndeputadocafubarreto@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "EDICLEY SOUZA BARRETO",
+    "Profissão": "Empresário",
+    "Nascimento": "22/10/1979,",
+    "Filiação": "Mario Marques de Souza e Lindinalva Barreto de Souza",
+    "Sexo": "Masculino",
+    "Filhos": "Fernanda e Yasmin"
+  },
+  "mandatos": [
+    "Eleito prefeito do município de Ibitita, PSD, 2013-2020. Eleito deputado estadual, PSD, 2023-2027.",
+    "Filiação Partidária",
+    "PSD, 2011 - ;",
+    "Atividade Partidária",
+    "Na Assembleia Legislativa da Bahia: vice-líder da Bancada da Maioria, 2023-dez.2025",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia: TITULAR DA COMISSÃO: Meio Ambiente, seca e recursos hídricos, (2023-2024, 2025).",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 108, Nelson David Ribeiro",
+    "Tel.:",
+    "deputadocafubarreto@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "deputadocafubarreto@alba.ba.gov.br",
+    "telefones": []
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 108, Nelson David Ribeiro",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/932181",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:20:59.033170Z"
+}

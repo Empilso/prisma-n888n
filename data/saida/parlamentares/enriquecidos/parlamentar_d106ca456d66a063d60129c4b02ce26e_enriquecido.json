@@ -1,0 +1,99 @@
+{
+  "prisma_id": "d106ca456d66a063d60129c4b02ce26e",
+  "parlamentar_id": "915879",
+  "nome_eleitoral": "Delegado Deraldo Damasceno",
+  "nome_limpo": "Delegado Deraldo Damasceno",
+  "partido": "PSL",
+  "sigla_partido": "PSL",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915879",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:DeraldoDamasceno.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental no Centro Educacional Carneiro Ribeiro - Escola Classe II, Salvador, e no  Colégio Estadual de Cachoeira-BA; técnico em Administração de Empresas, 2º Grau, pela Escola Técnica do Comércio da Bahia. Formou-se em Direito pela Faculdade Teófilo Otoni - MG, 1984; pós-graduação em Processo Penal e Direito Penal pela Faculdade do Vale do Rio Doce, 1998, e Docência para Ensino Superior - ABECM, Faculdade Visconde de Cairu, Salvador.\nAtividade Profissional\nAjudante de pedreiro, carregador de malas na Estação Rodoviária de Salvador, lavador de carros, frentista de posto de gasolina, repositor de supermercado, soldado do exército, agente de Polícia Civil do Estado da Bahia, 1977; delegado, 1985, nos municípios de Maiquinique, Itamaraju, Santa Maria da Vitória, Barreiras, Irecê, Bom Jesus da Lapa, Carinhanha, Vitória da Conquista e Eunapólis. Delegado de Polícia, 1994, nos municípios de Casa Nova, Itabuna, Ibotirama, Mucuri, Porto Seguro, Luis Eduardo Magalhães, Serra Preta e Candeal, delegado titular da 12ª Delegacia de Itapoã e da 5ª Delegacia de Periperi, Salvador-BA.\nMandato Eletivo\nEleito deputado estadual pelo PSL, para o período 2011-2015.\nFiliação Partidária\nPSL;\nPHS;\nAtividade Partidária\nVice-líder do Bloco Parlamentar PSL/PRB/PP, ALBA, out.2013. Vice-líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.\nAtividade Parlamentar\nNa Assembléia Legislativa, TITULAR das Comissões: Defesa do Consumidor e Relações de Trabalho (2011, 2013-2014), Direitos Humanos e Segurança Pública (2011, 2013-2014), CPI Tráfico de Pessoas (out/2013 - 2014); coordenador da sub-comissão de Prevenção as Irregularidades nas Relações de Consumo (2011); membro da sub-comissão de Segurança Pública Defesa Civil (2011).\nCondecorações\nMissões Oficiais\nBlog\nhttp://deraldodamasceno.blogspot.com.br/",
+  "dados_pessoais": {
+    "Nome": "DERALDO DE JESUS DAMASCENO",
+    "Profissão": "Advogado e Delegado de Polícia",
+    "Nascimento": "31/08/1950, Salvador-BA",
+    "Filiação": "Geraldo Alves Damasceno e Maria Rodrigues de Jesus Damasceno",
+    "Sexo": "Masculino",
+    "Cônjuge": "Vasti Dias de Souza Damasceno",
+    "Filhos": "Argemiro, Deraldo Júnior, Davidson e Mayra"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo PSL, para o período 2011-2015.",
+    "Filiação Partidária",
+    "PSL;",
+    "PHS;",
+    "Atividade Partidária",
+    "Vice-líder do Bloco Parlamentar PSL/PRB/PP, ALBA, out.2013. Vice-líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, TITULAR das Comissões: Defesa do Consumidor e Relações de Trabalho (2011, 2013-2014), Direitos Humanos e Segurança Pública (2011, 2013-2014), CPI Tráfico de Pessoas (out/2013 - 2014); coordenador da sub-comissão de Prevenção as Irregularidades nas Relações de Consumo (2011); membro da sub-comissão de Segurança Pública Defesa Civil (2011)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915879",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:02.189217Z",
+  "data_nascimento": "1950-08-31",
+  "municipio_nascimento": "Salvador",
+  "uf_nascimento": "BA",
+  "nome_civil": "DERALDO DE JESUS DAMASCENO",
+  "profissao": "Advogado e Delegado de Polícia",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Segurança Pública",
+    "Delegado",
+    "PSL",
+    "Direito",
+    "Relações de Consumo"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Direito",
+      "sub": "Faculdade Teófilo Otoni - MG — 1984"
+    },
+    {
+      "label": "Técnico em Administração de Empresas",
+      "sub": "Escola Técnica do Comércio da Bahia — Não especificado"
+    },
+    {
+      "label": "Pós-graduação em Processo Penal e Direito Penal",
+      "sub": "Faculdade do Vale do Rio Doce — 1998"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Delegado de Polícia (diversos municípios)",
+      "sub": "Polícia Civil da Bahia — 1985-2011"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PSL — 2011-2015"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-líder do Bloco Parlamentar PSL/PRB/PP",
+      "sub": "ALBA — out.2013"
+    },
+    {
+      "label": "Vice-líder do Bloco Parlamentar PP/PSL",
+      "sub": "ALBA — 2013-2014"
+    },
+    {
+      "label": "Titular da Comissão de Defesa do Consumidor e Relações de Trabalho",
+      "sub": "ALBA — 2011, 2013-2014"
+    },
+    {
+      "label": "Titular da Comissão de Direitos Humanos e Segurança Pública",
+      "sub": "ALBA — 2011, 2013-2014"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Delegado de Polícia com extensa carreira no serviço público baiano, Delegado Deraldo Damasceno foi eleito deputado estadual pelo PSL. Sua atuação parlamentar focou nas áreas de segurança pública e defesa do consumidor, exercendo liderança em blocos parlamentares de centro-direita.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

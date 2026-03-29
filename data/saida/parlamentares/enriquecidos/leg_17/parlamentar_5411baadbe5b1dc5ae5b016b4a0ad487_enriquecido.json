@@ -1,0 +1,104 @@
+{
+  "prisma_id": "5411baadbe5b1dc5ae5b016b4a0ad487",
+  "parlamentar_id": "915874",
+  "nome_eleitoral": "Temóteo Brito",
+  "nome_limpo": "Temóteo Brito",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915874",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:TemoteoBrito.jpg",
+  "biografia_completa": "Formação Educacional\nCursou o Ginásio no Ginásio Alfredo Dutra, Itapetinga-BA, 1954; o Secundário no Colégio Nossa Senhora da Vitória - Marista, Salvador-BA, 1959.\nAtividade Profissional\nDiretor do Centro Regional Integrado-CRI, 1983-1984; presidente da Cooperativa Mista Agropecuária, 1982-1983; agropecuarísta em Teixeira de Freitas-BA.\nMandato Eletivo\nEleito prefeito de Teixeira de Freitas pelo Partido da Frente Liberal-PFL, 1986-1988; deputado estadual pelo Partido da Reconstrução Nacional-PRN, 1991-1995, renunciou ao mandato em dez.1992; eleito prefeito de Teixeira de Freitas, 1993-1996. Eleito deputado estadual pelo Partido do Movimento Democrático Brasileiro - PMDB , 2011-2015. Eleito prefeito de Teixeira de Freitas, 2017-2020.\nFiliação Partidária\nMDB;\nPFL;\nPRN;\nPSD, 2011 - 2014;\nAtividade Parlamentar\nNa Assembléia Legislativa, 3º SECRETÁRIO da Mesa Diretora (1991-1993); PRESIDENTE da Comissão de Direitos Humanos e Segurança Pública (2011-2014); TITULAR das Comissões: Agricultura e Política Rural (2011-2014),  Saúde e Saneamento (2011-Mar.2012); SUPLENTE das Comissões: Especial de Assuntos Territoriais e Emancipação (2011-2014),  Especial do Porto Sul (2011-2014), Infra-estrutura, Desenvolvimento Econômico e Turismo (2011-2014), Saúde e Saneamento (2012-2014).",
+  "dados_pessoais": {
+    "Nome": "TEMOTEO ALVES DE BRITO",
+    "Profissão": "Agropecuarista e Empresário",
+    "Nascimento": "09/11/1941, Maiquinique-BA",
+    "Falecimento": "20/04/2024",
+    "Filiação": "Urcício Alves de Brito e Ermita Alves de Brito",
+    "Sexo": "Masculino",
+    "Cônjuge": "Dalvani Coelho Brito",
+    "Filhos": "Fabian, Leonardo e Maria Selma"
+  },
+  "mandatos": [
+    "Eleito prefeito de Teixeira de Freitas pelo Partido da Frente Liberal-PFL, 1986-1988; deputado estadual pelo Partido da Reconstrução Nacional-PRN, 1991-1995, renunciou ao mandato em dez.1992; eleito prefeito de Teixeira de Freitas, 1993-1996. Eleito deputado estadual pelo Partido do Movimento Democrático Brasileiro - PMDB , 2011-2015. Eleito prefeito de Teixeira de Freitas, 2017-2020.",
+    "Filiação Partidária",
+    "MDB;",
+    "PFL;",
+    "PRN;",
+    "PSD, 2011 - 2014;",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, 3º SECRETÁRIO da Mesa Diretora (1991-1993); PRESIDENTE da Comissão de Direitos Humanos e Segurança Pública (2011-2014); TITULAR das Comissões: Agricultura e Política Rural (2011-2014),  Saúde e Saneamento (2011-Mar.2012); SUPLENTE das Comissões: Especial de Assuntos Territoriais e Emancipação (2011-2014),  Especial do Porto Sul (2011-2014), Infra-estrutura, Desenvolvimento Econômico e Turismo (2011-2014), Saúde e Saneamento (2012-2014)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/915874",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:45.196241Z",
+  "data_nascimento": "1941-11-09",
+  "municipio_nascimento": "Maiquinique",
+  "uf_nascimento": "BA",
+  "nome_civil": "TEMOTEO ALVES DE BRITO",
+  "profissao": "Agropecuarista e Empresário",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Agropecuária",
+    "Executivo Municipal",
+    "PMDB",
+    "Direitos Humanos",
+    "Longevidade Política"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ensino Médio (Secundário)",
+      "sub": "Colégio Nossa Senhora da Vitória - Marista — 1959"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Prefeito de Teixeira de Freitas",
+      "sub": "PFL — 1986-1988"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PRN — 1991-1995"
+    },
+    {
+      "label": "Prefeito de Teixeira de Freitas",
+      "sub": "Não especificado — 1993-1996"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PMDB — 2011-2015"
+    },
+    {
+      "label": "Prefeito de Teixeira de Freitas",
+      "sub": "Não especificado — 2017-2020"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "3º Secretário da Mesa Diretora",
+      "sub": "ALBA — 1991-1993"
+    },
+    {
+      "label": "Presidente da Comissão de Direitos Humanos e Segurança Pública",
+      "sub": "ALBA — 2011-2014"
+    },
+    {
+      "label": "Titular da Comissão de Agricultura e Política Rural",
+      "sub": "ALBA — 2011-2014"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Político com vasta experiência no executivo municipal de Teixeira de Freitas, Temóteo Brito possui uma longa trajetória no legislativo estadual, passando por partidos como PFL, PRN e PMDB. Sua atuação recente na ALBA foi marcada pela presidência da Comissão de Direitos Humanos e Segurança Pública.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "17",
+  "historico_legislaturas": [
+    17
+  ],
+  "flags_validacao": []
+}

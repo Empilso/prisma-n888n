@@ -19,27 +19,26 @@ from typing import Dict, List
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "https://www.al.ba.gov.br"
-URL_LISTA = f"{BASE_URL}/deputados/deputados-estaduais"
-VERSAO = "v4.0-prisma-ids"
+VERSAO = "v5.0-prisma-ids-multileg"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Identificar todos os parlamentares ativos e listar IDs e páginas de perfil.",
-        "especialidade": "Reconhecimento de Superfície",
+        "missao": "Identificar todos os parlamentares e listar IDs e páginas de perfil para multiplas legislaturas.",
+        "especialidade": "Reconhecimento de Superfície Histórica",
         "protocolo_tecnico": "Requests + BeautifulSoup4 + LXML",
         "camada_dados": "Raw (Bronze Inicial)",
         "seguranca": "Timeout 30s + Ignora Erros de Certificado ALBA"
     },
     "diretrizes": [
-        "1. Acessa a lista master de deputados estaduais da ALBA.",
+        "1. Acessa a lista de deputados estaduais da ALBA baseada na legislatura escolhida (17, 18, 19, 20).",
         "2. Identifica o CARD de cada deputado (nó DOM .col-md-3).",
         "3. Extrai o parlamentar_id dinâmico da URL do perfil.",
         "4. Captura partido, nome parlamentar e foto.",
         "5. Verifica a sessão de observações para listar suplências."
     ],
     "apuracao": {
-        "safras_suportadas": ["Atual (Tempo Real)"],
-        "saida_esperada": "data/saida/parlamentares/raw/parlamentares_ids.json"
+        "safras_suportadas": ["17", "18", "19", "20 (Atual)"],
+        "saida_esperada": "data/saida/parlamentares/raw/parlamentares_ids_leg_{num}.json"
     }
 }
 
@@ -78,16 +77,25 @@ def print_status(msg: str, status="info"):
     print(f"{color}{icon} {msg}{C_END}")
 
 
-def main():
-    print_header(f"ZIDANE-A {VERSAO} | COLETOR DE IDs")
-    print_status("Iniciando reconhecimento de parlamentares no portal ALBA...", "process")
+def main(legislatura: str = "20"):
+    print_header(f"ZIDANE-A {VERSAO} | COLETOR DE IDs (Leg: {legislatura})")
+    print_status(f"Iniciando reconhecimento de parlamentares da legislatura {legislatura} no portal ALBA...", "process")
+
+    urls_leg = {
+        "17": f"{BASE_URL}/deputados/ex-deputados-estaduais/legislatura/17",
+        "18": f"{BASE_URL}/deputados/ex-deputados-estaduais/legislatura/18",
+        "19": f"{BASE_URL}/deputados/ex-deputados-estaduais/legislatura/19",
+        "20": f"{BASE_URL}/deputados/deputados-estaduais"
+    }
+    
+    url_lista = urls_leg.get(str(legislatura), urls_leg["20"])
 
     base_dir = Path("/home/carneiro888/CARNEIRO888/N888N - AGENTIC EXTRATORES/n888n")
     out_dir = base_dir / "data" / "saida" / "parlamentares" / "raw"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"📡 Acessando lista: {URL_LISTA}")
-    soup = get_soup(URL_LISTA)
+    print(f"📡 Acessando lista: {url_lista}")
+    soup = get_soup(url_lista)
     if not soup:
         print("💀 Falha crítica: não foi possível acessar o portal ALBA.")
         return
@@ -163,15 +171,19 @@ def main():
         "records": deputados
     }
 
-    out_file = out_dir / "parlamentares_ids.json"
+    out_file = out_dir / f"parlamentares_ids_leg_{legislatura}.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print_status(f"ZIDANE-A CONCLUÍDO! {C_BOLD}{len(deputados)}{C_END} IDs coletados.", "success")
+    print_status(f"ZIDANE-A CONCLUÍDO! {C_BOLD}{len(deputados)}{C_END} IDs coletados para Legislatura {legislatura}.", "success")
     print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
     print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Coletor de IDs Zidane-A (Multilegislatura)")
+    parser.add_argument("--legislatura", type=str, default="20", choices=["17", "18", "19", "20"],
+                        help="Qual legislatura baixar (17=histórica, 18=histórica, 19=ex, 20=atual)")
+    args = parser.parse_args()
+    main(args.legislatura)

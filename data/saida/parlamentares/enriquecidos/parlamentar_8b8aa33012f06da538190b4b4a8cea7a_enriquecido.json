@@ -1,0 +1,82 @@
+{
+  "prisma_id": "8b8aa33012f06da538190b4b4a8cea7a",
+  "parlamentar_id": "921271",
+  "nome_eleitoral": "Gika Lopes Lula",
+  "nome_limpo": "Gika Lopes Lula",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921271",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Gika.jpg%20",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental na Escola Dom Bosco e Colégio Estadual Rubem Berta, Serrinha-BA. Ensino médio na Escola Normal de Serrinha.\nMandato Eletivo\nVice-prefeito de Serrinha-BA, PSB, 2013-2016, renunciou ao mandato. Eleito deputado estadual, PT, 2015-2019.\nFiliação Partidária\nPSB2013;\nPT, 2013 - 2018;\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia, TITULAR DAS COMISSÕES: Agricultura e Política Rural, (2015-2018), Especial de Desenvolvimento Urbano (2015-2018); SUPLENTE DA COMISSÃO: Meio Ambiente, Seca e Recursos Humanos, (2015-2018).",
+  "dados_pessoais": {
+    "Nome": "GIVALDO DA SILVA LOPES",
+    "Profissão": "Comerciante",
+    "Nascimento": "21/02/1959, Serrinha-BA",
+    "Filiação": "José Ferreira Lopes e Rosa Ferreira da Silva",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Maria Virland da Silva Lopes",
+    "Filhos": "Marcone, Milena e Melina"
+  },
+  "mandatos": [
+    "Vice-prefeito de Serrinha-BA, PSB, 2013-2016, renunciou ao mandato. Eleito deputado estadual, PT, 2015-2019.",
+    "Filiação Partidária",
+    "PSB2013;",
+    "PT, 2013 - 2018;",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia, TITULAR DAS COMISSÕES: Agricultura e Política Rural, (2015-2018), Especial de Desenvolvimento Urbano (2015-2018); SUPLENTE DA COMISSÃO: Meio Ambiente, Seca e Recursos Humanos, (2015-2018)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921271",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:44.176561Z",
+  "data_nascimento": "1959-02-21",
+  "municipio_nascimento": "Serrinha",
+  "uf_nascimento": "BA",
+  "nome_civil": "GIVALDO DA SILVA LOPES",
+  "profissao": "Comerciante",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "PT",
+    "Esquerda Baiana",
+    "Executivo Municipal",
+    "Mandato Único",
+    "Desenvolvimento Urbano"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Ensino Médio",
+      "sub": "Escola Normal de Serrinha — Não informado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vice-prefeito de Serrinha-BA",
+      "sub": "PSB — 2013-2016"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PT — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Titular da Comissão de Agricultura e Política Rural",
+      "sub": "Assembleia Legislativa da Bahia — 2015-2018"
+    },
+    {
+      "label": "Titular da Comissão Especial de Desenvolvimento Urbano",
+      "sub": "Assembleia Legislativa da Bahia — 2015-2018"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Ascendeu politicamente através do executivo municipal em Serrinha, migrando para a Assembleia Legislativa da Bahia pelo PT. Sua atuação parlamentar focou em temas como agricultura e desenvolvimento urbano, indicando alinhamento com pautas regionais e do partido.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

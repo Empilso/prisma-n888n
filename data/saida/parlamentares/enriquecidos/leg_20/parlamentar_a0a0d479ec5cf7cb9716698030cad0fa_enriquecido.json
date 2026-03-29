@@ -1,0 +1,122 @@
+{
+  "prisma_id": "a0a0d479ec5cf7cb9716698030cad0fa",
+  "parlamentar_id": "926902",
+  "nome_eleitoral": "Hilton Coelho",
+  "nome_limpo": "Hilton Coelho",
+  "partido": "PSOL",
+  "sigla_partido": "PSOL",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/926902",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:hiltoncoelho.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou no Colégio Estadual Luiz Vianna Filho, 1983-86 e na Escola Técnica Federal da Bahia, 1987-90. Graduado em História - UFBA , 2000.  Mestre em História  Política e Social da Bahia, UFBA, Salvador, 2004.\nAtividade Profissional\nTécnico Judiciário do TRT- 5 região, 1993-2013.  Professor de História, Curso Popular Pré Vestibular 2 de Julho, Salvador, 2002-2008.\nMandato Eletivo\nEleito vereador de Salvador (2013-2017) pelo PSOL, Coligação Chega de Vender Nossa Cidade (PSOL - PCB). Reeleito vereador (2016-2020). Renunciou o mandato de vereador para assumir o cargo de deputado estadual; eleito deputado estadual pelo PSOL, para o período de 2019-2023; reeleito deputado estadual pela Federação PSOL/Rede (PSOL/REDE), para o período 2023-2027.\nFiliação Partidária\nPSOL, 2005 - ;\nAtividade Partidária\nMilitante do Partido Socialismo e Liberdade (PSOL), atua desde jovem nos movimentos sociais, defendendo os ideais do socialismo. Atua no movimento sindical na direção do Sindicato dos Servidores do Judiciário na Bahia (licenciado). Membro da Intersindical e vice-presidente do PSOL na Bahia.\nAtividade Parlamentar\nNa Câmara Municipal de Salvador, membro da Comissão de Reparação; Suplente na Comissão de Planejamento Urbano e Meio Ambiente. \r\nNa Assembleia Legislativa, TITULAR DAS COMISSÕES: Especial da Promoção da Igualdade (2019-2021), Direitos Humanos e Segurança Pública (2023-2024, 2025), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2023-2024, 2025); SUPLENTE DAS COMISÕES: Educação, Cultura, Ciência e Tec. e Serviço Público (2019-2022),  Direitos Humanos e Segurança Pública (abr. 2019-2022).\nContato\nEndereço:\nPrédio Anexo, gab. 309, Nelson David Ribeiro\nTel.:\n3115-4014 /\n3115-5371 /\n3115-5489 /\n3115-7062 /\n3115-7063 /\n3115-7265\nhiltoncoelho@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "HILTON BARROS COELHO",
+    "Profissão": "Servidor Público Federal",
+    "Nascimento": "22/06/1971, Salvador - BA",
+    "Filiação": "Altamir Santana Coelho  e Ivonilde Raimunda Barros Coelho",
+    "Sexo": "Masculino",
+    "Cônjuge": "Denise Silva de Souza",
+    "Filhos": "Maiana"
+  },
+  "mandatos": [
+    "Eleito vereador de Salvador (2013-2017) pelo PSOL, Coligação Chega de Vender Nossa Cidade (PSOL - PCB). Reeleito vereador (2016-2020). Renunciou o mandato de vereador para assumir o cargo de deputado estadual; eleito deputado estadual pelo PSOL, para o período de 2019-2023; reeleito deputado estadual pela Federação PSOL/Rede (PSOL/REDE), para o período 2023-2027.",
+    "Filiação Partidária",
+    "PSOL, 2005 - ;",
+    "Atividade Partidária",
+    "Militante do Partido Socialismo e Liberdade (PSOL), atua desde jovem nos movimentos sociais, defendendo os ideais do socialismo. Atua no movimento sindical na direção do Sindicato dos Servidores do Judiciário na Bahia (licenciado). Membro da Intersindical e vice-presidente do PSOL na Bahia.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Salvador, membro da Comissão de Reparação; Suplente na Comissão de Planejamento Urbano e Meio Ambiente.",
+    "Na Assembleia Legislativa, TITULAR DAS COMISSÕES: Especial da Promoção da Igualdade (2019-2021), Direitos Humanos e Segurança Pública (2023-2024, 2025), Educação, Cultura, Ciência e Tecnologia e Serviço Público (2023-2024, 2025); SUPLENTE DAS COMISÕES: Educação, Cultura, Ciência e Tec. e Serviço Público (2019-2022),  Direitos Humanos e Segurança Pública (abr. 2019-2022).",
+    "Contato",
+    "Endereço:",
+    "Prédio Anexo, gab. 309, Nelson David Ribeiro",
+    "Tel.:",
+    "3115-4014 /",
+    "3115-5371 /",
+    "3115-5489 /",
+    "3115-7062 /",
+    "3115-7063 /",
+    "3115-7265",
+    "hiltoncoelho@alba.ba.gov.br"
+  ],
+  "contatos": {
+    "email": "hiltoncoelho@alba.ba.gov.br",
+    "telefones": [
+      "3115-4014",
+      "3115-5371",
+      "3115-5489",
+      "3115-7062",
+      "3115-7063",
+      "3115-7265"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 309, Nelson David Ribeiro",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/926902",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:21:14.584662Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "HILTON BARROS COELHO",
+  "profissao": "Servidor Público Federal",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Esquerda",
+    "Movimento Social",
+    "Educação",
+    "Direitos Humanos",
+    "PSOL"
+  ],
+  "formacao_academica": [
+    {
+      "label": "História",
+      "sub": "UFBA — 2000"
+    },
+    {
+      "label": "Mestre em História Política e Social da Bahia",
+      "sub": "UFBA, Salvador — 2004"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador de Salvador",
+      "sub": "PSOL — 2013-2017"
+    },
+    {
+      "label": "Vereador de Salvador",
+      "sub": "PSOL — 2016-2020"
+    },
+    {
+      "label": "Deputado estadual",
+      "sub": "PSOL — 2019-2023"
+    },
+    {
+      "label": "Deputado estadual",
+      "sub": "Federação PSOL/Rede — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Membro da Comissão",
+      "sub": "Reparação (Câmara Municipal de Salvador) — Não informado"
+    },
+    {
+      "label": "Vice-presidente do PSOL na Bahia",
+      "sub": "PSOL — Não informado"
+    },
+    {
+      "label": "TITULAR DAS COMISSÕES",
+      "sub": "Direitos Humanos e Segurança Pública — 2023-2024, 2025"
+    }
+  ],
+  "condecoracoes": [],
+  "biografia_resumo": "Deputado estadual reeleito, Hilton Coelho é uma figura histórica da esquerda baiana, com formação acadêmica em História e forte militância sindical e partidária no PSOL. Sua atuação parlamentar é focada em pautas sociais, como Direitos Humanos e Promoção da Igualdade, mantendo-se fiel à sua base ideológica.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    19,
+    20
+  ],
+  "flags_validacao": []
+}

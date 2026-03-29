@@ -1,0 +1,42 @@
+{
+  "prisma_id": "4333b508a3e1533a8dca4c0a5713f026",
+  "parlamentar_id": "921839",
+  "nome_eleitoral": "Herzem Gusmão",
+  "nome_limpo": "Herzem Gusmão",
+  "partido": "MDB",
+  "sigla_partido": "MDB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921839",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:Herzem%20Gusmao.jpg",
+  "biografia_completa": "Formação Educacional\nFormou-se em Jornalismo.\nAtividade Profissional\nGerente  da ASPEB- Associação de Poupança e Empréstimo da Bahia, 1981.  Trabalhou também no Banco Econômico, 1984;  gerente das Lojas Unilar, 1985.\nMandato Eletivo\n1ºSuplente de deputado estadual, pelo PMDB, assumiu a vaga de deputado  em 3/03/2015.\nFiliação Partidária\nPSB, 1995 - 2007;\nPSDB, 2007 - 2009;\nMDB, 2009 - 2016;\nAtividade Partidária\nPresidente do PMDB, Vitória da Conquista, BA. Vice-líder da Bancada da Minoria, ALBA, mar.2015-mar.2016\nAtividade Parlamentar\nNa Assembléia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público (2016);  TITULAR DAS COMISSÕES: Educação, Cultura, Ciência e Tecnologia e Serviço Público (2015-06/2016), Direitos Humanos e Segurança Pública (2015-2016), Finanças, Orçamento, Fiscalização e Controle (2015-06/2016), Especial de Desenvolvimento Regional (mar-jun/2016), Especial Desporto, Paradesporto e Lazer (mar/2016-); SUPLENTE DAS COMISSÕES: Saúde e Saneamento (2015- 2016).",
+  "dados_pessoais": {
+    "Nome": "HERZEM GUSMÃO PEREIRA",
+    "Profissão": "Jornalista",
+    "Nascimento": "02/06/1948, Vitória da Conquista",
+    "Falecimento": "18/03/2021",
+    "Filiação": "Eunildo Gusmão Pereira e Zilda Gusmão Pereira",
+    "Sexo": "Masculino",
+    "Estado Civil": "casado",
+    "Cônjuge": "Luci Freire Gusmão"
+  },
+  "mandatos": [
+    "1ºSuplente de deputado estadual, pelo PMDB, assumiu a vaga de deputado  em 3/03/2015.",
+    "Filiação Partidária",
+    "PSB, 1995 - 2007;",
+    "PSDB, 2007 - 2009;",
+    "MDB, 2009 - 2016;",
+    "Atividade Partidária",
+    "Presidente do PMDB, Vitória da Conquista, BA. Vice-líder da Bancada da Minoria, ALBA, mar.2015-mar.2016",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa da Bahia: VICE-PRESIDENTE da Comissão de Educação, Cultura, Ciência e Tecnologia e Serviço Público (2016);  TITULAR DAS COMISSÕES: Educação, Cultura, Ciência e Tecnologia e Serviço Público (2015-06/2016), Direitos Humanos e Segurança Pública (2015-2016), Finanças, Orçamento, Fiscalização e Controle (2015-06/2016), Especial de Desenvolvimento Regional (mar-jun/2016), Especial Desporto, Paradesporto e Lazer (mar/2016-); SUPLENTE DAS COMISSÕES: Saúde e Saneamento (2015- 2016)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921839",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:46.754093Z"
+}

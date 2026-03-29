@@ -1,0 +1,116 @@
+{
+  "prisma_id": "233a76ee653193f62e17b914c3ac8db4",
+  "parlamentar_id": "921264",
+  "nome_eleitoral": "Antonio Henrique Júnior",
+  "nome_limpo": "Antonio Henrique Júnior",
+  "partido": "PP",
+  "sigla_partido": "PP",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/deputado-estadual/921264",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:AntonioHenriqueJunior.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino médio no Centro de Ensino de Jovens e Adultos, Brasília-DF.\nAtividade Profissional\nEm Barreiras, foi Secretário Municipal de Saúde, 2004 e Secretário de Administração, 2014.\nMandato Eletivo\nEleito deputado estadual, PP, para o período 2015-2019. Reeleito deputado estadual pelo PP, Coligação Força do Trabalho pela Bahia, para o período 2019-2023; reeleito deputado estadual pelo PP para o período 2023-2027\nFiliação Partidária\nPP, 2012 - ;\nAtividade Partidária\nVice-Líder do Bloco Parlamentar PP/PSL/PSB, ALBA, fev/2015-. Vice-Líder do Bloco da Maioria, ALBA, 2016-2017-.Vice-líder do PP, 2018.\nAtividade Parlamentar\nNa Assembleia Legislativa da Bahia, 3º VICE-PRESIDENTE da MESA DIRETORA (2023-2025); PRESIDENTE da Comissão: Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I) (2019-2021); TITULAR DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos (2015-2018), Especial de Desenvolvimento Regional (2015-2018, 2021), Constituição e Justiça (2017-2022), Agricultura e Política Rural (2017-2018), Especial de Desporto, Paradesporto e Lazer (2019-2020, 2023-2024), Conselho de Ética e Decoro Parlamentar (mar. 2024); SUPLENTE DAS COMISSÕES: Agricultura e Política Rural (2015-2016, 2021-2022), Defesa do Consumidor e Relações de Trabalho (jun. 2023-2024, 2025) Especial da Ferrovia de Integração Oeste Leste (2015-2018), Especial de Desporto, Paradesporto e Lazer (2015-2018). Ouvidor Parlamentar, 2025-2027.\nCondecorações\nTítulo de Cidadão Barreirense; Cidadão São Felense, Câmara Municipal de São Félix do Coribe, 2017;  Cidadão Santa-Mariense, Câmara Municipal de Santa Maria da Vitória, 2017.\nContato\nEndereço:\nPrédio Anexo, gab. 204, Wilson Lins\nTel.:\n3115-2986 /\n3115-4005 /\n3115-5224 /\n3115-5250 /\n3115-5510 /\n3115-7209 /\n3115-7387\nantoniohenriquejr@alba.ba.gov.br",
+  "dados_pessoais": {
+    "Nome": "ANTONIO HENRIQUE DE SOUSA MOREIRA JÚNIOR",
+    "Profissão": "Pecuarista",
+    "Nascimento": "30/08/1970, Itabuna-BA",
+    "Filiação": "Antonio Henrique de Sousa Moreira e Judite Paulina dos Santos",
+    "Sexo": "Masculino",
+    "Estado Civil": "Casado",
+    "Cônjuge": "Nádia Ferreira de Souza",
+    "Filhos": "Danilo Henrique, Antonio Henrique Neto, Rafael e Larissa"
+  },
+  "mandatos": [
+    "Eleito deputado estadual, PP, para o período 2015-2019. Reeleito deputado estadual pelo PP, Coligação Força do Trabalho pela Bahia, para o período 2019-2023; reeleito deputado estadual pelo PP para o período 2023-2027",
+    "Filiação Partidária",
+    "PP, 2012 - ;",
+    "Atividade Partidária",
+    "Vice-Líder do Bloco Parlamentar PP/PSL/PSB, ALBA, fev/2015-. Vice-Líder do Bloco da Maioria, ALBA, 2016-2017-.Vice-líder do PP, 2018.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa da Bahia, 3º VICE-PRESIDENTE da MESA DIRETORA (2023-2025); PRESIDENTE da Comissão: Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I) (2019-2021); TITULAR DAS COMISSÕES: Meio Ambiente, Seca e Recursos Hídricos (2015-2018), Especial de Desenvolvimento Regional (2015-2018, 2021), Constituição e Justiça (2017-2022), Agricultura e Política Rural (2017-2018), Especial de Desporto, Paradesporto e Lazer (2019-2020, 2023-2024), Conselho de Ética e Decoro Parlamentar (mar. 2024); SUPLENTE DAS COMISSÕES: Agricultura e Política Rural (2015-2016, 2021-2022), Defesa do Consumidor e Relações de Trabalho (jun. 2023-2024, 2025) Especial da Ferrovia de Integração Oeste Leste (2015-2018), Especial de Desporto, Paradesporto e Lazer (2015-2018). Ouvidor Parlamentar, 2025-2027."
+  ],
+  "contatos": {
+    "email": "antoniohenriquejr@alba.ba.gov.br",
+    "telefones": [
+      "3115-2986",
+      "3115-4005",
+      "3115-5224",
+      "3115-5250",
+      "3115-5510",
+      "3115-7209",
+      "3115-7387"
+    ]
+  },
+  "gabinete_endereco": "Prédio Anexo, gab. 204, Wilson Lins",
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/deputado-estadual/921264",
+  "versao_zidane": "v4.0-prisma-hub",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-28T16:20:54.666039Z",
+  "data_nascimento": "1970-08-30",
+  "municipio_nascimento": "Itabuna",
+  "uf_nascimento": "BA",
+  "nome_civil": "ANTONIO HENRIQUE DE SOUSA MOREIRA JÚNIOR",
+  "profissao": "Pecuarista",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "PP",
+    "Base do Governo",
+    "Mesa Diretora",
+    "Gestão Municipal",
+    "Infraestrutura (FIOL)"
+  ],
+  "formacao_academica": [],
+  "carreira_politica": [
+    {
+      "label": "Secretário Municipal de Saúde",
+      "sub": "Barreiras — 2004"
+    },
+    {
+      "label": "Secretário de Administração",
+      "sub": "Barreiras — 2014"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2015-2019"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP, Coligação Força do Trabalho pela Bahia — 2019-2023"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2023-2027"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Vice-Líder do Bloco Parlamentar PP/PSL/PSB",
+      "sub": "ALBA — fev/2015-"
+    },
+    {
+      "label": "Vice-Líder do Bloco da Maioria",
+      "sub": "ALBA — 2016-2017"
+    },
+    {
+      "label": "3º Vice-Presidente da Mesa Diretora",
+      "sub": "ALBA — 2023-2025"
+    },
+    {
+      "label": "Presidente da Comissão Especial do Complexo Intermodal da FIOL, Porto Sul e Complexo Viário do Oeste (Ponte S-I)",
+      "sub": "ALBA — 2019-2021"
+    }
+  ],
+  "condecoracoes": [
+    "Título de Cidadão Barreirense",
+    "Cidadão São Felense (Câmara Municipal de São Félix do Coribe, 2017)",
+    "Cidadão Santa-Mariense (Câmara Municipal de Santa Maria da Vitória, 2017)"
+  ],
+  "biografia_resumo": "Com experiência prévia como Secretário Municipal em Barreiras, Antonio Henrique Júnior é um deputado estadual do PP com forte alinhamento à base governista. Sua atuação parlamentar inclui a liderança de blocos e a ocupação de cargos na Mesa Diretora da ALBA, além de foco em comissões de infraestrutura e desenvolvimento regional.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "20",
+  "historico_legislaturas": [
+    18,
+    19,
+    20
+  ],
+  "flags_validacao": []
+}

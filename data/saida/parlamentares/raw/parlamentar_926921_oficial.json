@@ -1,0 +1,38 @@
+{
+  "prisma_id": "6d70e875646a2c7faaf777612b5bfcea",
+  "parlamentar_id": "926921",
+  "nome_eleitoral": "Rogério Andrade Filho",
+  "nome_limpo": "Rogério Andrade Filho",
+  "partido": "PSD",
+  "sigla_partido": "PSD",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926921",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:RogerioAndradeFilho.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o 2º grau no Colégio Sartre COC, Salvador. Estudante de Direito, UNIFACS, Salvador.\nMandato Eletivo\nEleito deputado estadual, para o período 2019-2023, pela Coligação Força do Trabalho pela Bahia.\nFiliação Partidária\nPSD, 2019 - ;\nAtividade Partidária\nPresidente do PSD Jovem. Vice-líder da Bancada do PSD, ALBA, 2019-2022.\nAtividade Parlamentar\nNa Assembleia Legislativa, TITULAR das Comissões: Direitos Humanos e Segurança Pública (2019-2022), Especial Desporto, Paradesporto e Lazer (fev.-out.2019), Especial de Assuntos Territoriais e Emancipação (2019-2021), Especial de Desenvolvimento Urbano (fev.-out.2019), Especial de Desenvolvimento Regional (2021).",
+  "dados_pessoais": {
+    "Nome": "ANDRE ROGERIO DE ARAUJO ANDRADE FILHO",
+    "Profissão": "Estudante",
+    "Nascimento": "10/08/1997, Santo Antonio de Jesus - BA",
+    "Filiação": "André Rogério de Araújo Andrade",
+    "Sexo": "Masculino",
+    "Estado Civil": "Solteiro"
+  },
+  "mandatos": [
+    "Eleito deputado estadual, para o período 2019-2023, pela Coligação Força do Trabalho pela Bahia.",
+    "Filiação Partidária",
+    "PSD, 2019 - ;",
+    "Atividade Partidária",
+    "Presidente do PSD Jovem. Vice-líder da Bancada do PSD, ALBA, 2019-2022.",
+    "Atividade Parlamentar",
+    "Na Assembleia Legislativa, TITULAR das Comissões: Direitos Humanos e Segurança Pública (2019-2022), Especial Desporto, Paradesporto e Lazer (fev.-out.2019), Especial de Assuntos Territoriais e Emancipação (2019-2021), Especial de Desenvolvimento Urbano (fev.-out.2019), Especial de Desenvolvimento Regional (2021)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/926921",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:25.373910Z"
+}

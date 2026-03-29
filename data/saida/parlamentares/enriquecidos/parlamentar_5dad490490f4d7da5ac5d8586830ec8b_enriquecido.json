@@ -1,0 +1,66 @@
+{
+  "prisma_id": "5dad490490f4d7da5ac5d8586830ec8b",
+  "parlamentar_id": "932043",
+  "nome_eleitoral": "Valda ACS",
+  "nome_limpo": "Valda Acs",
+  "partido": "PT",
+  "sigla_partido": "PT",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932043",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:valda_acs.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino fundamental no Grupo Escolar Getúlio Vargas, 1981-1984; no Centro Educacional João Durval Carneiro, 1985-1989; na Unidade de Ensino Monteiro Lobato, 2001 e o ensino médio no Centro Educacional João Durval Carneiro, 2002-2004. Graduanda em Gestão Pública, UNOPAR, 2022.\nAtividade Profissional\nAgente comunitária de saúde. Prefeitura Municipal de Guanambi, 08/06/1991-31/12/2022.\nMandato Eletivo\nSuplente de Deputado Estadual, 2019-2023, assumiu o mandato parlamentar em 05/01/2023, em função do afastamento do deputado Tum.",
+  "dados_pessoais": {
+    "Nome": "MARIVALDA SANTOS PEREIRA DE ARAUJO",
+    "Profissão": "AGENTE COMUNITÁRIA DE SAÚDE",
+    "Nascimento": "20/08/1969, GUANAMBI",
+    "Filiação": "MARIO JOSÉ PEREIRA E MARIA TEREZA SANTOS PEREIRA",
+    "Sexo": "Feminino",
+    "Filhos": "JONOTA, MÁRCIO E MIRELA VITÓRIA"
+  },
+  "mandatos": [
+    "Suplente de Deputado Estadual, 2019-2023, assumiu o mandato parlamentar em 05/01/2023, em função do afastamento do deputado Tum."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/932043",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:35:30.671948Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MARIVALDA SANTOS PEREIRA DE ARAUJO",
+  "profissao": "AGENTE COMUNITÁRIA DE SAÚDE",
+  "sexo": "Feminino",
+  "tags_estrategicas": [
+    "Saúde Comunitária",
+    "Ativismo Social",
+    "Mandato Suplente",
+    "Guanambi",
+    "Início de Carreira"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Graduanda em Gestão Pública",
+      "sub": "UNOPAR — 2022"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Agente comunitária de saúde",
+      "sub": "Prefeitura Municipal de Guanambi — 1991-2022"
+    },
+    {
+      "label": "Deputada Estadual (Suplente/Efetivada)",
+      "sub": "Não informado — 2019-2023"
+    }
+  ],
+  "lideranca_e_comissoes": [],
+  "condecoracoes": [],
+  "biografia_resumo": "Profissional de saúde comunitária com décadas de serviço na prefeitura de Guanambi. Sua entrada na política ocorreu como suplente de Deputado Estadual, assumindo o mandato no final do período legislativo de 2019-2023.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

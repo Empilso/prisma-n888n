@@ -1,0 +1,100 @@
+{
+  "prisma_id": "8683ef5a6d430a3e182355e13604edfb",
+  "parlamentar_id": "907266",
+  "nome_eleitoral": "Ronaldo Carletto",
+  "nome_limpo": "Ronaldo Carletto",
+  "partido": "PP",
+  "sigla_partido": "PP",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907266",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:RonaldoCarletto.jpg",
+  "biografia_completa": "Formação Educacional\nSegundo grau completo.\nAtividade Profissional\nPresidente das Empresas Grupo Brasileiro.\nMandato Eletivo\nEleito deputado estadual pelo Partido Progressista Brasileiro, PPB, 2003-2007; reeleito deputado estadual pelo Partido Popular, PP, para os períodos de 2007-2011 e 2011-2015. Eleito deputado federal, 2015-2019.\nFiliação Partidária\nPPB, 2002 - 2003;\nPP, 2003 - 2012;\nAtividade Partidária\nLíder do Bloco Parlamentar  PP/PRP, 2008; líder do Bloco Parlamentar PP/PMN/PRTB, ALBA, 2009; líder da Bancada do PP, ALBA, 2009-2010. Líder do PP, ALBA, 2011. Líder do Bloco Parlamentar PP/PRB/PSL, ALBA, 2011- out.2013. Líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.\nAtividade Parlamentar\nNa Assembléia Legislativa, TITULAR das Comissões: Desenvolvimento Econômico e Turismo (2003- 2004), Fiscalização e Controle (2005-2006),  Meio Ambiente, Seca e Recursos Hídricos (2007), Saúde e Saneamento (2007-2008), Defesa do Consumidor e Relação de Trabalho (2008-2009), Infraestrutura, Desenvolvimento Econômico e Turismo (2009), Constituição e Justiça (2009), Especial de Assuntos Territoriais e Emancipação (2011-2014), Especial do Porto Sul (2011-2014), Especial da Verdade (2013-2014); SUPLENTE das Comissões: Fiscalização e Controle (2003-2004), Especial do Cacau (2003-2006), Finanças e Orçamento (dez.2003/fev.2004), Meio Ambiente, Seca e Recursos Hídricos (2008), Educação, Esportes e Serviço Público (ago.2004), Constituição e Justiça (2007-2008), Finanças, Orçamento, Fiscalização e Controle (2008), Agricultura e Política Rural (2009,fev.-mar 2011), Comissão Extraordinária para Discursão/Análise da Reforma Política (2011), CPI Tráfico de Pessoas ( out/2013 - 2014); coordenador da Sub-comissão de Saneamento Básico (2007); Membro da Sub-comissão Especial para Desenvolvimento de Est. do Lençol Freático do Semi-Árido Baiano (2011).\nCondecorações\nTítulo de Cidadão Baiano, ALBA, 2008.",
+  "dados_pessoais": {
+    "Nome": "RONALDO CARLETTO",
+    "Profissão": "Empresário",
+    "Nascimento": "05/01/1960, Conceição da Barra-ES",
+    "Filiação": "Aluyr Tassizo Carletto e Marisete Santos Carletto",
+    "Cônjuge": "Carlete Oliveira",
+    "Filhos": "Aluyr Neto e Ana Carolina"
+  },
+  "mandatos": [
+    "Eleito deputado estadual pelo Partido Progressista Brasileiro, PPB, 2003-2007; reeleito deputado estadual pelo Partido Popular, PP, para os períodos de 2007-2011 e 2011-2015. Eleito deputado federal, 2015-2019.",
+    "Filiação Partidária",
+    "PPB, 2002 - 2003;",
+    "PP, 2003 - 2012;",
+    "Atividade Partidária",
+    "Líder do Bloco Parlamentar  PP/PRP, 2008; líder do Bloco Parlamentar PP/PMN/PRTB, ALBA, 2009; líder da Bancada do PP, ALBA, 2009-2010. Líder do PP, ALBA, 2011. Líder do Bloco Parlamentar PP/PRB/PSL, ALBA, 2011- out.2013. Líder do Bloco Parlamentar PP/PSL, ALBA, 2013-2014.",
+    "Atividade Parlamentar",
+    "Na Assembléia Legislativa, TITULAR das Comissões: Desenvolvimento Econômico e Turismo (2003- 2004), Fiscalização e Controle (2005-2006),  Meio Ambiente, Seca e Recursos Hídricos (2007), Saúde e Saneamento (2007-2008), Defesa do Consumidor e Relação de Trabalho (2008-2009), Infraestrutura, Desenvolvimento Econômico e Turismo (2009), Constituição e Justiça (2009), Especial de Assuntos Territoriais e Emancipação (2011-2014), Especial do Porto Sul (2011-2014), Especial da Verdade (2013-2014); SUPLENTE das Comissões: Fiscalização e Controle (2003-2004), Especial do Cacau (2003-2006), Finanças e Orçamento (dez.2003/fev.2004), Meio Ambiente, Seca e Recursos Hídricos (2008), Educação, Esportes e Serviço Público (ago.2004), Constituição e Justiça (2007-2008), Finanças, Orçamento, Fiscalização e Controle (2008), Agricultura e Política Rural (2009,fev.-mar 2011), Comissão Extraordinária para Discursão/Análise da Reforma Política (2011), CPI Tráfico de Pessoas ( out/2013 - 2014); coordenador da Sub-comissão de Saneamento Básico (2007); Membro da Sub-comissão Especial para Desenvolvimento de Est. do Lençol Freático do Semi-Árido Baiano (2011)."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/907266",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:31:41.170629Z",
+  "data_nascimento": "1960-01-05",
+  "municipio_nascimento": "Conceição da Barra",
+  "uf_nascimento": "ES",
+  "nome_civil": "RONALDO CARLETTO",
+  "profissao": "Empresário",
+  "sexo": null,
+  "tags_estrategicas": [
+    "Liderança de Bloco",
+    "Base Aliada",
+    "PP",
+    "Empresário",
+    "Mandato Federal"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Segundo grau completo",
+      "sub": "Não especificada — Não especificado"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Deputado Estadual",
+      "sub": "PPB — 2003-2007"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2007-2011"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PP — 2011-2015"
+    },
+    {
+      "label": "Deputado Federal",
+      "sub": "PP — 2015-2019"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Líder do Bloco Parlamentar",
+      "sub": "PP/PRP, ALBA — 2008"
+    },
+    {
+      "label": "Líder da Bancada do PP",
+      "sub": "ALBA — 2009-2010"
+    },
+    {
+      "label": "Líder do PP",
+      "sub": "ALBA — 2011"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar",
+      "sub": "PP/PRB/PSL, ALBA — 2011- out.2013"
+    }
+  ],
+  "condecoracoes": [
+    "Título de Cidadão Baiano (ALBA, 2008)"
+  ],
+  "biografia_resumo": "Empresário com forte atuação partidária, Ronaldo Carletto consolidou sua carreira como deputado estadual e federal, sempre ligado ao Partido Progressista (PPB/PP). Demonstrou habilidade em liderar blocos parlamentares na ALBA, indicando influência nas articulações da base aliada.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "flags_validacao": []
+}

@@ -1,0 +1,98 @@
+{
+  "prisma_id": "4777058de7a1e01b8df2519701865a6f",
+  "parlamentar_id": "921279",
+  "nome_eleitoral": "Marcell dos Animais",
+  "nome_limpo": "Marcell Dos Animais",
+  "partido": "PSDB",
+  "sigla_partido": "PSDB",
+  "url_oficial": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921279",
+  "foto_url": "https://www.al.ba.gov.br/fserver/:imagensAlbanet:fotos:MacellMoraes.jpg",
+  "biografia_completa": "Formação Educacional\nEstudou o ensino médio no Colégio Estadual Raphael Serravalle; graduou-se em Administração de Empresas, pela Faculdade de Artes, Ciências e Tecnologias, FACET, em 2010. Foi presidente do Diretório Acadêmico de Administração da FACET.\nAtividade Profissional\nCoordenador do Parque Metropolitano de Pituaçu, 2006. Coordenador do Parque das Lagoas e Dunas do Abaeté, 2008. Ambientalista por mais de 15 anos. Coordenador da Hora do Planeta na Bahia, WWF Brasil. Presidente da ONG ambientalista GEAMO - Grupo Ecológico Amigos da Onça, além de atuar como ativista das ONGs Greenpeace, Defesa dos Animais e Nacci.\nMandato Eletivo\nEleito vereador do município de Salvador pelo PV, 2013-2016, renunciou em 2015. Eleito deputado estadual pelo PV, 2015-2019. Reeleito deputado estadual pelo PV, 2019-2023. Teve a perda de mandato declarada pelo TSE em 09/11/2020, com a convocação do Deputado Tiago Brandão Correia (PSDB).\nFiliação Partidária\nPV, 2003 - 2017;\nPSDB, 2018 - ;\nAtividade Partidária\nNa Câmara Municipal de Salvador: líder do PV, 2013-2015. Na Assembleia Legislativa da Bahia: vice-líder do Bloco Parlamentar DEM/PV, 2017; líder do Bloco Parlamentar PSDB/PSC, abr. 2018; líder do Bloco Parlamentar PSDB/PSC, 2019-2020. Dirigente estadual e vice-presidente municipal do PV.\nAtividade Parlamentar\nNa Câmara Municipal de Salvador: presidente da Comissão de Direitos do Cidadão, 2013-2014. Titular das Comissões: de Transporte, Trânsito e Serviços Municipais, 2013-2014; de Planejamento Urbano e Meio Ambiente, 2013-2014. Na Assembleia Legislativa da Bahia: presidente da comissão de Meio Ambiente, Seca e Recursos Hídricos, 2015-2018. Titular das Comissões: de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 06/2016-2018; de Meio Ambiente, Seca e Recursos Hídricos, 2017- abr.2018, 2020; Especial de Desporto, Paradesporto e Lazer, jun.2016-2018; dos Direitos da Mulher, 2018. Suplente das Comissões: Especial de Desporto, Paradesporto e Lazer, 2015-2020; dos Direitos da Mulher, 2017, 2019-2020; Especial de Desenvolvimento Urbano, 2019-2020.\nCondecorações\nTítulo de Cidadão Amargosense, Câmara Municipal de Amargosa, 2013.\nObras e Trabalhos\nO Respeito à Vida, sem distinção. In: Diário Oficial do Legislativo, Salvador, p.12, 7/02/2014.",
+  "dados_pessoais": {
+    "Nome": "MARCELL CARVALHO DE MORAES",
+    "Profissão": "Administrador de Empresas",
+    "Nascimento": "29/08/1978, Ruy Barbosa - BA",
+    "Filiação": "José Milton Lopes de Moraes e Letícia Maria Carvalho de Moraes",
+    "Sexo": "Masculino",
+    "Estado Civil": "solteiro",
+    "Filhos": "Marcella"
+  },
+  "mandatos": [
+    "Eleito vereador do município de Salvador pelo PV, 2013-2016, renunciou em 2015. Eleito deputado estadual pelo PV, 2015-2019. Reeleito deputado estadual pelo PV, 2019-2023. Teve a perda de mandato declarada pelo TSE em 09/11/2020, com a convocação do Deputado Tiago Brandão Correia (PSDB).",
+    "Filiação Partidária",
+    "PV, 2003 - 2017;",
+    "PSDB, 2018 - ;",
+    "Atividade Partidária",
+    "Na Câmara Municipal de Salvador: líder do PV, 2013-2015. Na Assembleia Legislativa da Bahia: vice-líder do Bloco Parlamentar DEM/PV, 2017; líder do Bloco Parlamentar PSDB/PSC, abr. 2018; líder do Bloco Parlamentar PSDB/PSC, 2019-2020. Dirigente estadual e vice-presidente municipal do PV.",
+    "Atividade Parlamentar",
+    "Na Câmara Municipal de Salvador: presidente da Comissão de Direitos do Cidadão, 2013-2014. Titular das Comissões: de Transporte, Trânsito e Serviços Municipais, 2013-2014; de Planejamento Urbano e Meio Ambiente, 2013-2014. Na Assembleia Legislativa da Bahia: presidente da comissão de Meio Ambiente, Seca e Recursos Hídricos, 2015-2018. Titular das Comissões: de Educação, Cultura, Ciência e Tecnologia e Serviço Público, 06/2016-2018; de Meio Ambiente, Seca e Recursos Hídricos, 2017- abr.2018, 2020; Especial de Desporto, Paradesporto e Lazer, jun.2016-2018; dos Direitos da Mulher, 2018. Suplente das Comissões: Especial de Desporto, Paradesporto e Lazer, 2015-2020; dos Direitos da Mulher, 2017, 2019-2020; Especial de Desenvolvimento Urbano, 2019-2020."
+  ],
+  "contatos": {
+    "email": null,
+    "telefones": []
+  },
+  "gabinete_endereco": null,
+  "fonte_portal": "al_ba_gov_br",
+  "fonte_url": "https://www.al.ba.gov.br/deputados/ex-deputado-estadual/921279",
+  "versao_zidane": "v5.0-prisma-hub-multileg",
+  "qualidade_score": 0.98,
+  "processado_em": "2026-03-29T15:34:51.955676Z",
+  "data_nascimento": null,
+  "municipio_nascimento": null,
+  "uf_nascimento": null,
+  "nome_civil": "MARCELL CARVALHO DE MORAES",
+  "profissao": "Administrador de Empresas",
+  "sexo": "Masculino",
+  "tags_estrategicas": [
+    "Ambientalista",
+    "PV/PSDB",
+    "Meio Ambiente",
+    "Ativismo Social",
+    "Salvador"
+  ],
+  "formacao_academica": [
+    {
+      "label": "Administração de Empresas",
+      "sub": "Faculdade de Artes, Ciências e Tecnologias, FACET — 2010"
+    }
+  ],
+  "carreira_politica": [
+    {
+      "label": "Vereador do município de Salvador",
+      "sub": "PV — 2013-2015"
+    },
+    {
+      "label": "Deputado Estadual",
+      "sub": "PV — 2015-2023 (Perda de mandato em 2020)"
+    }
+  ],
+  "lideranca_e_comissoes": [
+    {
+      "label": "Presidente do Diretório Acadêmico de Administração",
+      "sub": "FACET — Não informado"
+    },
+    {
+      "label": "Líder do PV",
+      "sub": "Câmara Municipal de Salvador — 2013-2015"
+    },
+    {
+      "label": "Presidente da Comissão de Meio Ambiente, Seca e Recursos Hídricos",
+      "sub": "Assembleia Legislativa da Bahia — 2015-2018"
+    },
+    {
+      "label": "Líder do Bloco Parlamentar PSDB/PSC",
+      "sub": "ALBA — 2018-2020"
+    }
+  ],
+  "condecoracoes": [
+    "Título de Cidadão Amargosense (2013)"
+  ],
+  "biografia_resumo": "Ativista ambiental com formação em administração, Marcell construiu sua carreira política focada em pautas ecológicas, inicialmente no PV e depois migrando para o PSDB. Sua trajetória inclui liderança em comissões ambientais na ALBA e atuação política em Salvador, apesar de ter tido um mandato interrompido pelo TSE.",
+  "versao_enricher": "v6.1-validated-gemini-flash-lite-latest",
+  "legislatura_alvo": "19",
+  "historico_legislaturas": [
+    18,
+    19
+  ],
+  "flags_validacao": []
+}
