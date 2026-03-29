@@ -65,7 +65,7 @@ __PRISMA_MANIFEST__ = {
         "6. Emite alertas de fraude (ex: CNPJ portal vs CNPJ rodapé da nota)."
     ],
     "apuracao": {
-        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
         "saida_esperada": "data/saida/kaka/alba_{ano}_kaka.json"
     }
 }

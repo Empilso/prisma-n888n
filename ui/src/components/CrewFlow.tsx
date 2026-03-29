@@ -316,6 +316,7 @@ const CrewFlow = ({ onAgentSelect, systemStatus, selectedCrewId }: CrewFlowProps
                 checkpointYears: systemStatus?.agents?.[a.id]?.checkpoint_years,
                 extractedYears: systemStatus?.agents?.[a.id]?.extracted_years,
                 auditGaps: systemStatus?.agents?.[a.id]?.audit_gaps,
+                availableInputYears: systemStatus?.agents?.[a.id]?.available_input_years,
                 config: systemStatus?.agents?.[a.id]?.config,
                 onRename: (newName: string) => {
                     setStages(prev => {

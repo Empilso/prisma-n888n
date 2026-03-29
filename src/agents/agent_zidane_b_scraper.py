@@ -146,9 +146,11 @@ def scrape_perfil(url_perfil: str) -> Dict:
         if match:
             dados["contatos"]["email"] = match.group(0).strip()
 
-    # ── FIX 2: Telefones (extrai do texto da bio) ─────────────────────
+    # ── FIX 2: Telefones (extrai do texto da bio exatamente como está) ─────
     if dados.get("biografia_completa"):
-        fones = re.findall(r'\b3\d{3}-\d{4}\b', dados["biografia_completa"])
+        bio_txt = dados["biografia_completa"]
+        # Captura (XX) 3XXX-XXXX ou 3XXX-XXXX
+        fones = re.findall(r'\(?\d{2}\)?\s*3\d{3}-\d{4}|3\d{3}-\d{4}', bio_txt)
         dados["contatos"]["telefones"] = list(dict.fromkeys(fones))
 
     # ── FIX 3: Endereço do Gabinete ───────────────────────────────────

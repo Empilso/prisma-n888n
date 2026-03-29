@@ -8,6 +8,15 @@ AMARRA:   Vincula deputado (string) → parlamentar_id (hash 32 chars)
 OUTPUT:   verbas_gabinete_gold.json → pronto para o Loader D / Upsert
 """
 
+__PRISMA_MANIFEST__ = """
+=============================================================================
+PRISMA MANIFEST - AGENT 3 (RONALDO GOLD)
+- Visão Geral: Orquestrador da Camada Gold Financeira.
+- Diretrizes: Aplica as 12 Diretrizes do Prisma, focado em Matching Robusto e Normalização.
+- Apuração: Apenas registros com match perfeito são convertidos para Ouro. Falhas vão para Quarentena.
+=============================================================================
+"""
+
 import os
 import sys
 import json
@@ -15,6 +24,7 @@ import hashlib
 import re
 import argparse
 import requests
+import unicodedata
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, Any, List
@@ -79,10 +89,27 @@ def mapear_categoria_global(slug_prata: Optional[str], categoria_original: Optio
 
 
 # ─── Busca de parlamentares no Supabase ────────────────────────────────────
+def normalizar_nome(nome: str) -> str:
+    """Diretriz Prisma: Normalização absoluta de nomes."""
+    if not nome: return ""
+    # Remove acentos
+    s = ''.join(c for c in unicodedata.normalize('NFD', nome) if unicodedata.category(c) != 'Mn')
+    s = s.lower()
+    # Remove títulos e sufixos políticos
+    ruidos = [
+        " do pt", " do pl", " do psd", " do psb", " do pdt", " do psol", " do mdb", " do uniao", " do solidariedade",
+        " lula", " professor", " professora", " pastor", " pastora", " capitão", " capitao",
+        " coronel", " sargento", " delegado", " dr.", " dr ", "deputado", "deputada"
+    ]
+    for r in ruidos:
+        s = s.replace(r, "")
+    return re.sub(r'\s+', ' ', s).strip()
+
 def carregar_mapa_parlamentares(supa_url: str, supa_key: str) -> Dict[str, str]:
     """
-    Carrega o cache de parlamentares do Supabase.
-    Retorna dict: nome_normalizado (lower) → parlamentar_prisma_id
+    Carrega o cache de parlamentares do Supabase ajustado com o Normalizador de Nomes.
+    Retorna dict: nome_normalizado_prisma (lower) → parlamentar_prisma_id
+
     """
     headers = {
         "apikey": supa_key,
@@ -108,7 +135,9 @@ def carregar_mapa_parlamentares(supa_url: str, supa_key: str) -> Dict[str, str]:
                 for campo in ["nome_normalizado", "nome_urna", "nome_civil"]:
                     nome = row.get(campo)
                     if nome:
-                        mapa[nome.strip().lower()] = pid
+                        n = normalizar_nome(nome)
+                        if n:
+                            mapa[n] = pid
             print(f"{C_GREEN}[RONALDO] ✅ {len(mapa)} nomes indexados em cache.{C_END}")
             return mapa
         else:
@@ -119,22 +148,22 @@ def carregar_mapa_parlamentares(supa_url: str, supa_key: str) -> Dict[str, str]:
         return {}
 
 
-def resolver_parlamentar_id(nome_deputado: Optional[str], mapa: Dict[str, str]) -> Optional[str]:
-    """Resolve o nome string do deputado para o prisma_id do Supabase."""
+def resolver_parlamentar_id(nome_deputado: Optional[str], mapa: Dict[str, str]) -> tuple[Optional[str], Optional[str]]:
+    """Resolve o nome string do deputado para o prisma_id do Supabase e o nome mapeado."""
     if not nome_deputado:
-        return None
-    busca = nome_deputado.strip().lower()
+        return None, None
+    busca = normalizar_nome(nome_deputado)
     
     # 1. Match exato
     if busca in mapa:
-        return mapa[busca]
+        return mapa[busca], busca
     
-    # 2. Match parcial: se o nome da lista contem o nome do deputado ou vice-versa
+    # 2. Match parcial: se o nome normalizado contem o nome da lista ou vice-versa
     for nome_cache, pid in mapa.items():
         if busca in nome_cache or nome_cache in busca:
-            return pid
+            return pid, nome_cache
     
-    return None
+    return None, None
 
 
 # ─── Geração do Prisma ID Ouro ────────────────────────────────────────────
@@ -157,9 +186,12 @@ def purificar_para_ouro(r: Dict[str, Any], mapa_parlamentares: Dict[str, str], e
     nome_deputado = r.get("deputado")
 
     # ── Amarra Relacional (Diretriz 1 do Ouro) ──────────────
-    parlamentar_id = resolver_parlamentar_id(nome_deputado, mapa_parlamentares)
+    parlamentar_id, nome_banco = resolver_parlamentar_id(nome_deputado, mapa_parlamentares)
     if not parlamentar_id:
         erros_vinculo.append(nome_deputado or "DESCONHECIDO")
+        return None
+
+    print(f"{C_PURPLE}🎯 MATCH: {C_WHITE}{nome_deputado}{C_CYAN} -> {nome_banco} | {parlamentar_id}{C_END}")
 
     # ── Categoria Global (Diretriz 2 do Ouro) ───────────────
     categoria_slug = mapear_categoria_global(
@@ -319,6 +351,7 @@ def main():
         ano_str = match_ano.group(0) if match_ano else "undefined"
 
         registros_ouro: List[Dict[str, Any]] = []
+        registros_orfaos: List[Dict[str, Any]] = []
         erros_vinculo: List[str] = []
         vistos: set = set()
 
@@ -333,6 +366,8 @@ def main():
                     vistos.add(ouro["prisma_id"])
                     registros_ouro.append(ouro)
                     total_ouro += 1
+            else:
+                registros_orfaos.append(r)
 
             if (i + 1) % 1000 == 0:
                 print(f"{C_PURPLE}[RONALDO GOLD] 🏆 {i+1}/{len(registros)} processados...{C_END}")
@@ -350,13 +385,25 @@ def main():
             sys.stdout.flush()
 
         # Salva o JSON Ouro
-        output_path = ouro_dir / f"verbas_gabinete_{ano_str}_gold.json"
+        hoje = datetime.now().strftime("%Y%m%d")
+        versao_simples = VERSION.split('_')[-1]
+        output_path = ouro_dir / f"verbas_{ano_str}_gold_v{versao_simples}_{hoje}.json"
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(registros_ouro, f, ensure_ascii=False, indent=2)
 
         print(f"{C_GREEN}[RONALDO] 💾 Arquivo salvo: {output_path.name}{C_END}")
         print(f"{C_GREEN}[RONALDO] 💎 Registros Ouro: {len(registros_ouro)}{C_END}")
         sys.stdout.flush()
+
+        # Salva o JSON Órfãos na Quarentena
+        if registros_orfaos:
+            orfaos_dir = base_dir / "data" / "saida" / "verbas" / "orphans"
+            orfaos_dir.mkdir(parents=True, exist_ok=True)
+            orfaos_path = orfaos_dir / f"verbas_{ano_str}_orfas.json"
+            with open(orfaos_path, "w", encoding="utf-8") as f:
+                json.dump(registros_orfaos, f, ensure_ascii=False, indent=2)
+            print(f"{C_YELLOW}[RONALDO] ⚠️ Arquivo de Órfãos salvo em Quarentena: {orfaos_path.name} ({len(registros_orfaos)} registros){C_END}")
+            sys.stdout.flush()
 
     # --- Resumo Final ────────────────────────────────────────────────────
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")

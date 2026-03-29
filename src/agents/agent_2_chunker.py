@@ -21,7 +21,7 @@ __PRISMA_MANIFEST__ = {
         "7. Gera `prisma_id` único baseado em Hash da despesa."
     ],
     "apuracao": {
-        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
         "saida_esperada": "data/saida/prata/alba_{ano}_prata.json"
     }
 }
@@ -349,14 +349,14 @@ def main():
             bronze_path = data_dir / "saida" / "checkpoints" / args.file
     elif args.year:
         final_path = data_dir / "saida" / "bronze" / f"alba_{args.year}_bronze.json"
-        checkpoint_path = data_dir / "saida" / "checkpoints" / f"alba_{args.year}_checkpoint.json"
+        checkpoint_path = data_dir / "saida" / "bronze" / f"alba_{args.year}_checkpoint.json"
         if final_path.exists():
             bronze_path = final_path
         elif checkpoint_path.exists():
             bronze_path = checkpoint_path
     else:
         bronze_files = sorted(
-            list((data_dir / "saida" / "checkpoints").rglob("*alba*checkpoint*.json")) +
+            list((data_dir / "saida" / "bronze").rglob("*alba*checkpoint*.json")) +
             list((data_dir / "saida" / "bronze").rglob("*alba*bronze*.json")),
             key=os.path.getmtime, reverse=True
         )

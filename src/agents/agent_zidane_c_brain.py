@@ -53,34 +53,44 @@ C_END = "\033[0m"
 
 # --- Configurações de Orquestração ---
 # Usando gemini-2.0-flash-001 para ter acesso a uma nova cota diária de requisições.
-MODEL_NAME = "gemini-2.0-flash-001"
-BATCH_SIZE = 5        # Lotes de 5 parlamentares
-SLEEP_BETWEEN_BATCHES = 15 # Intervalo seguro
+MODEL_NAME = "gemini-flash-lite-latest"
+BATCH_SIZE = 11        # Lote máximo para Paid Tier
+SLEEP_BETWEEN_BATCHES = 2 # Alta velocidade (sem rate limit no Paid Tier)
 
-SYSTEM_PROMPT = """Você é um Analista de Inteligência Política Sênior. 
-Você receberá 5 biografias. Para cada uma, gere o objeto de inteligência.
+SYSTEM_PROMPT = """Você é um Analista de Inteligência Política Sênior do sistema PRISMA.
+Você receberá biografias parlamentares. Para CADA UMA, gere o objeto de inteligência no formato abaixo.
 
-Retorne um ÚNICO JSON OBRIGATÓRIAMENTE no formato abaixo:
+Retorne um ÚNICO JSON OBRIGATORIAMENTE neste formato exato:
 {
   "respostas": [
     {
       "prisma_id": "...",
       "dados_premium": {
-        "formacao_academica": [{"curso": "...", "instituicao": "...", "ano_conclusao": 2000}], 
-        "carreira_politica": [{"periodo": "...", "cargo": "...", "local": "...", "observacao": "..."}], 
-        "lideranca_e_comissoes": [{"orgao": "...", "cargo": "...", "periodo": "..."}], 
-        "condecoracoes": ["..."], 
-        "tags_estrategicas": ["...", "...", "...", "...", "..."], 
-        "biografia_resumo": "..."
+        "formacao_academica": [
+          {"label": "Nome do Curso", "sub": "Instituição — Ano de Conclusão"}
+        ],
+        "carreira_politica": [
+          {"label": "Cargo ou Mandato", "sub": "Partido — Período (ex: PP — 2019-2023)"}
+        ],
+        "lideranca_e_comissoes": [
+          {"label": "Cargo na Mesa ou Comissão", "sub": "Órgão — Período"}
+        ],
+        "condecoracoes": ["Medalha X (Órgão, Ano)"],
+        "tags_estrategicas": ["Tag1", "Tag2", "Tag3", "Tag4", "Tag5"],
+        "biografia_resumo": "Resumo de 2-3 linhas focado em poder, alianças e trajetória política."
       }
     }
   ]
 }
 
-REGRAS:
-1. "tags_estrategicas": Array com exatas 5 tags de perfil político (Ex: "Agronegócio", "Fiel ao Governo").
-2. "biografia_resumo": Resumo de 3 linhas focado em poder e alianças.
-3. Não use marcação markdown (```json). Retorne APENAS o JSON puro.
+REGRAS OBRIGATÓRIAS:
+1. "formacao_academica": Cada item DEVE ter {"label": "...", "sub": "..."}. label = nome do curso, sub = instituição + ano.
+2. "carreira_politica": Cada item DEVE ter {"label": "...", "sub": "..."}. label = cargo, sub = partido + período.
+3. "lideranca_e_comissoes": Cada item DEVE ter {"label": "...", "sub": "..."}. label = cargo, sub = órgão + período.
+4. "condecoracoes": Lista de strings simples.
+5. "tags_estrategicas": EXATAMENTE 5 tags curtas de perfil político (ex: "Agronegócio", "Base do Governo").
+6. "biografia_resumo": Texto puro, 2-3 linhas, focado em poder e alianças. NÃO copie a bio bruta.
+7. Não use marcação markdown (```json). Retorne APENAS o JSON puro.
 """
 
 def init_brain():

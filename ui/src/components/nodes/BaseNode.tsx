@@ -371,9 +371,10 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                 <div className="px-5 pb-6 flex flex-col items-center gap-3">
                     <div className="w-full h-[1px] bg-white/5 mb-1" />
                     <div className="grid grid-cols-6 gap-3">
-                        {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(year => {
-                            const isExtracted = data.extractedYears?.includes(year.toString());
+                        {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map(year => {
+                            const isExtracted = data.completedYears?.includes(year.toString()) || data.extractedYears?.includes(year.toString());
                             const isCheckpoint = data.checkpointYears?.includes(year.toString());
+                            const isAvailableInput = data.availableInputYears?.includes(year.toString());
                             const isSelected = selectedYear === year.toString();
                             const hasGap = data.auditGaps?.[year.toString()];
 
@@ -393,23 +394,73 @@ const BaseNode = ({ data }: BaseNodeProps) => {
                                 color = 'bg-[var(--orange)] border-[var(--orange)]/40';
                                 glow = 'shadow-[0_0_10px_rgba(255,159,10,0.4)]';
                                 labelColor = 'text-[var(--orange)] font-bold';
+                            } else if (isAvailableInput) {
+                                color = 'bg-[#0a84ff]/20 border-[#0a84ff]/40';
+                                glow = 'shadow-[0_0_10px_rgba(10,132,255,0.4)]';
+                                labelColor = 'text-[#0a84ff] font-bold';
                             }
 
                             // Highlight selection via Border
                             const ringStyle = isSelected ? 'ring-2 ring-white/50 ring-offset-1 ring-offset-black/50 scale-125' : '';
 
                             return (
-                                <div
-                                    key={year}
-                                    onClick={(e) => { e.stopPropagation(); setSelectedYear(year.toString()); }}
-                                    className="flex flex-col items-center gap-1.5 cursor-pointer group/yr"
-                                    title={`${year}: Clique para selecionar. Status: ${isExtracted ? 'Extraído' : (isCheckpoint ? 'Pausado' : 'Não Iniciado')}`}
-                                >
+                                    <div
+                                        key={year}
+                                        onClick={(e) => { e.stopPropagation(); setSelectedYear(year.toString()); }}
+                                        className="flex flex-col items-center gap-1.5 cursor-pointer group/yr"
+                                        title={`${year}: Clique para selecionar. Status: ${isExtracted ? 'Pronto' : (isCheckpoint ? 'Em Andamento' : isAvailableInput ? 'Dado de Entrada Disponível 📥' : 'Aguardando Anterior')}`}
+                                    >
                                     <div className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${color} ${glow} ${ringStyle} group-hover/yr:scale-110 flex items-center justify-center`}>
                                         {hasGap && <span className="text-[8px]">⚠️</span>}
                                     </div>
                                     <span className={`text-[8px] font-black tracking-tighter ${isSelected ? 'text-white' : labelColor} transition-colors group-hover/yr:text-white/70`}>
                                         {year.toString().slice(-2)}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* ══ ZIDANE STATUS MAPPING (Bolinha Única do Censo) ══ */}
+            {(data.id?.startsWith('zidane')) && (
+                <div className="px-5 pb-6 flex flex-col items-center gap-3">
+                    <div className="w-full h-[1px] bg-white/5 mb-1" />
+                    <div className="flex justify-center items-center gap-3">
+                        {['Censo'].map(year => {
+                            const isExtracted = data.completedYears?.includes(year) || data.extractedYears?.includes(year);
+                            const isCheckpoint = data.checkpointYears?.includes(year);
+                            const isSelected = selectedYear === year;
+
+                            let color = 'bg-white/5 border-white/10';
+                            let glow = '';
+                            let labelColor = 'text-white/20';
+
+                            if (isExtracted) {
+                                color = 'bg-[var(--accent-green)] border-[var(--accent-green)]/40';
+                                glow = 'shadow-[0_0_10px_rgba(50,205,50,0.4)]';
+                                labelColor = 'text-[var(--accent-green)] font-bold';
+                            } else if (isCheckpoint) {
+                                color = 'bg-[var(--orange)] border-[var(--orange)]/40';
+                                glow = 'shadow-[0_0_10px_rgba(255,159,10,0.4)]';
+                                labelColor = 'text-[var(--orange)] font-bold';
+                            }
+
+                            const ringStyle = isSelected ? 'ring-2 ring-white/50 ring-offset-1 ring-offset-black/50 scale-125' : '';
+
+                            return (
+                                <div
+                                    key={year}
+                                    onClick={(e) => { e.stopPropagation(); setSelectedYear(year); }}
+                                    className="flex flex-col items-center gap-1.5 cursor-pointer group/yr"
+                                    title={`Status Atual: ${isExtracted ? 'Extraído' : (isCheckpoint ? 'Em Andamento' : 'Aguardando')}`}
+                                >
+                                    <div className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${color} ${glow} ${ringStyle} group-hover/yr:scale-110 flex items-center justify-center`}>
+                                        {/* Status indicator só com cor */}
+                                    </div>
+                                    <span className={`text-[8px] font-black tracking-tighter ${isSelected ? 'text-white' : labelColor} transition-colors group-hover/yr:text-white/70`}>
+                                        STATUS ATUAL
                                     </span>
                                 </div>
                             );

@@ -242,6 +242,25 @@ async def get_latest_results():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+@app.get("/api/stage/load")
+async def get_stage():
+    """Recupera o estado do React Flow."""
+    try:
+        with open(os.path.join(PRISMA_ROOT, "stage_config.json"), "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        return {"nodes": {}, "edges": {}, "stages": {}}
+
+@app.post("/api/stage/save")
+async def save_stage(data: dict):
+    """Salva o estado do React Flow de forma persistente."""
+    try:
+        with open(os.path.join(PRISMA_ROOT, "stage_config.json"), "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.get("/api/studio/explorer")
 async def get_studio_explorer():
     import glob
@@ -785,8 +804,9 @@ def agent1_worker(ano_alvo, q, max_pages=0, mes_alvo=0):
 
 active_agent1_process = None
 
-BRONZE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "saida", "bronze")
-PRATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "saida", "prata")
+PRISMA_ROOT = "/home/carneiro888/CARNEIRO888/N888N - AGENTIC EXTRATORES/n888n"
+BRONZE_DIR = os.path.join(PRISMA_ROOT, "data", "saida", "bronze")
+PRATA_DIR = os.path.join(PRISMA_ROOT, "data", "saida", "prata")
 
 @app.get("/api/status")
 async def get_system_status():
@@ -801,10 +821,61 @@ async def get_system_status():
         anos_checkpoint = set()
         for y in range(2015, 2026):
             ano_str = str(y)
-            # Final file check (ex: verbas_2023_gold.json)
-            final_file = f"{prefix}_{ano_str}{suffix}.json"
-            if os.path.exists(os.path.join(directory, final_file)):
+            # Multi-Paths de Busca:
+            diretorios_busca = [directory]
+            if "bronze" in directory or "raw" in directory:
+                diretorios_busca.extend([
+                    os.path.join(PRISMA_ROOT, "data", "saida", "verbas", "raw"),
+                    os.path.join(PRISMA_ROOT, "data", "raw")
+                ])
+            elif "prata" in directory or "processed" in directory:
+                diretorios_busca.extend([
+                    os.path.join(PRISMA_ROOT, "data", "saida", "verbas", "processed"),
+                    os.path.join(PRISMA_ROOT, "data", "processed")
+                ])
+                
+            f1 = f"{prefix}_{ano_str}{suffix}.json"
+            f2 = f"alba_{ano_str}{suffix}.json"
+            
+            # Legados e Variações Ocultas:
+            f3 = f"verbas_{ano_str}_processed.json" if "prata" in suffix else f1
+            f4 = f"alba_{ano_str}.json" if "bronze" in suffix or suffix == "" else f1
+            f5 = f"verbas_{ano_str}.json" if "bronze" in suffix or suffix == "" else f1
+            f6 = f"alba_{ano_str}_bronze.json"
+            f7 = f"alba_{ano_str}_prata.json"
+
+            encontrou = False
+            caminho_encontrado = ""
+            for d in diretorios_busca:
+                if not os.path.exists(d): continue
+                
+                # Busca flexível iterativa para arquivos Gold/Bronze versionados
+                try:
+                    for f_name in os.listdir(d):
+                        if ano_str in f_name and suffix in f_name and not "checkpoint" in f_name and f_name.endswith(".json"):
+                            caminho_completo = os.path.join(d, f_name)
+                            if os.path.isfile(caminho_completo):
+                                encontrou = True
+                                caminho_encontrado = caminho_completo
+                                break
+                except Exception:
+                    pass
+
+                if not encontrou:
+                    for f in [f1, f2, f3, f4, f5, f6, f7]:
+                        caminho_completo = os.path.join(d, f)
+                        if os.path.exists(caminho_completo):
+                            encontrou = True
+                            caminho_encontrado = caminho_completo
+                            break
+                if encontrou: break
+
+            if encontrou:
+                print(f"[DEBUG] Verificando Safra {ano_str}: Caminho [{caminho_encontrado}] -> STATUS: [FOUND]")
                 anos_finais.add(ano_str)
+            else:
+                if prefix == "verbas" and suffix == "_bronze":
+                    print(f"[DEBUG] Verificando Safra {ano_str}: {directory} -> STATUS: [NOT FOUND]")
             
             # Checkpoint file check
             chk_file = f"{prefix}_{ano_str}_checkpoint.json"
@@ -822,7 +893,7 @@ async def get_system_status():
 
         return sorted(list(anos_finais)), sorted(list(anos_checkpoint))
 
-    bronze_finais, bronze_checkpoint = check_on_disk(BRONZE_DIR, prefix="verbas", suffix="")
+    bronze_finais, bronze_checkpoint = check_on_disk(BRONZE_DIR, prefix="alba", suffix="_bronze")
     prata_finais, prata_checkpoint = check_on_disk(PRATA_DIR, prefix="verbas", suffix="_prata")
     OURO_DIR = os.path.join(os.path.dirname(PRATA_DIR), "ouro")
     ouro_finais, ouro_checkpoint = check_on_disk(OURO_DIR, prefix="verbas", suffix="_gold")
@@ -844,8 +915,14 @@ async def get_system_status():
         "pdf": len(glob.glob(os.path.join(os.path.dirname(os.path.dirname(PRATA_DIR)), "anexos", "*.pdf"))) > 0,
         "bronze_anos": bronze_finais,
         "prata_anos": prata_finais,
-        "ouro_anos": ouro_finais
+        "ouro_anos": ouro_finais,
+        "alba_verbas": len(bronze_finais) > 0,
+        "alba_processed": len(prata_finais) > 0,
+        "zidane_a": os.path.exists(os.path.join(PRISMA_ROOT, "data", "saida", "parlamentares", "raw", "parlamentares_ids.json")),
+        "zidane_c": os.path.exists(os.path.join(PRISMA_ROOT, "data", "saida", "parlamentares", "parlamentares_hub_normalized.json"))
     }
+    
+    print(f"[STATUS CHECK] Verbas 2022: {'OK' if '2022' in bronze_finais else 'OFF'} | Zidane-A: {'OK' if data_presence['zidane_a'] else 'OFF'}")
 
     
     # Check audits
@@ -912,7 +989,7 @@ async def get_system_status():
     }
 
     # ── Status Zidane (Crew 00 — Biografias Parlamentares) ────────
-    PARLAMENTARES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "saida", "parlamentares")
+    PARLAMENTARES_DIR = os.path.join(PRISMA_ROOT, "data", "parlamentares")
     RAW_DIR = os.path.join(PARLAMENTARES_DIR, "raw")
     ids_file = os.path.join(RAW_DIR, "parlamentares_ids.json")
     hub_file = os.path.join(PARLAMENTARES_DIR, "parlamentares_hub_normalized.json")
@@ -936,7 +1013,7 @@ async def get_system_status():
         "status": "idle",
         "input_ready": True,
         "detail": f"✅ {ids_count} IDs coletados" if os.path.exists(ids_file) else "Pronto para varredura",
-        "completed_years": ["2023-2027"] if os.path.exists(ids_file) else [],
+        "completed_years": ["Censo"] if os.path.exists(ids_file) else [],
         "checkpoint_years": [],
         "available_input_years": [],
         "usage": {"input": 0, "output": ids_count}
@@ -945,9 +1022,9 @@ async def get_system_status():
     status["zidane_b"] = {
         "status": "idle",
         "input_ready": os.path.exists(ids_file),
-        "detail": f"✅ {len(raw_perfis)} perfis extraídos" if raw_perfis else "Aguardando IDs do Zidane-A",
-        "completed_years": ["2023-2027"] if len(raw_perfis) > 50 else [],
-        "checkpoint_years": ["2023-2027"] if 0 < len(raw_perfis) <= 50 else [],
+        "detail": f"✅ {len(raw_perfis)} perfis extraídos" if raw_perfis else "Aguardando IDs",
+        "completed_years": ["Censo"] if len(raw_perfis) > 50 else [],
+        "checkpoint_years": ["Censo"] if 0 < len(raw_perfis) <= 50 else [],
         "available_input_years": [],
         "usage": {"input": ids_count, "output": len(raw_perfis)}
     }
@@ -956,7 +1033,7 @@ async def get_system_status():
         "status": "idle",
         "input_ready": len(raw_perfis) > 0,
         "detail": f"✅ Hub consolidado ({hub_count} parlamentares)" if os.path.exists(hub_file) else f"{len(raw_perfis)} perfis prontos para consolidação",
-        "completed_years": ["2023-2027"] if os.path.exists(hub_file) else [],
+        "completed_years": ["Censo"] if os.path.exists(hub_file) else [],
         "checkpoint_years": [],
         "available_input_years": [],
         "usage": {"input": len(raw_perfis), "output": hub_count}

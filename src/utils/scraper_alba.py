@@ -106,38 +106,47 @@ def scrape_detalhes(id_alba: str, session=None) -> dict:
 
 def scrape_lista_completa(ano: int = 2024, mes: Optional[int] = None, checkpoint_dir: Optional[str] = None, max_pages: int = 0, resume: bool = False, smart: bool = False) -> list[dict]:
     if not checkpoint_dir:
-        checkpoint_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "saida", "bronze")
+        checkpoint_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "saida", "verbas", "raw")
     os.makedirs(checkpoint_dir, exist_ok=True)
     checkpoint_file = os.path.join(checkpoint_dir, f"alba_{ano}_checkpoint.json")
-    final_file = os.path.join(checkpoint_dir, f"alba_{ano}_bronze.json")
+    final_file = os.path.join(checkpoint_dir, f"alba_{ano}.json")
+    final_file_alt = os.path.join(checkpoint_dir, f"verbas_{ano}.json")
     
     # Em modo SMART, lerei todos os registros atuais para uma lista de IDs conhecidos
     existing_ids = set()
     all_records = []
     page = 1
     
-    # Se existe o final file e for smart, carrega para não baixar repetido
-    if smart and os.path.exists(final_file):
-        with open(final_file, "r", encoding='utf-8') as f:
-            all_records = json.load(f)
-            for r in all_records:
-                if "link_detalhe" in r:
-                    eid = [p for p in r["link_detalhe"].split("/") if p.isdigit()]
-                    if eid: existing_ids.add(eid[-1])
-        print(f"\n🧠 [SMART SYNC] Carregados {len(all_records)} registros já existentes do arquivo final.")
-        # Em smart mode sempre começamos da Page 1 para varrer tudo e preencher os buracos
-    elif resume and os.path.exists(checkpoint_file):
-        try:
-            with open(checkpoint_file, "r", encoding='utf-8') as f:
-                cp = json.load(f)
-                all_records = cp.get("records", [])
-                page = cp.get("last_page", 0) + 1
-                for r in all_records:
-                    if "link_detalhe" in r:
-                        eid = [p for p in r["link_detalhe"].split("/") if p.isdigit()]
-                        if eid: existing_ids.add(eid[-1])
-            print(f"\n🔄 [AGENT 1] RETOMADA ATIVA! Página atual: {page}")
-        except: pass
+    if smart or resume:
+        file_to_load = final_file if os.path.exists(final_file) else (
+            final_file_alt if os.path.exists(final_file_alt) else (
+                checkpoint_file if os.path.exists(checkpoint_file) else None
+            )
+        )
+        
+        if file_to_load:
+            try:
+                with open(file_to_load, "r", encoding='utf-8') as f:
+                    data = json.load(f)
+                    # O checkpoint_file salva num dicionário {"records": [...], "last_page": X}.
+                    # O final_file salva numa lista direta [...].
+                    if isinstance(data, dict) and "records" in data:
+                        all_records = data["records"]
+                        if not smart and resume: # No modo não-smart, usamos o resume puro (página exata)
+                            page = data.get("last_page", 0) + 1
+                            print(f"\n🔄 [AGENT 1] RETOMADA ATIVA! Página atual: {page}")
+                    else:
+                        all_records = data
+                        
+                    for r in all_records:
+                        if "link_detalhe" in r:
+                            eid = [p for p in r["link_detalhe"].split("/") if p.isdigit()]
+                            if eid: existing_ids.add(eid[-1])
+                print(f"\n🧠 [SMART SYNC] Carregados {len(all_records)} registros já existentes do arquivo {os.path.basename(file_to_load)}.")
+            except Exception as e:
+                print(f"\n⚠️ [SMART SYNC] Falha ao ler {os.path.basename(file_to_load)}: {e}. Desconsiderando para não corromper.")
+                all_records = []
+                existing_ids = set()
 
     print(f"\n🕵️ [AGENT 1] ALBA {'SMART ' if smart else ''}— Ano: {ano} | Pág Inicial: {page}")
     

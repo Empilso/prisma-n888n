@@ -338,7 +338,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                         )}
 
                         <div className="grid grid-cols-5 gap-1.5 mt-1">
-                            {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(ano => {
+                            {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map(ano => {
                                 const agentStatus = systemStatus?.agents?.[agentId || ''];
                                 const isExtracted = agentStatus?.completed_years?.includes(ano.toString());
                                 const isCheckpointed = agentStatus?.checkpoint_years?.includes(ano.toString());
@@ -655,7 +655,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                 })()}
 
                 {(agentId === 'kaka' || agentId === '3') && (() => {
-                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
                     const agentStatus = systemStatus?.agents?.[agentId || 'kaka'];
                     const kakaAnos: string[] = agentStatus?.completed_years || [];
                     const checkpointAnos: string[] = agentStatus?.checkpoint_years || [];
@@ -791,7 +791,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                 })()}
 
                 {agentId === 'ronaldo' && (() => {
-                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
                     const agentStatus = systemStatus?.agents?.['ronaldo'];
                     const ouroAnos: string[] = agentStatus?.completed_years || [];
                     const prataAnos: string[] = (systemStatus?.agents?.['2']?.completed_years || []);
@@ -895,10 +895,14 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                 })()}
 
                 {agentId === '2' && (() => {
-                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+                    const ANOS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
                     const agentStatus = systemStatus?.agents?.['2'];
                     const prataAnos: string[] = agentStatus?.completed_years || [];
-                    const bronzeAnos: string[] = (systemStatus?.agents?.['1']?.completed_years || []);
+                    const agente1 = systemStatus?.agents?.['1'];
+                    const bronzeAnos: string[] = Array.from(new Set([
+                        ...(agente1?.completed_years || []),
+                        ...(agente1?.checkpoint_years || [])
+                    ]));
 
                     return (
                         <div className="space-y-4">
@@ -915,7 +919,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                             <button
                                                 key={ano}
                                                 onClick={() => {
-                                                    const match = availableBronzeFiles.find((f: any) => f.name.includes(anoStr) && !f.name.includes('checkpoint'));
+                                                    const match = availableBronzeFiles.find((f: any) => f.name.includes(anoStr));
                                                     if (match) {
                                                         setSelectedBronzeFile(match.name);
                                                         setSelectedAno(ano);
@@ -953,7 +957,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                         availableBronzeFiles.map((f: any) => {
                                             const yrMatch = f.name.match(/20\d{2}/);
                                             const fileYear = yrMatch ? yrMatch[0] : null;
-                                            const isAlreadyPrata = fileYear && prataAnos.includes(fileYear) && !f.name.includes('checkpoint');
+                                            const isAlreadyPrata = fileYear && prataAnos.includes(fileYear);
                                             return (
                                                 <button
                                                     key={f.name}
@@ -1227,7 +1231,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                     {/* Visão Geral de Safras */}
                                     <Section title="Status do Pipeline por Safra" icon="📊">
                                         <div className="grid grid-cols-3 gap-2">
-                                            {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(ano => {
+                                            {[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map(ano => {
                                                 const agentStatus = systemStatus?.agents?.[agentId || ''];
                                                 const isExtracted = agentStatus?.completed_years?.includes(ano.toString());
                                                 const isCheckpointed = agentStatus?.checkpoint_years?.includes(ano.toString());

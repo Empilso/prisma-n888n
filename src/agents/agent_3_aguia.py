@@ -24,7 +24,7 @@ __PRISMA_MANIFEST__ = {
         "5. Exporta camada Ouro em JSON padronizado."
     ],
     "apuracao": {
-        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        "safras_suportadas": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
         "saida_esperada": "data/saida/ouro/alba_{ano}_ouro_aguia_v2.json"
     }
 }
