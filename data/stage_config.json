@@ -128,6 +128,32 @@
           "stroke": "rgba(255,255,255,0.08)"
         },
         "animated": false
+      },
+      {
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.15)"
+        },
+        "source": "2",
+        "sourceHandle": null,
+        "target": "ronaldo",
+        "targetHandle": null,
+        "id": "reactflow__edge-2-ronaldo",
+        "animated": false
+      },
+      {
+        "type": "smoothstep",
+        "style": {
+          "strokeWidth": 2,
+          "stroke": "rgba(255,255,255,0.15)"
+        },
+        "source": "ronaldo",
+        "sourceHandle": null,
+        "target": "zidane_d",
+        "targetHandle": null,
+        "id": "reactflow__edge-ronaldo-zidane_d",
+        "animated": false
       }
     ],
     "2": [
