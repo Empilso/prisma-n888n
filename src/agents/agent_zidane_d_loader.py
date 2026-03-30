@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-🐘 AGENT ZIDANE-D — THE LOADER v3.0 | SYNC ENGINE
+🐘 AGENT ZIDANE-D — THE LOADER v3.1 | SYNC ENGINE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ESTRATÉGIA: UPSERT de Elite — Identidade + Inteligência → Supabase
 MOTOR:      REST API Supabase (DADOS-PRISMA)
 SAÍDA:      Tabela 'parlamentares' (dinâmico)
-NEW v3.0:   esfera, uf, casa, slug dinâmico + legislaturas corretas
+NEW v3.1:   FIX legislaturas — usa historico_legislaturas + legislatura_alvo (Zidane-C v6)
+            FIX mandatos_count — calculado via len(mandatos)
 """
 
 import os
@@ -30,7 +31,7 @@ __PRISMA_MANIFEST__ = {
         "3. Fallback de nomes nulos: nome_civil usa nome_limpo → nome_eleitoral.",
         "4. Integridade Referencial: Nenhum registro sem prisma_id é enviado.",
         "5. DDD 71 aplicado em todos os telefones de gabinete (Salvador-BA).",
-        "6. v3.0: esfera, uf, casa, slug dinâmico e legislaturas corretamente populados.",
+        "6. v3.1: FIX legislaturas usando historico_legislaturas do Zidane-C + mandatos_count correto.",
     ],
 }
 
@@ -51,7 +52,6 @@ def gerar_slug(nome: str, esfera: str, uf: str, casa: str) -> str:
         .encode("ascii", "ignore").decode()
         .replace(" ", "-")
     )
-    # Remove caracteres especiais
     nome_slug = re.sub(r"[^\w-]", "", nome_slug)
     sufixo_map = {
         "estadual":  f"deputado-{uf.lower()}",
@@ -61,6 +61,50 @@ def gerar_slug(nome: str, esfera: str, uf: str, casa: str) -> str:
     }
     sufixo = sufixo_map.get(esfera, f"parlamentar-{uf.lower()}")
     return f"{nome_slug}-{sufixo}"
+
+
+def extrair_legislaturas(r: dict, db_legislaturas: list) -> list:
+    """
+    v3.1 FIX — Monta a lista final de legislaturas corretamente.
+    Fontes (em ordem de prioridade):
+      1. historico_legislaturas (int[]) — campo gerado pelo Zidane-C v6
+      2. legislatura_alvo (str) — campo gerado pelo Zidane-C v6
+      3. legislatura (str) — campo legado (Zidane-C v5 e anteriores)
+      4. db_legislaturas — o que já existe no banco (merge)
+    Retorna lista de strings (ex: ["17", "18", "19", "20"]).
+    """
+    legs = set(str(x) for x in (db_legislaturas or []))
+
+    # Fonte 1: historico_legislaturas (lista de ints do Zidane-C v6)
+    historico = r.get("historico_legislaturas")
+    if historico and isinstance(historico, list):
+        for leg in historico:
+            legs.add(str(leg))
+
+    # Fonte 2: legislatura_alvo (string do Zidane-C v6)
+    leg_alvo = r.get("legislatura_alvo")
+    if leg_alvo:
+        legs.add(str(leg_alvo))
+
+    # Fonte 3: legislatura (campo legado)
+    leg_legado = r.get("legislatura")
+    if leg_legado:
+        legs.add(str(leg_legado))
+
+    return sorted(legs)
+
+
+def calcular_mandatos_count(r: dict) -> int:
+    """
+    v3.1 FIX — Calcula mandatos_count de forma confiável.
+    Usa len(mandatos) se disponível, senão len(legislaturas).
+    """
+    mandatos = r.get("mandatos")
+    if mandatos and isinstance(mandatos, list) and len(mandatos) > 0:
+        return len(mandatos)
+    # fallback: 1 mandato por legislatura detectada
+    legs = r.get("historico_legislaturas") or []
+    return len(legs) if legs else (r.get("mandatos_count") or 0)
 
 
 def main():
@@ -92,7 +136,7 @@ def main():
             records.append(json.load(f))
 
     print(f"\n{C_PURPLE}╔════════════════════════════════════════════════════════════════════╗{C_END}")
-    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}   ZIDANE-D THE LOADER v3.0 | SYNC ENGINE ({len(records)} PARLAMENTARES)   {C_END}{C_PURPLE}║{C_END}")
+    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}   ZIDANE-D THE LOADER v3.1 | SYNC ENGINE ({len(records)} PARLAMENTARES)   {C_END}{C_PURPLE}║{C_END}")
     print(f"{C_PURPLE}╚════════════════════════════════════════════════════════════════════╝{C_END}\n")
     print(f"{C_CYAN}📦 {len(records)} biografias carregadas de {enriquecidos_dir}.{C_END}")
     print(f"{C_CYAN}🎯 Alvo: {supa_url}/rest/v1/parlamentares{C_END}\n")
@@ -119,12 +163,12 @@ def main():
             erros += 1
             continue
 
-        # ─── Contexto geográfico (v3.0) ─────────────────────────────────
+        # ─── Contexto geográfico ─────────────────────────────────────────
         esfera = r.get("esfera", "estadual")
         uf     = r.get("uf",     "BA")
         casa   = r.get("casa",   "ALBA")
 
-        # ─── Slug dinâmico (v3.0) ──────────────────────────────────────
+        # ─── Slug dinâmico ───────────────────────────────────────────────
         slug = gerar_slug(nome_urna, esfera, uf, casa)
 
         # ─── GOLDEN RECORD: PRE-CHECK IDENTIDADE NO BANCO ───────────────
@@ -145,11 +189,12 @@ def main():
             except Exception as e:
                 print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Erro no Pre-Check: {e}{C_END}")
 
-        # ─── Legislaturas: merge db + nova detectada (v3.0) ────────────
-        leg_nova = r.get("legislatura")  # populado pelo Zidane-C v5.0
-        legislaturas_merged = list(set(
-            db_legislaturas + ([leg_nova] if leg_nova else [])
-        ))
+        # ─── v3.1 FIX: Legislaturas completas via função dedicada ────────
+        legislaturas_final = extrair_legislaturas(r, db_legislaturas)
+
+        # ─── v3.1 FIX: mandatos_count confiável ─────────────────────────
+        mandatos_list  = r.get("mandatos", [])
+        mandatos_count = calcular_mandatos_count(r)
 
         sexo_bruto   = r.get("sexo", "")
         sexo_tratado = sexo_bruto[0].upper() if isinstance(sexo_bruto, str) and sexo_bruto else None
@@ -158,7 +203,7 @@ def main():
         tags_count = len(tags) if tags else 0
         contatos   = r.get("contatos", {}) or {}
 
-        # ─── PAYLOAD OURO v3.0 ──────────────────────────────────────────
+        # ─── PAYLOAD OURO v3.1 ──────────────────────────────────────────
         payload = {
             # Identidade
             "prisma_id":            prisma_id,
@@ -170,7 +215,7 @@ def main():
             "foto_url":             r.get("foto_url"),
             "slug":                 slug,
 
-            # Contexto geográfico (v3.0)
+            # Contexto geográfico
             "esfera":               esfera,
             "uf":                   uf,
             "casa":                 casa,
@@ -194,10 +239,10 @@ def main():
             "biografia_completa":   r.get("biografia_completa"),
             "biografia_resumo":     r.get("biografia_resumo"),
 
-            # Mandatos e Legislaturas (v3.0 corrigido)
-            "mandatos":             r.get("mandatos", []),
-            "mandatos_count":       r.get("mandatos_count", 0),
-            "legislaturas":         legislaturas_merged,
+            # Mandatos e Legislaturas — v3.1 CORRIGIDO
+            "mandatos":             mandatos_list,
+            "mandatos_count":       mandatos_count,
+            "legislaturas":         legislaturas_final,
 
             # Contato
             "email":                contatos.get("email") if isinstance(contatos, dict) else None,
@@ -227,6 +272,8 @@ def main():
                 print(
                     f"{C_GREEN}[ZIDANE-D] 🐘 {C_BOLD}{nome_urna:<30}{C_END}{C_GREEN} "
                     f"| {casa:<8} | {esfera:<10} | {uf} "
+                    f"| Legs: {legislaturas_final} "
+                    f"| Mandatos: {mandatos_count} "
                     f"| Tags: {tags_count} | ✅ OURO{C_END}"
                 )
                 sucesso += 1
