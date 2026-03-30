@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 """
-🐘 AGENT ZIDANE-D — THE LOADER v2.0 | SYNC ENGINE
+🐘 AGENT ZIDANE-D — THE LOADER v2.1 | SYNC ENGINE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ESTRATÉGIA: UPSERT de Elite — Identidade + Inteligência → Supabase
 MOTOR:      REST API Supabase (DADOS-PRISMA)
-SAÍDA:      Tabela 'parlamentares' (63 registros enriquecidos)
+SAÍDA:      Tabela 'parlamentares' (dinâmico)
 """
 
 import os
 import sys
 import json
+import glob
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Sincronizar a Identidade Suprema dos 63 parlamentares da ALBA para o banco de dados PRISMA DADOS (Supabase), unificando dados biográficos brutos com a inteligência IA do Cérebro Zidane-C.",
+        "missao": "Sincronizar a Identidade Suprema dos parlamentares da ALBA para o banco de dados PRISMA DADOS (Supabase), unificando dados biográficos brutos com a inteligência IA do Cérebro Zidane-C.",
         "especialidade": "Loader de Elite | REST UPSERT com mapeamento premium de todos os campos de IA",
         "protocolo_tecnico": "Python + Supabase REST API (DADOS-PRISMA)",
         "camada_dados": "Ouro (Carga Final — Identidade + Inteligência)",
@@ -26,10 +27,11 @@ __PRISMA_MANIFEST__ = {
         "2. Mapeamento Premium de IA: carreira_politica, formacao_academica, tags_estrategicas, lideranca_e_comissoes, condecoracoes mapeados como colunas reais.",
         "3. Fallback de nomes nulos: nome_civil usa nome_limpo → nome_eleitoral para não violar constraint NOT NULL.",
         "4. Integridade Referencial: Nenhum registro sem prisma_id é enviado.",
+        "5. DDD 71 aplicado em todos os telefones de gabinete (Salvador-BA).",
     ],
     "apuracao": {
         "safras_suportadas": ["17", "18", "19", "20 (Atual)"],
-        "entrada_esperada": "data/saida/parlamentares/parlamentares_hub_normalized.json",
+        "entrada_esperada": "data/saida/parlamentares/enriquecidos/**/*.json",
         "saida_esperada": "Supabase PRISMA DADOS (Tabela parlamentares)"
     }
 }
@@ -44,11 +46,6 @@ C_BOLD   = "\033[1m"
 C_END    = "\033[0m"
 
 def main():
-    # ─── BOOT ──────────────────────────────────────────────────────────────
-    print(f"\n{C_PURPLE}╔════════════════════════════════════════════════════════════════════╗{C_END}")
-    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}       ZIDANE-D THE LOADER v2.0 | SYNC ENGINE (63 PARLAMENTARES)  {C_END}{C_PURPLE}║{C_END}")
-    print(f"{C_PURPLE}╚════════════════════════════════════════════════════════════════════╝{C_END}\n")
-
     # 1. Variáveis de ambiente
     env_path = Path(__file__).resolve().parent.parent.parent / ".env"
     load_dotenv(dotenv_path=env_path)
@@ -66,9 +63,8 @@ def main():
         print(f"{C_RED}❌ ERRO: Chave do Supabase não encontrada no .env{C_END}")
         sys.exit(1)
 
-    import glob
+    # 2. Carregar JSONs enriquecidos
     enriquecidos_dir = base_dir / "data" / "saida" / "parlamentares" / "enriquecidos"
-    
     json_files = glob.glob(str(enriquecidos_dir / "**" / "*.json"), recursive=True)
     if not json_files:
         print(f"{C_YELLOW}⚠️ Nenhum parlamentar encontrado em {enriquecidos_dir}.{C_END}")
@@ -78,6 +74,11 @@ def main():
     for fp in json_files:
         with open(fp, "r", encoding="utf-8") as f:
             records.append(json.load(f))
+
+    # ─── BOOT (banner dinâmico) ────────────────────────────────────────────
+    print(f"\n{C_PURPLE}╔════════════════════════════════════════════════════════════════════╗{C_END}")
+    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}   ZIDANE-D THE LOADER v2.1 | SYNC ENGINE ({len(records)} PARLAMENTARES)   {C_END}{C_PURPLE}║{C_END}")
+    print(f"{C_PURPLE}╚════════════════════════════════════════════════════════════════════╝{C_END}\n")
 
     print(f"{C_CYAN}📦 {len(records)} biografias carregadas de {enriquecidos_dir}.{C_END}")
     print(f"{C_CYAN}🎯 Alvo: {supa_url}/rest/v1/parlamentares{C_END}\n")
@@ -99,34 +100,33 @@ def main():
     for r in records:
         nome_urna  = r.get("nome_eleitoral") or r.get("nome_limpo") or r.get("nome_civil") or "Desconhecido"
         nome_civil = r.get("nome_civil") or r.get("nome_limpo") or r.get("nome_eleitoral") or "Parlamentar ALBA"
-        
-        prisma_id  = r.get("prisma_id")
 
+        prisma_id = r.get("prisma_id")
         if not prisma_id:
-            print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Ignorado {nome_urna} (sem prisma_id_base){C_END}")
+            print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Ignorado {nome_urna} (sem prisma_id){C_END}")
             erros += 1
             continue
 
         contatos = r.get("contatos", {}) or {}
-        # ---- GOLDEN RECORD: PRE-CHECK IDENTIDADE NO BANDO ----
+
+        # ---- GOLDEN RECORD: PRE-CHECK IDENTIDADE NO BANCO ----
         q_nome = r.get("nome_limpo")
         db_legislaturas = []
         if q_nome:
             try:
-                # Busca exata pelo nome normalizado
                 check_url = f"{endpoint}?nome_normalizado=eq.{requests.utils.quote(q_nome)}&select=prisma_id,legislaturas"
                 check_resp = requests.get(check_url, headers=headers, timeout=10)
                 if check_resp.status_code == 200:
                     matches = check_resp.json()
                     if matches and len(matches) > 0:
-                        # Achou! Vamos herdar o ID existente em vez de criar duplicata
                         old_id = prisma_id
                         prisma_id = matches[0]["prisma_id"]
                         db_legislaturas = matches[0].get("legislaturas") or []
                         if old_id != prisma_id:
-                            print(f"{C_CYAN}[ZIDANE-D] 🔗 Golden Record (Match): {q_nome} ➔ Herdado ID: {prisma_id[:8]}{C_END}")
+                            print(f"{C_CYAN}[ZIDANE-D] 🔗 Golden Record: {q_nome} ➔ ID herdado: {prisma_id[:8]}{C_END}")
             except Exception as e:
-                print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Erro no Pre-Check de Identidade: {e}{C_END}")
+                print(f"{C_YELLOW}[ZIDANE-D] ⚠️ Erro no Pre-Check: {e}{C_END}")
+
         sexo_bruto = r.get("sexo", "")
         sexo_tratado = (
             sexo_bruto[0].upper()
@@ -137,7 +137,7 @@ def main():
         tags = r.get("tags_estrategicas", [])
         tags_count = len(tags) if tags else 0
 
-        # ─── PAYLOAD OURO ESTRUTURADO ──────────────────────────────────────
+        # ─── PAYLOAD OURO ─────────────────────────────────────────────────
         payload = {
             # Identidade
             "prisma_id":            prisma_id,
@@ -172,12 +172,12 @@ def main():
             "mandatos_count":       r.get("mandatos_count", 0),
             "legislaturas":         list(set(db_legislaturas + ([str(r.get("legislatura"))] if r.get("legislatura") else []))),
 
-            # Contato
+            # Contato (DDD 71 — Salvador/ALBA)
             "email":                contatos.get("email") if isinstance(contatos, dict) else None,
             "telefones":            [f"(71) {t}" for t in contatos.get("telefones", []) if t] if isinstance(contatos, dict) else [],
             "gabinete_endereco":    r.get("gabinete_endereco"),
 
-            # ── Inteligência IA (Campos Ouro do Zidane-C) ──
+            # Inteligência IA (Zidane-C)
             "carreira_politica":    r.get("carreira_politica", []),
             "formacao_academica":   r.get("formacao_academica", []),
             "tags_estrategicas":    tags,
@@ -198,9 +198,8 @@ def main():
             resp = requests.post(endpoint, headers=headers, params=params, json=payload, timeout=15)
             if resp.status_code in [200, 201, 204]:
                 print(
-                    f"{C_GREEN}[ZIDANE-D] 🐘 Sincronizando Inteligência: "
-                    f"{C_BOLD}{nome_urna}{C_END}{C_GREEN} | "
-                    f"Tags: {tags_count} | Status: OURO ✅{C_END}"
+                    f"{C_GREEN}[ZIDANE-D] 🐘 {C_BOLD}{nome_urna}{C_END}{C_GREEN} | "
+                    f"Tags: {tags_count} | ✅ OURO{C_END}"
                 )
                 sucesso += 1
             else:
