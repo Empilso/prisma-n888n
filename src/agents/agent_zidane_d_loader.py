@@ -52,6 +52,7 @@ def main():
     # 1. Variáveis de ambiente
     env_path = Path(__file__).resolve().parent.parent.parent / ".env"
     load_dotenv(dotenv_path=env_path)
+    base_dir = Path(__file__).resolve().parent.parent.parent
 
     project_id = os.getenv("DADOS_PRISMA_PROJECT", "hrrzwhkosgzungqxlcps")
     supa_url   = f"https://{project_id}.supabase.co"
@@ -106,7 +107,7 @@ def main():
             erros += 1
             continue
 
-        telefone = r.get("contatos", {}) or {}
+        contatos = r.get("contatos", {}) or {}
         # ---- GOLDEN RECORD: PRE-CHECK IDENTIDADE NO BANDO ----
         q_nome = r.get("nome_limpo")
         db_legislaturas = []
@@ -173,7 +174,7 @@ def main():
 
             # Contato
             "email":                contatos.get("email") if isinstance(contatos, dict) else None,
-            "telefones":            contatos.get("telefones", []) if isinstance(contatos, dict) else [],
+            "telefones":            [f"(71) {t}" for t in contatos.get("telefones", []) if t] if isinstance(contatos, dict) else [],
             "gabinete_endereco":    r.get("gabinete_endereco"),
 
             # ── Inteligência IA (Campos Ouro do Zidane-C) ──
