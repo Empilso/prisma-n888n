@@ -15,7 +15,7 @@ __PRISMA_MANIFEST__ = {
     "diretrizes": [
         "1. Limpa strings (espaços extras, N/A, Null).",
         "2. Normaliza Textos para Title Case inteligente.",
-        "3. Extrai CNPJ/CPF embutidos em QUALQUER posição do nome (início, meio, fim).",
+        "3. Extrai CNPJ/CPF embutidos em QUALQUER posição do nome (início, meio, fim) — inclusive fragmentos parciais.",
         "4. Repara URLs de PDF truncadas ou relativas + decodifica %20.",
         "5. Converte Valores Monetários BR (1.234,56 -> 1234.56).",
         "6. Unifica Meses e Anos em ISO-8601 (YYYY-MM-01).",
@@ -27,17 +27,23 @@ __PRISMA_MANIFEST__ = {
     }
 }
 
-# Padrões de CPF e CNPJ em qualquer formato (mascarado ou só dígitos)
-# CNPJ: 14 dígitos — ex: 33139754000186 ou 33.139.754/0001-86
+# ── Padrões de documentos ────────────────────────────────────────────────────
+# CNPJ completo mascarado:  33.139.754/0001-86
 _RE_CNPJ_MASK = re.compile(r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')
+# CNPJ puro 14 dígitos:     33139754000186
 _RE_CNPJ_RAW  = re.compile(r'(?<![\d])\d{14}(?![\d])')
-# CPF: 11 dígitos — ex: 05418730592 ou 054.187.305-92
+# CPF mascarado:            054.187.305-92
 _RE_CPF_MASK  = re.compile(r'\d{3}\.\d{3}\.\d{3}-\d{2}')
+# CPF puro 11 dígitos:      05418730592
 _RE_CPF_RAW   = re.compile(r'(?<![\d])\d{11}(?![\d])')
+# CNPJ fragmento inicial:   33.139.754  (sem /XXXX-XX — CNPJ incompleto no campo)
+_RE_CNPJ_FRAG = re.compile(r'(?<![\d\.])\d{2}\.\d{3}\.\d{3}(?![/\d])')
+# Fragmento numérico solto no início/fim do nome (ex: "33139754 Vinicius")
+_RE_NUM_SOLTO = re.compile(r'^[\d\.\-/]+\s+|\s+[\d\.\-/]+$')
 
 
 class PurificadorBebeto:
-    VERSION = "bebeto_v2.4"
+    VERSION = "bebeto_v2.5"
 
     def __init__(self):
         self.flags = []
@@ -79,47 +85,63 @@ class PurificadorBebeto:
     ) -> Tuple[str, Optional[str], Optional[str]]:
         """
         Diretriz 3: Detecta e remove CPF ou CNPJ embutido em QUALQUER posição do nome.
-        Suporta formatos mascarados (33.139.754/0001-86, 054.187.305-92)
-        e formato só dígitos (33139754000186, 05418730592).
+        Passagens (ordem de prioridade):
+          1. CNPJ mascarado completo:  33.139.754/0001-86
+          2. CPF  mascarado completo:  054.187.305-92
+          3. CNPJ puro 14 dígitos:     33139754000186
+          4. CPF  puro 11 dígitos:     05418730592
+          5. CNPJ fragmento inicial:   33.139.754  (CNPJ incompleto — limpa e sinaliza)
+          6. Número solto no início/fim do nome
         Retorna: (nome_limpo, numero_doc, tipo_doc)  — tipo_doc: 'CPF' | 'CNPJ' | None
         """
         if not nome:
             return nome, None, None
 
         s = nome.strip()
-        doc   = None
-        tipo  = None
+        doc  = None
+        tipo = None
 
-        # 1º tenta CNPJ mascarado (14 dígitos com pontos/barra/traço)
+        # 1º — CNPJ mascarado completo
         m = _RE_CNPJ_MASK.search(s)
         if m:
-            raw = re.sub(r'\D', '', m.group())
-            s   = (s[:m.start()] + s[m.end():]).strip()
-            doc, tipo = raw, "CNPJ"
+            doc  = re.sub(r'\D', '', m.group())
+            s    = (s[:m.start()] + s[m.end():]).strip()
+            tipo = "CNPJ"
 
-        # 2º tenta CPF mascarado
+        # 2º — CPF mascarado completo
         if not doc:
             m = _RE_CPF_MASK.search(s)
             if m:
-                raw = re.sub(r'\D', '', m.group())
-                s   = (s[:m.start()] + s[m.end():]).strip()
-                doc, tipo = raw, "CPF"
+                doc  = re.sub(r'\D', '', m.group())
+                s    = (s[:m.start()] + s[m.end():]).strip()
+                tipo = "CPF"
 
-        # 3º tenta CNPJ puro (14 dígitos consecutivos)
+        # 3º — CNPJ puro 14 dígitos
         if not doc:
             m = _RE_CNPJ_RAW.search(s)
             if m:
-                raw = m.group()
-                s   = (s[:m.start()] + s[m.end():]).strip()
-                doc, tipo = raw, "CNPJ"
+                doc  = m.group()
+                s    = (s[:m.start()] + s[m.end():]).strip()
+                tipo = "CNPJ"
 
-        # 4º tenta CPF puro (11 dígitos consecutivos)
+        # 4º — CPF puro 11 dígitos
         if not doc:
             m = _RE_CPF_RAW.search(s)
             if m:
-                raw = m.group()
-                s   = (s[:m.start()] + s[m.end():]).strip()
-                doc, tipo = raw, "CPF"
+                doc  = m.group()
+                s    = (s[:m.start()] + s[m.end():]).strip()
+                tipo = "CPF"
+
+        # 5º — CNPJ fragmento inicial (ex: "33.139.754 Vinicius...")
+        if not doc:
+            m = _RE_CNPJ_FRAG.search(s)
+            if m:
+                doc  = re.sub(r'\D', '', m.group())  # guarda os 8 dígitos disponíveis
+                s    = (s[:m.start()] + s[m.end():]).strip()
+                tipo = "CNPJ_FRAGMENTO"
+
+        # 6º — Número solto remanescente no início ou fim
+        s = _RE_NUM_SOLTO.sub('', s).strip()
 
         # Limpa sobras de pontuação após remoção
         s = re.sub(r'^[\s,;\-/]+|[\s,;\-/]+$', '', s)
@@ -287,14 +309,15 @@ class PurificadorBebeto:
             p["cnpj_fornecedor"] = None
             p["cnpj_valido"] = None
         else:
-            # Registra CPF extraído do nome (se havia)
             if tipo_doc_extraido == "CPF":
                 p["cpf_fornecedor"] = doc_extraido
                 flags.append("cpf_extraido_do_nome")
             elif tipo_doc_extraido == "CNPJ":
-                # CNPJ estava no nome — registra como extraído
                 p["cpf_fornecedor"] = None
                 flags.append("cnpj_extraido_do_nome")
+            elif tipo_doc_extraido == "CNPJ_FRAGMENTO":
+                p["cpf_fornecedor"] = None
+                flags.append("cnpj_fragmento_extraido_do_nome")
             else:
                 p["cpf_fornecedor"] = None
 
@@ -302,6 +325,10 @@ class PurificadorBebeto:
             p["cnpj_fornecedor"] = cnpj_norm
             p["cnpj_valido"] = len(cnpj_flags) == 0
             flags.extend(cnpj_flags)
+
+        # Fix 2: CPF e CNPJ presentes ao mesmo tempo → sinaliza para Ronaldo Gold
+        if p.get("cpf_fornecedor") and p.get("cnpj_fornecedor"):
+            flags.append("fornecedor_pf_e_pj")
 
         # Valor
         valor_norm, valor_flags = self.normalizar_valor(r.get("valor"))
@@ -366,13 +393,13 @@ class PurificadorBebeto:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Xylos-Bebeto v2.4: O Purificador de Plasma")
+    parser = argparse.ArgumentParser(description="Xylos-Bebeto v2.5: O Purificador de Plasma")
     env_ano = os.environ.get("ANO_ALVO")
     parser.add_argument("--year", type=str, default=env_ano, help="Ano para processar")
     parser.add_argument("--file", type=str, help="Arquivo específico para processar")
     args = parser.parse_args()
 
-    print(f"[AGENT 2] 🛡️ Bebeto v2.4: Iniciando Purificação...")
+    print(f"[AGENT 2] 🛡️ Bebeto v2.5: Iniciando Purificação...")
     sys.stdout.flush()
 
     base_dir = Path(__file__).resolve().parent.parent.parent
@@ -441,7 +468,7 @@ def main():
 
     print(f"[AGENT 2] 💾 Purificação Concluída: {output_path.name}")
     print(f"[AGENT 2] 💎 Registros Úteis: {len(prata)}")
-    print(f"[AGENT 2] [AGENT DONE] ✅ Bebeto v2.4 encerra com sucesso!")
+    print(f"[AGENT 2] [AGENT DONE] ✅ Bebeto v2.5 encerra com sucesso!")
     sys.stdout.flush()
 
 
