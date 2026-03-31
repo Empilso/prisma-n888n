@@ -15,7 +15,7 @@ __PRISMA_MANIFEST__ = {
     "diretrizes": [
         "1. Limpa strings (espaços extras, N/A, Null).",
         "2. Normaliza Textos para Title Case inteligente.",
-        "3. Extrai CNPJ/CPF embutidos em descrições soltas.",
+        "3. Extrai CNPJ/CPF embutidos em QUALQUER posição do nome (início, meio, fim).",
         "4. Repara URLs de PDF truncadas ou relativas + decodifica %20.",
         "5. Converte Valores Monetários BR (1.234,56 -> 1234.56).",
         "6. Unifica Meses e Anos em ISO-8601 (YYYY-MM-01).",
@@ -27,8 +27,17 @@ __PRISMA_MANIFEST__ = {
     }
 }
 
+# Padrões de CPF e CNPJ em qualquer formato (mascarado ou só dígitos)
+# CNPJ: 14 dígitos — ex: 33139754000186 ou 33.139.754/0001-86
+_RE_CNPJ_MASK = re.compile(r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')
+_RE_CNPJ_RAW  = re.compile(r'(?<![\d])\d{14}(?![\d])')
+# CPF: 11 dígitos — ex: 05418730592 ou 054.187.305-92
+_RE_CPF_MASK  = re.compile(r'\d{3}\.\d{3}\.\d{3}-\d{2}')
+_RE_CPF_RAW   = re.compile(r'(?<![\d])\d{11}(?![\d])')
+
+
 class PurificadorBebeto:
-    VERSION = "bebeto_v2.3"
+    VERSION = "bebeto_v2.4"
 
     def __init__(self):
         self.flags = []
@@ -65,15 +74,58 @@ class PurificadorBebeto:
 
         return resultado
 
-    def extrair_cpf(self, nome_fornecedor: str) -> Tuple[str, Optional[str]]:
-        """Diretriz 3: Extração de CPF embutido no final do nome."""
-        if not nome_fornecedor: return nome_fornecedor, None
-        match = re.search(r'(\d{11})$', nome_fornecedor.strip())
-        if match:
-            cpf = match.group(1)
-            novo_nome = nome_fornecedor[:match.start()].strip()
-            return novo_nome, cpf
-        return nome_fornecedor, None
+    def extrair_documento_do_nome(
+        self, nome: str
+    ) -> Tuple[str, Optional[str], Optional[str]]:
+        """
+        Diretriz 3: Detecta e remove CPF ou CNPJ embutido em QUALQUER posição do nome.
+        Suporta formatos mascarados (33.139.754/0001-86, 054.187.305-92)
+        e formato só dígitos (33139754000186, 05418730592).
+        Retorna: (nome_limpo, numero_doc, tipo_doc)  — tipo_doc: 'CPF' | 'CNPJ' | None
+        """
+        if not nome:
+            return nome, None, None
+
+        s = nome.strip()
+        doc   = None
+        tipo  = None
+
+        # 1º tenta CNPJ mascarado (14 dígitos com pontos/barra/traço)
+        m = _RE_CNPJ_MASK.search(s)
+        if m:
+            raw = re.sub(r'\D', '', m.group())
+            s   = (s[:m.start()] + s[m.end():]).strip()
+            doc, tipo = raw, "CNPJ"
+
+        # 2º tenta CPF mascarado
+        if not doc:
+            m = _RE_CPF_MASK.search(s)
+            if m:
+                raw = re.sub(r'\D', '', m.group())
+                s   = (s[:m.start()] + s[m.end():]).strip()
+                doc, tipo = raw, "CPF"
+
+        # 3º tenta CNPJ puro (14 dígitos consecutivos)
+        if not doc:
+            m = _RE_CNPJ_RAW.search(s)
+            if m:
+                raw = m.group()
+                s   = (s[:m.start()] + s[m.end():]).strip()
+                doc, tipo = raw, "CNPJ"
+
+        # 4º tenta CPF puro (11 dígitos consecutivos)
+        if not doc:
+            m = _RE_CPF_RAW.search(s)
+            if m:
+                raw = m.group()
+                s   = (s[:m.start()] + s[m.end():]).strip()
+                doc, tipo = raw, "CPF"
+
+        # Limpa sobras de pontuação após remoção
+        s = re.sub(r'^[\s,;\-/]+|[\s,;\-/]+$', '', s)
+        s = re.sub(r'\s{2,}', ' ', s).strip()
+
+        return s, doc, tipo
 
     def validar_pdf(self, url: Any) -> Tuple[Optional[str], List[str]]:
         """Diretriz 4: Flags de PDF, URL Correction e decodificação %20."""
@@ -83,7 +135,6 @@ class PurificadorBebeto:
             flags.append("pdf_ausente")
             return None, flags
 
-        # FIX: decodifica caracteres percent-encoded (%20 → espaço, etc)
         u = unquote(u)
 
         BASE_ALBA = "https://www.al.ba.gov.br"
@@ -91,7 +142,6 @@ class PurificadorBebeto:
             u = BASE_ALBA + u
             flags.append("pdf_url_relativa_corrigida")
 
-        # URL quebrada sem nome de arquivo
         if u.endswith(":anexo:") or u.endswith(":anexo") or u.endswith("/"):
             flags.append("pdf_url_sem_arquivo")
             return None, flags
@@ -104,7 +154,7 @@ class PurificadorBebeto:
         return u, flags
 
     def normalizar_nf(self, nf: Any) -> Tuple[Optional[str], str, List[str]]:
-        """Diretriz 5: Normalização de NF. Retorna (nf_limpo, nf_tipo, flags)."""
+        """Diretriz 5: Normalização de NF."""
         flags = []
         s = self.clean_string(nf)
         if not s: return None, "ausente", ["nf_ausente"]
@@ -128,7 +178,6 @@ class PurificadorBebeto:
         """Diretriz 6: Categoria Slug."""
         s = self.clean_string(cat)
         if not s: return "outros"
-
         s = s.lower()
         mapping = {
             "divulga": "divulgacao",
@@ -177,7 +226,6 @@ class PurificadorBebeto:
 
         if not digits or len(digits) != 14:
             return digits if digits else None, ["cnpj_tamanho_invalido"]
-
         if digits == digits[0] * 14:
             return digits, ["cnpj_falso_sequencial"]
 
@@ -188,33 +236,26 @@ class PurificadorBebeto:
 
         p1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
         p2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-
         d1 = calc_digito(digits[:12], p1)
         d2 = calc_digito(digits[:13], p2)
 
         if int(digits[12]) != d1 or int(digits[13]) != d2:
             return digits, ["cnpj_digito_invalido"]
-
         return digits, []
 
     def normalizar_valor(self, valor: Any) -> Tuple[Optional[float], List[str]]:
         """Diretriz 5: Valor Monetário Robusto."""
-        flags = []
         if valor is None: return None, []
-
         if isinstance(valor, (int, float)):
             return float(valor), []
-
         s = str(valor).strip().replace("R$", "").replace(" ", "")
         if not s: return None, []
-
         try:
             if re.search(r'\d\.\d{3},', s) or ("," in s and "." not in s) or ("," in s and s.find(".") < s.find(",")):
                 s = s.replace(".", "").replace(",", ".")
             else:
                 s = s.replace(",", "")
-            val = float(re.sub(r'[^\d.-]', '', s))
-            return val, []
+            return float(re.sub(r'[^\d.-]', '', s)), []
         except:
             return None, ["valor_invalido"]
 
@@ -231,23 +272,32 @@ class PurificadorBebeto:
         p["deputado"] = self.normalizar_texto(r.get("deputado"))
         p["partido"] = self.normalizar_texto(r.get("partido"), mode="upper")
 
-        # Fornecedor e CPF
-        nome_forn_cru = r.get("nome_fornecedor", "")
-        nome_limpo, cpf_extraido = self.extrair_cpf(nome_forn_cru)
+        # Diretriz 3: Fornecedor — extrai CPF/CNPJ de QUALQUER posição do nome
+        nome_forn_cru = r.get("nome_fornecedor") or ""
+        nome_limpo, doc_extraido, tipo_doc_extraido = self.extrair_documento_do_nome(nome_forn_cru)
         p["nome_fornecedor"] = self.normalizar_texto(nome_limpo)
-        p["nome_fornecedor_limpo"] = nome_limpo
-        p["cpf_fornecedor"] = cpf_extraido
-        if cpf_extraido: flags.append("cpf_extraido_do_nome")
+        p["nome_fornecedor_limpo"] = nome_limpo.upper() if nome_limpo else None
 
-        # CNPJ ou CPF
+        # CPF: pode vir do campo tipo_documento=CPF ou extraído do nome
         tipo_documento = self.clean_string(r.get("tipo_documento"))
+
         if tipo_documento == "CPF":
             cpf_digits = re.sub(r'\D', '', str(r.get("cnpj_fornecedor", "")))
-            if len(cpf_digits) == 11:
-                p["cpf_fornecedor"] = cpf_digits
+            p["cpf_fornecedor"] = cpf_digits if len(cpf_digits) == 11 else doc_extraido
             p["cnpj_fornecedor"] = None
             p["cnpj_valido"] = None
         else:
+            # Registra CPF extraído do nome (se havia)
+            if tipo_doc_extraido == "CPF":
+                p["cpf_fornecedor"] = doc_extraido
+                flags.append("cpf_extraido_do_nome")
+            elif tipo_doc_extraido == "CNPJ":
+                # CNPJ estava no nome — registra como extraído
+                p["cpf_fornecedor"] = None
+                flags.append("cnpj_extraido_do_nome")
+            else:
+                p["cpf_fornecedor"] = None
+
             cnpj_norm, cnpj_flags = self.validar_cnpj(r.get("cnpj_fornecedor"))
             p["cnpj_fornecedor"] = cnpj_norm
             p["cnpj_valido"] = len(cnpj_flags) == 0
@@ -280,7 +330,7 @@ class PurificadorBebeto:
         p["categoria_detalhe_raw"] = self.clean_string(r.get("categoria_detalhe"))
         p["categoria_slug"] = self.mapear_categoria(r.get("categoria"))
 
-        # PDF — FIX: decodifica %20 dentro de validar_pdf
+        # PDF
         link_orig = self.clean_string(r.get("link_pdf_nf"))
         p["link_pdf_nf_raw"] = link_orig
         u_corrigida, pdf_flags = self.validar_pdf(r.get("link_pdf_nf"))
@@ -295,7 +345,7 @@ class PurificadorBebeto:
         p["valor_glosado"] = valor_glosado
         valor_detalhe, _ = self.normalizar_valor(r.get("valor_detalhe"))
         p["valor_detalhe"] = valor_detalhe
-        p["tipo_documento"] = self.clean_string(r.get("tipo_documento"))
+        p["tipo_documento"] = tipo_documento
         p["link_detalhe"] = self.clean_string(r.get("link_detalhe"))
         p["romario_coletado_em"] = self.clean_string(r.get("coletado_em"))
         p["numero_nf_recibo_raw"] = self.clean_string(r.get("numero_nf_recibo"))
@@ -309,7 +359,6 @@ class PurificadorBebeto:
         p["processado_em"] = datetime.utcnow().isoformat() + "Z"
         p["versao_bebeto"] = self.VERSION
 
-        # prisma_id — hash MD5
         chave = f"{p['num_processo']}|{p['num_nf']}|{p['cnpj_fornecedor']}|{p['valor']}|{p['competencia_date']}"
         p["prisma_id"] = hashlib.md5(chave.encode()).hexdigest()
 
@@ -317,13 +366,13 @@ class PurificadorBebeto:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Xylos-Bebeto v2.3: O Purificador de Plasma")
+    parser = argparse.ArgumentParser(description="Xylos-Bebeto v2.4: O Purificador de Plasma")
     env_ano = os.environ.get("ANO_ALVO")
     parser.add_argument("--year", type=str, default=env_ano, help="Ano para processar")
     parser.add_argument("--file", type=str, help="Arquivo específico para processar")
     args = parser.parse_args()
 
-    print(f"[AGENT 2] 🛡️ Bebeto v2.3: Iniciando Purificação...")
+    print(f"[AGENT 2] 🛡️ Bebeto v2.4: Iniciando Purificação...")
     sys.stdout.flush()
 
     base_dir = Path(__file__).resolve().parent.parent.parent
@@ -392,7 +441,7 @@ def main():
 
     print(f"[AGENT 2] 💾 Purificação Concluída: {output_path.name}")
     print(f"[AGENT 2] 💎 Registros Úteis: {len(prata)}")
-    print(f"[AGENT 2] [AGENT DONE] ✅ Bebeto v2.3 encerra com sucesso!")
+    print(f"[AGENT 2] [AGENT DONE] ✅ Bebeto v2.4 encerra com sucesso!")
     sys.stdout.flush()
 
 
