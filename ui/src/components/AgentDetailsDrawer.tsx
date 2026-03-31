@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// v3.1 — Barlow Condensed typography upgrade
+// v3.2 — year cards always visible + luxury pill style
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Cpu, Shield, Database, FileJson, Zap, Network, Target, ChevronRight,
@@ -38,7 +38,31 @@ const getLayer = (agentId: string | null): 'bronze' | 'prata' | 'ouro' | 'kaka' 
     return 'ouro';
 };
 
-// ─── Sub-Components ───────────────────────────────────────────────────────────
+// ─── Year Pill ───────────────────────────────────────────────────────────────
+const YearPill = ({
+    label, active, done, partial, onClick, tooltip
+}: { label: string; active: boolean; done?: boolean; partial?: boolean; onClick: () => void; tooltip?: string }) => {
+    const base = 'relative px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all select-none border shadow-sm cursor-pointer';
+    let colorClass = '';
+    if (active) {
+        colorClass = 'bg-gradient-to-br from-blue-500/25 to-purple-500/15 text-blue-200 border-blue-400/50 shadow-[0_0_14px_rgba(99,102,241,0.25)] scale-105';
+    } else if (done) {
+        colorClass = 'bg-emerald-500/10 text-emerald-300 border-emerald-400/25 hover:border-emerald-400/50 hover:scale-105';
+    } else if (partial) {
+        colorClass = 'bg-amber-500/10 text-amber-300 border-amber-400/25 hover:border-amber-400/50 hover:scale-105';
+    } else {
+        colorClass = 'bg-white/[0.04] text-white/40 border-white/[0.09] hover:bg-white/[0.07] hover:border-white/25 hover:text-white/70 hover:scale-105';
+    }
+    return (
+        <button onClick={onClick} title={tooltip} className={`${base} ${colorClass}`}>
+            {label}
+            {done && !active && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-black" />}
+            {partial && !done && !active && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 border border-black animate-pulse" />}
+        </button>
+    );
+};
+
+// ─── Compact Pill (para Linhagem / Safras) ────────────────────────────────────
 const Pill = ({
     label, active, done, partial, onClick, tooltip
 }: { label: string; active: boolean; done?: boolean; partial?: boolean; onClick: () => void; tooltip?: string }) => (
@@ -110,6 +134,9 @@ const CodePreview = ({ code }: { code: string }) => {
         </div>
     );
 };
+
+// ─── ALL_YEARS — lista fixa, sempre visível ───────────────────────────────────
+const ALL_YEARS = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrewId, onOpenStudio, inputReady, systemStatus }: AgentDetailsDrawerProps) => {
@@ -237,7 +264,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
             const qp = new URLSearchParams();
             if (agentId !== 'zidane_d') { qp.append('ano', selectedAno.toString()); qp.append('provider', selectedProvider); qp.append('model', selectedModel); }
             qp.append('restart', 'true');
-            await fetch(`http://localhost:8003/api/run-agent/${agentId}?${qp.toString()}`, { method: 'POST' });
+            await fetch(`http://localhost:8003/api/run-agent/${agentId}?${qp.toString()}`, { method: 'POST' })
         } finally { setLoading(false); }
     };
 
@@ -264,7 +291,6 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     const isRunningPulse = isActuallyRunning || isTargetPartial;
     const isGlobalDone = completedYears.length > 0;
 
-    // Resolve path templates — update in real-time with selected context
     const resolvePath = (p: string) => p
         ? p.replace('{ano}', currentRawAno).replace('{num}', currentRawAno)
         : '';
@@ -274,7 +300,6 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
     const sourceFile = resolvePath(rawEntrada) || 'Data Lake';
     const targetFile = resolvePath(rawSaida) || 'Banco de Dados';
 
-    // Label for run button
     const runLabel = (() => {
         const zLabels: Record<string, string> = { zidane_a: 'Coletar IDs', zidane_b: 'Deep Scrape', zidane_c: 'Consolidar Hub' };
         const act = zLabels[agentId || ''] || (agentId === '1' ? 'Extrair' : agentId === '2' ? 'Purificar' : agentId === 'kaka' ? 'Auditar' : 'Executar');
@@ -283,7 +308,6 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
         return `${act}${yr}`;
     })();
 
-    // Needs config flags
     const needsYear = ['1', '3', '4', '5', '6', '10'].includes(selectedCrewId) && agentId === '1';
     const needsLegislatura = agentId === 'zidane_a' || agentId === 'zidane_b';
     const needsCity = selectedCrewId === '9' && agentId === '1';
@@ -367,7 +391,6 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                     </div>
                                 )}
 
-                                {/* Manifesto carregando */}
                                 {!agentManifest && (
                                     <div className="px-4 text-center py-6">
                                         <div className="w-5 h-5 border border-white/10 border-t-blue-400/50 rounded-full animate-spin mx-auto mb-2" />
@@ -470,6 +493,69 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                     </div>
                                 </div>
 
+                                {/* ══ FILTRO DE ANOS — sempre visível ═══════════════════════ */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Clock size={11} className="text-white/20" />
+                                        <span className="text-[11px] font-black text-white/30 uppercase tracking-[0.15em]">Período</span>
+                                        <span className="flex-1 h-px bg-white/[0.04]" />
+                                        {selectedAno !== 'all' && (
+                                            <span className="text-[10px] text-blue-300/70 font-bold">{selectedAno} selecionado</span>
+                                        )}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {/* Botão Todos */}
+                                        <YearPill
+                                            label="Todos"
+                                            active={selectedAno === 'all'}
+                                            onClick={() => setSelectedAno('all')}
+                                            tooltip="Exibir todos os anos"
+                                        />
+                                        {/* Ano atual destacado */}
+                                        <YearPill
+                                            label="atual 2025"
+                                            active={selectedAno === 2025}
+                                            done={completedYears.includes('2025')}
+                                            partial={checkpointYears.includes('2025') && !completedYears.includes('2025')}
+                                            onClick={() => {
+                                                setSelectedAno(2025);
+                                                const entry = availableFiles.find(f => f.name.includes('2025'));
+                                                if (entry) { setFilename(entry.name); fetchPreview(entry.name); }
+                                            }}
+                                            tooltip={completedYears.includes('2025') ? '2025 ✓ Extraído' : '2025 — atual'}
+                                        />
+                                        {/* Demais anos — TODOS SEMPRE VISÍVEIS */}
+                                        {ALL_YEARS.filter(y => y !== 2025).reverse().map(ano => {
+                                            const isDone = completedYears.includes(ano.toString());
+                                            const isPartial = checkpointYears.includes(ano.toString()) && !isDone;
+                                            return (
+                                                <YearPill
+                                                    key={ano}
+                                                    label={ano.toString()}
+                                                    active={selectedAno === ano}
+                                                    done={isDone}
+                                                    partial={isPartial}
+                                                    onClick={() => {
+                                                        setSelectedAno(ano);
+                                                        const entry = availableFiles.find(f => f.name.includes(ano.toString()));
+                                                        if (entry) { setFilename(entry.name); fetchPreview(entry.name); }
+                                                    }}
+                                                    tooltip={isDone ? `${ano} ✓ Extraído` : isPartial ? `${ano} — Em Andamento` : `${ano} — Pendente`}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                    {/* Legenda */}
+                                    <div className="flex gap-4 mt-2">
+                                        {[{ color: 'bg-emerald-400', label: 'Extraído' }, { color: 'bg-amber-400', label: 'Em Andamento' }, { color: 'bg-white/20', label: 'Pendente' }].map(l => (
+                                            <div key={l.label} className="flex items-center gap-1">
+                                                <div className={`w-1.5 h-1.5 rounded-full ${l.color}`} />
+                                                <span className="text-[9px] text-white/20 uppercase">{l.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 {/* CONFIGURAÇÕES */}
                                 {(needsYear || needsLegislatura || needsCity || needsLLM || (isZidaneCrew && safras.length > 0)) && (
                                     <div>
@@ -526,7 +612,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                                 </div>
                                             )}
 
-                                            {/* Legislatura (Zidane A/B) */}
+                                            {/* Legislatura */}
                                             {needsLegislatura && safras.length === 0 && (
                                                 <div>
                                                     <div className="text-[11px] font-black text-white/30 uppercase tracking-wider mb-1">Legislatura</div>
@@ -587,7 +673,7 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                                 </div>
                                             )}
 
-                                            {/* Arquivo Seletor (Agente 2 / Kaka) */}
+                                            {/* Arquivo Seletor */}
                                             {availableBronzeFiles.length > 0 && (
                                                 <div>
                                                     <div className="text-[11px] font-black text-white/30 uppercase tracking-wider mb-1">Arquivo Alvo</div>
