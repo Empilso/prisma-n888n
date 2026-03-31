@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🏆 AGENT RONALDO GOLD v2.1 — O FINALIZADOR ENTERPRISE
+🏆 AGENT RONALDO GOLD v2.2 — O FINALIZADOR ENTERPRISE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 MISSÃO:  Prata → Ouro com vínculo garantido ao hub parlamentares
 ARMADURA: Match exato + fuzzy (difflib) + token sort
@@ -8,6 +8,10 @@ ARMADURA: Match exato + fuzzy (difflib) + token sort
              - MATCH → com parlamentar_id preenchido
              - SEM MATCH → parlamentar_id=None, flag ORFAO no metadados
 OUTPUT:   verbas_{ano}_gold_{versao}_{data}.json (pronto para Zidane-E)
+
+CHANGELOG v2.2:
+  - Captura nome_fornecedor_limpo nos metadados (campo novo Bebeto v2.5)
+  - Captura valor_raw nos metadados (campo novo Bebeto v2.5)
 
 CHANGELOG v2.1:
   - FIX TYPO: nicel_qualidade → nivel_qualidade
@@ -27,15 +31,15 @@ CHANGELOG v2.0:
 
 __PRISMA_MANIFEST__ = """
 =============================================================================
-PRISMA MANIFEST - AGENT 3 (RONALDO GOLD v2.1)
+PRISMA MANIFEST - AGENT 3 (RONALDO GOLD v2.2)
 - Visão Geral  : Finalizador da Camada Gold Financeira.
 - Matching     : Exato > Fuzzy (0.82) > Token Sort > ORFAO (nunca descarta)
 - Garantia     : 100% dos registros Prata chegam ao banco.
                  Com vínculo = parlamentar_id preenchido.
                  Sem vínculo = parlamentar_id NULL + metadados.orfao=True.
 - Schema       : Alinhado com despesas_gabinete enterprise v2.
-- FIX v2.1     : nivel_qualidade (typo corrigido), categoria_detalhe e
-                 competencia_raw agora presentes no schema Ouro.
+- FIX v2.2     : nome_fornecedor_limpo e valor_raw agora nos metadados
+                 (compatibilidade com Bebeto v2.5).
 =============================================================================
 """
 
@@ -62,7 +66,7 @@ C_BOLD   = "\033[1m"
 C_WHITE  = "\033[97m"
 C_END    = "\033[0m"
 
-VERSION         = "ronaldo_gold_v2.1"
+VERSION         = "ronaldo_gold_v2.2"
 FUZZY_THRESHOLD = 0.82
 
 CATEGORY_MAPPER: Dict[str, str] = {
@@ -236,23 +240,25 @@ def purificar(r: Dict[str, Any], mapa: Dict, stats: Dict) -> Dict[str, Any]:
     )
 
     metadados = {
-        "nf_tipo"             : r.get("nf_tipo"),
-        "cnpj_valido"         : r.get("cnpj_valido"),
-        "link_pdf_valido"     : r.get("link_pdf_valido"),
-        "qualidade_score"     : r.get("qualidade_score"),
-        "flags"               : r.get("flags", []),
-        "cpf_fornecedor"      : r.get("cpf_fornecedor"),
-        "cpf_tipo_doc"        : r.get("tipo_documento"),
-        "num_processo"        : r.get("num_processo"),
-        "link_detalhe"        : r.get("link_detalhe"),
-        "link_pdf_nf_raw"     : r.get("link_pdf_nf_raw"),
-        "romario_coletado_em" : r.get("romario_coletado_em"),
-        "numero_nf_raw"       : r.get("numero_nf_recibo_raw"),
-        "bebeto_versao"       : r.get("versao_bebeto"),
-        "ronaldo_versao"      : VERSION,
-        "match_metodo"        : metodo,
-        "match_score"         : round(score, 4),
-        "orfao"               : flag_orfao,
+        "nf_tipo"              : r.get("nf_tipo"),
+        "cnpj_valido"          : r.get("cnpj_valido"),
+        "link_pdf_valido"      : r.get("link_pdf_valido"),
+        "qualidade_score"      : r.get("qualidade_score"),
+        "flags"                : r.get("flags", []),
+        "cpf_fornecedor"       : r.get("cpf_fornecedor"),
+        "cpf_tipo_doc"         : r.get("tipo_documento"),
+        "num_processo"         : r.get("num_processo"),
+        "link_detalhe"         : r.get("link_detalhe"),
+        "link_pdf_nf_raw"      : r.get("link_pdf_nf_raw"),
+        "romario_coletado_em"  : r.get("romario_coletado_em"),
+        "numero_nf_raw"        : r.get("numero_nf_recibo_raw"),
+        "nome_fornecedor_limpo": r.get("nome_fornecedor_limpo"),  # FIX v2.2
+        "valor_raw"            : r.get("valor_raw"),              # FIX v2.2
+        "bebeto_versao"        : r.get("versao_bebeto"),
+        "ronaldo_versao"       : VERSION,
+        "match_metodo"         : metodo,
+        "match_score"          : round(score, 4),
+        "orfao"                : flag_orfao,
     }
 
     return {
@@ -268,7 +274,7 @@ def purificar(r: Dict[str, Any], mapa: Dict, stats: Dict) -> Dict[str, Any]:
         "nome_deputado_raw"   : nome_dep,
         "partido_raw"         : r.get("partido"),
         # Competência
-        "competencia_raw"     : r.get("competencia_raw"),       # FIX v2.1
+        "competencia_raw"     : r.get("competencia_raw"),
         "competencia_date"    : r.get("competencia_date"),
         "competencia_ano"     : r.get("competencia_ano") or r.get("ano"),
         "competencia_mes"     : r.get("competencia_mes"),
@@ -279,7 +285,7 @@ def purificar(r: Dict[str, Any], mapa: Dict, stats: Dict) -> Dict[str, Any]:
         "tipo_documento"      : r.get("tipo_documento"),
         # Fornecedor
         "cnpj_fornecedor"     : r.get("cnpj_fornecedor"),
-        "cpf_fornecedor"      : r.get("cpf_fornecedor"),        # FIX v2.1
+        "cpf_fornecedor"      : r.get("cpf_fornecedor"),
         "nome_fornecedor"     : r.get("nome_fornecedor"),
         # Valores
         "valor"               : valor,
@@ -288,11 +294,11 @@ def purificar(r: Dict[str, Any], mapa: Dict, stats: Dict) -> Dict[str, Any]:
         # Categoria
         "categoria_portal"    : r.get("categoria_original") or r.get("categoria"),
         "categoria_slug"      : categoria_slug,
-        "categoria_detalhe"   : r.get("categoria_detalhe_raw"),  # FIX v2.1
+        "categoria_detalhe"   : r.get("categoria_detalhe_raw"),
         # URLs
         "url_documento"       : r.get("url_pdf_nf") or r.get("link_pdf_nf"),
         "url_transparencia"   : r.get("fonte_url") or r.get("link_detalhe"),
-        # Qualidade — FIX v2.1: corrigido typo nicel_qualidade → nivel_qualidade
+        # Qualidade
         "nivel_qualidade"     : nivel_qualidade,
         "qualidade_score"     : r.get("qualidade_score") or (1.0 if not flag_orfao else 0.5),
         # Metadados + timestamps
@@ -303,14 +309,14 @@ def purificar(r: Dict[str, Any], mapa: Dict, stats: Dict) -> Dict[str, Any]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Ronaldo Gold v2.1: O Finalizador Enterprise")
+    parser = argparse.ArgumentParser(description="Ronaldo Gold v2.2: O Finalizador Enterprise")
     parser.add_argument("--year", type=str,        default=None,  help="Ano para processar (ex: 2022)")
     parser.add_argument("--file", type=str,        default=None,  help="Arquivo Prata específico")
     parser.add_argument("--all",  action="store_true",            help="Processar todos os anos")
     args = parser.parse_args()
 
     print(f"\n{C_PURPLE}╔═══════════════════════════════════════════════════════════════════╗{C_END}")
-    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}   🏆 RONALDO GOLD v2.1 | PRATA → OURO ENTERPRISE    {C_END}{C_PURPLE}║{C_END}")
+    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}   🏆 RONALDO GOLD v2.2 | PRATA → OURO ENTERPRISE    {C_END}{C_PURPLE}║{C_END}")
     print(f"{C_PURPLE}╚═══════════════════════════════════════════════════════════════════╝{C_END}")
     print(f"{C_WHITE}   Match   : Exato > Token Sort > Fuzzy ({FUZZY_THRESHOLD}) > ORFAO")
     print(f"   Garantia : 100% dos registros sobem ao banco{C_END}\n")
@@ -418,7 +424,7 @@ def main():
             stats_global["matches"][k] = stats_global["matches"].get(k, 0) + v
 
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print(f"{C_GREEN}🏆 RONALDO GOLD v2.1 FINALIZADO!{C_END}")
+    print(f"{C_GREEN}🏆 RONALDO GOLD v2.2 FINALIZADO!{C_END}")
     print(f"{C_WHITE}   Com vínculo   : {stats_global['ouro']}")
     print(f"   Órfãos (banco) : {stats_global['orfaos']} (sobem com parlamentar_id=NULL)")
     total_matches = sum(stats_global["matches"].values())
@@ -426,7 +432,7 @@ def main():
         pct = round(v / total_matches * 100, 1) if total_matches else 0
         print(f"   Match {k:12}: {v} ({pct}%)")
     print(f"{C_END}{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
-    print(f"[AGENT DONE] ✅ Ronaldo Gold v2.1 encerra com sucesso!")
+    print(f"[AGENT DONE] ✅ Ronaldo Gold v2.2 encerra com sucesso!")
     sys.stdout.flush()
 
 
