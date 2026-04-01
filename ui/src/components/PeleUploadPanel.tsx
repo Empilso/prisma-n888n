@@ -96,17 +96,29 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
                 <div className="space-y-3">
                     <select
                         value={tipoEmenda}
-                        onChange={(e) => setTipoEmenda(e.target.value)}
+                        onChange={(e) => {
+                            setTipoEmenda(e.target.value);
+                            setUploadedFiles([]);
+                            setUploadStatus('');
+                        }}
                         className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white/70 text-[11px] focus:outline-none focus:border-blue-400/30"
                     >
-                        <option value="parlamentares">Emendas Parlamentares (5 arquivos)</option>
-                        <option value="transferencias">Transferências Especiais (5 arquivos)</option>
+                        <option value="parlamentares">📋 Emendas Parlamentares (Estaduais BA)</option>
+                        <option value="transferencias">💰 Transferências Especiais (Pix/Federais)</option>
                     </select>
 
-                    <div className="p-2 rounded-lg bg-blue-500/5 border border-blue-400/20 text-[9px] text-blue-300">
-                        📋 {tiposInfo[tipoEmenda as keyof typeof tiposInfo].descricao}
-                        <br />
-                        ⚠️ Selecione os {tiposInfo[tipoEmenda as keyof typeof tiposInfo].arquivos} arquivos CSV deste tipo
+                    {/* Info Box */}
+                    <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-400/20 space-y-2">
+                        <div className="text-[10px] font-bold text-blue-300 uppercase tracking-wide">
+                            {tiposInfo[tipoEmenda as keyof typeof tiposInfo].nome}
+                        </div>
+                        <div className="text-[9px] text-blue-300/70">
+                            {tiposInfo[tipoEmenda as keyof typeof tiposInfo].descricao}
+                        </div>
+                        <div className="flex items-center gap-2 text-[9px] text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-400/20">
+                            <span>⚠️</span>
+                            <span>Selecione os <strong>{tiposInfo[tipoEmenda as keyof typeof tiposInfo].arquivos} arquivos CSV</strong> deste tipo</span>
+                        </div>
                     </div>
 
                     <div className="relative">

@@ -1,32 +1,23 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-A2 v2.0 — INGESTOR TRANSFERÊNCIAS ESPECIAIS (FEDERAL → BA)
+🇧🇷 PELÉ-A2 v2.0 — INGESTOR TRANSFERÊNCIAS ESPECIAIS (EMENDAS PIX/FEDERAIS)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Ler os CSVs do portal de Transferências Especiais (federal → estado BA),
-         consolidar as 5 tabelas em um JSON Bronze unificado com origem = 'federal'.
+MISSÃO:  Processar 5 CSVs de Transferências Especiais (emendas federais repassadas ao estado BA)
+         e gerar JSON Bronze unificado.
 
-ARQUIVOS DE ENTRADA (pasta transferenciasespeciais/):
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv           (principal)
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv  (exclusivo federal)
+FONTE:   dados.ba.gov.br/dataset/transferencias-especiais
+TIPO:    Transferências Especiais (Emendas Pix/Federais)
+ESFERA:  federal_transferencia
+SUFIXO:  .6
 
-CHAVE DE JUNÇÃO:
-  num_codigo → CENTRALIZACAO → num_codigo_exec → PAGAMENTO
-                             → num_codigo_liqu → LIQUIDACAO
+ARQUIVOS (5):
+  1. VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv (PRINCIPAL)
+  2. VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv
+  3. VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv
+  4. VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv
+  5. VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv (EXCLUSIVO A2)
 
-IDENTIFICADOR DE ORIGEM: sufixo *.6 no num_codigo
-
-EXCLUSIVO FEDERAL:
-  - Ministério de Origem da Emenda
-  - Número da Emenda Parlamentar / Ano da Emenda
-  - CNPJ_CPF_CREDOR_PAGAMENTO
-  - URL Painel de Pagamentos
-  - VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO
-
-OUTPUT:
-  data/saida/pele/bronze/pele_federal_{ano}_bronze.json
+OUTPUT:  data/saida/pele/bronze/pele_federal_{ano}_bronze.json
 
 USO:
     python agent_pele_a2_federal.py --pasta ./transferenciasespeciais --ano 2024
@@ -35,43 +26,111 @@ USO:
 
 import os
 import sys
-import re
 import csv
 import json
-import hashlib
 import argparse
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import List, Dict, Any
 
 VERSAO = "v2.0-prisma-pele-a2-federal"
-ORIGEM = "federal"
+
+# Configuração fixa do A2
+TIPO_EMENDA = "transferencias"
+ESFERA = "federal_transferencia"
 SUFIXO_ORIGEM = ".6"
+FONTE_PORTAL = "dados_ba_gov_br_transf_especial"
+
+ARQUIVOS_ESPERADOS = [
+    "VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv",
+    "VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv",
+    "VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv",
+    "VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv",
+    "VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv"
+]
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Ingestão Bronze dos CSVs de Transferências Especiais Federais → BA.",
-        "especialidade": "Consolidação de 5 CSVs + junção por num_codigo + CNPJ credor",
-        "protocolo_tecnico": "Pure Python (csv + json)",
-        "camada_dados": "Bronze (Raw)",
-        "origem": ORIGEM,
-        "sufixo_num_codigo": SUFIXO_ORIGEM,
-        "seguranca": "Sem acesso à internet. Processa apenas arquivos locais."
+        "missao": "Ingesta de Transferências Especiais (emendas federais Pix repassadas ao estado BA)",
+        "especialidade": "Ingestão Multi-Arquivo com Merge (5 CSVs)",
+        "protocolo_tecnico": "csv.DictReader + Merge por num_codigo",
+        "camada_dados": "Bronze (Raw Validado)",
+        "seguranca": "Processamento local, encoding utf-8-sig"
     },
-    "arquivos_entrada": [
-        "VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv",
-        "VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv",
-        "VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv",
-        "VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv",
-        "VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv",
+    "diretrizes": [
+        "1. Processa 5 CSVs: DESPESA (principal), PAGAMENTO, LIQUIDACAO, CENTRALIZACAO, INSTRUMENTO_CAPTACAO",
+        "2. Merge por num_codigo: DESPESA → CENTRALIZACAO → PAGAMENTO/LIQUIDACOES",
+        "3. Extrai instrumento de captação (convênio/contrato) - exclusivo A2",
+        "4. Gera Bronze JSON: pele/bronze/pele_federal_{ano}_bronze.json",
+        "5. Campos exclusivos A2: ministerio_origem, num_emenda_federal, cnpj_cpf_credor, instrumento_captacao",
+        "6. Campos NULL no A2: processos_sei (lista vazia), tem_processo_sei (false), num_empenho (null)"
     ],
-    "exclusivos_federal": [
-        "ministerio_origem", "num_emenda_federal", "ano_emenda_federal",
-        "cnpj_cpf_credor", "url_painel_pagamentos", "instrumento_captacao"
-    ]
+    "apuracao": {
+        "esfera": "federal_transferencia",
+        "fonte_portal": "dados_ba_gov_br_transf_especial",
+        "uf": "BA",
+        "origem": "Emendas federais (Pix) repassadas ao estado BA",
+        "sufixo_origem": ".6",
+        "arquivos_entrada": 5,
+        "tem_processo_sei": False,
+        "tem_cnpj_credor": True,
+        "tem_emenda_federal": True,
+        "tem_instrumento_captacao": True,
+        "saida_esperada": "data/saida/pele/bronze/pele_federal_{ano}_bronze.json"
+    }
+}
+    "apuracao": {
+        "esfera": "estadual",
+        "fonte_portal": "siga_ba",
+        "uf": "BA",
+        "tipos_suportados": {
+            "parlamentares": {
+                "arquivos": 5,
+                "origem": "Deputados estaduais BA",
+                "tem_processo_sei": True,
+                "tem_cnpj_credor": False
+            },
+            "transferencias": {
+                "arquivos": 5,
+                "origem": "Emendas federais (Pix) repassadas ao estado",
+                "tem_cnpj_credor": True,
+                "tem_emenda_federal": True,
+                "tem_instrumento_captacao": True
+            }
+        },
+        "entrada_esperada": "5 CSVs por tipo (upload manual ou pasta local)",
+        "saida_esperada": "data/saida/pele/bronze/pele_{tipo}_{ano}_bronze.json"
+    }
 }
 
-# ── Estética Terminal ──────────────────────────────────────────────────────────
+# ── Colunas esperadas no CSV (aceita variações de nome) ────────────────────────
+COLUNAS_MAPA = {
+    # Chave = nome canônico interno | Valores = variações aceitas no CSV
+    "parlamentar_nome": ["deputado", "nome_deputado", "parlamentar", "nome", "autor", "nome_autor"],
+    "partido":          ["partido", "sigla_partido", "sigla", "partido_politico"],
+    "uf":               ["uf", "estado", "sigla_uf"],
+    "ano":              ["ano", "exercicio", "ano_emenda", "competencia_ano"],
+    "valor":            ["valor", "valor_emenda", "valor_pago", "vl_emenda", "valor_total"],
+    "tipo_emenda":      ["tipo_emenda", "tipo", "modalidade", "especie"],
+    "numero_emenda":    ["codigo", "codigo_emenda", "num_emenda", "numero_emenda", "id_emenda"],
+    "funcao":           ["funcao", "funcao_programatica", "area", "setor"],
+    "subfuncao":        ["subfuncao", "subfuncao_programatica"],
+    "programa":         ["programa", "programa_orcamentario"],
+    "acao":             ["acao", "acao_orcamentaria"],
+    "localizador":      ["localizador", "localizador_gasto"],
+    "resultado":        ["resultado", "resultado_primario"],
+    "valor_orcado_inicial": ["dotacao", "dotacao_inicial", "dotacao_atualizada"],
+    "valor_empenhado":  ["empenhado", "valor_empenhado"],
+    "valor_liquidado":  ["liquidado", "valor_liquidado"],
+    "valor_pago":       ["pago", "valor_pago_direto"],
+    "beneficiario":     ["beneficiario", "nome_beneficiario", "municipio", "cidade"],
+    "cnpj_cpf":         ["cnpj_cpf", "cnpj", "cpf", "documento_beneficiario"],
+    "objeto":           ["objeto", "descricao", "descricao_emenda"],
+    "situacao":         ["situacao", "status", "situacao_emenda"],
+}
+COLUNAS_OBRIGATORIAS = ["parlamentar_nome", "valor"]
+
+# ── Estética Terminal (igual família Zidane) ───────────────────────────────────
 C_PURPLE = "\033[95m"
 C_CYAN   = "\033[96m"
 C_GREEN  = "\033[92m"
@@ -90,293 +149,246 @@ def print_header(title: str):
 def print_status(msg: str, status="info"):
     icons  = {"info": "🔹", "success": "✅", "error": "❌", "warn": "⚠️", "process": "⚙️"}
     colors = {"info": C_CYAN, "success": C_GREEN, "error": C_RED, "warn": C_YELLOW, "process": C_PURPLE}
-    print(f"{colors.get(status, C_CYAN)}{icons.get(status, '🔹')} {msg}{C_END}")
+    icon  = icons.get(status, "🔹")
+    color = colors.get(status, C_CYAN)
+    print(f"{color}{icon} {msg}{C_END}")
 
 
-def normalizar_chave_coluna(col: str) -> str:
-    """Normaliza nomes de colunas: lowercase, sem acentos, sem espaços."""
-    import unicodedata
-    nfkd = "".join(c for c in unicodedata.normalize('NFKD', col)
-                   if not unicodedata.combining(c))
-    return re.sub(r'[^a-z0-9_]', '_', nfkd.strip().lower()).strip('_')
+def detectar_coluna(header: List[str], variações: List[str]) -> str | None:
+    """Encontra o nome real da coluna no CSV dentre as variações aceitas."""
+    header_lower = {h.strip().lower(): h for h in header}
+    for v in variações:
+        if v.lower() in header_lower:
+            return header_lower[v.lower()]
+    return None
 
 
-def ler_csv(filepath: Path, encoding: str = "utf-8-sig") -> List[Dict[str, str]]:
-    """Lê CSV e retorna lista de dicts com chaves normalizadas."""
-    records = []
-    try:
-        with open(filepath, "r", encoding=encoding, errors="replace") as f:
-            reader = csv.DictReader(f, delimiter=",")
-            for row in reader:
-                normalized = {normalizar_chave_coluna(k): (v.strip() if v else "") for k, v in row.items()}
-                records.append(normalized)
-        print_status(f"{filepath.name}: {len(records)} linhas lidas.", "success")
-    except Exception as e:
-        print_status(f"Erro ao ler {filepath.name}: {e}", "error")
-    return records
+def detectar_ano(records: List[Dict], campo_ano: str | None) -> str:
+    """Tenta detectar o ano dominante dos registros."""
+    if campo_ano:
+        anos = [r.get(campo_ano, "") for r in records if r.get(campo_ano, "").strip()]
+        if anos:
+            from collections import Counter
+            return Counter(anos).most_common(1)[0][0]
+    return datetime.now().strftime("%Y")
 
 
-def parse_valor(v: str) -> float:
-    """Converte valor BR (ex: 1.234,56) para float."""
-    if not v:
+def limpar_valor(v: str) -> float:
+    """Converte string de valor brasileiro para float."""
+    if not v or str(v).strip() in ["", "None", "-"]:
         return 0.0
+    v = str(v).strip()
+    # Remove R$, espaços, pontos de milhar; troca vírgula decimal por ponto
+    v = v.replace("R$", "").replace(" ", "").replace(".", "").replace(",", ".")
     try:
-        return float(v.replace(".", "").replace(",", ".").replace("R$", "").strip())
-    except:
+        return float(v)
+    except ValueError:
         return 0.0
-
-
-def gerar_prisma_id(num_codigo: str, origem: str, ano: str) -> str:
-    payload = f"{num_codigo.strip().lower()}{origem}{ano.strip()}"
-    return hashlib.md5(payload.encode()).hexdigest()
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Pelé-A2 v2.0: Ingestor Transferências Especiais Federal → BA"
-    )
-    parser.add_argument("--pasta",   type=str, required=True,
-                        help="Pasta contendo os CSVs de transferenciasespeciais/")
-    parser.add_argument("--ano",     type=str, required=True,
-                        help="Ano de exercício (ex: 2024)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Processa sem salvar")
+    parser = argparse.ArgumentParser(description="Pelé-A v1.1: Ingestor de CSV local de Emendas Estaduais BA")
+    parser.add_argument("--arquivo",  type=str, help="Caminho do arquivo CSV")
+    parser.add_argument("--pasta",    type=str, help="Pasta com múltiplos CSVs para processar em lote")
+    parser.add_argument("--ano",      type=str, default=None, help="Ano de referência (ex: 2024)")
+    parser.add_argument("--dry-run",  action="store_true", help="Valida sem salvar")
+    parser.add_argument("--encoding", type=str, default=None, help="Encoding do CSV (auto-detecta se omitido)")
     args = parser.parse_args()
 
-    print_header(f"PELÉ-A2 {VERSAO} | INGESTOR FEDERAL — ANO {args.ano}")
-
-    pasta = Path(args.pasta)
-    if not pasta.exists():
-        print_status(f"Pasta não encontrada: {pasta}", "error")
+    print_header(f"PELÉ-A v1.1 | INGESTOR CSV LOCAL — EMENDAS ESTADUAIS BA — {args.ano or 'ANO NÃO DEFINIDO'}")
+    
+    # Modo pasta: processar múltiplos CSVs
+    if args.pasta:
+        pasta_path = Path(args.pasta).expanduser().resolve()
+        if not pasta_path.exists():
+            print_status(f"Pasta não encontrada: {pasta_path}", "error")
+            sys.exit(1)
+        
+        csv_files = list(pasta_path.glob("*.csv"))
+        if not csv_files:
+            print_status(f"Nenhum arquivo CSV encontrado em: {pasta_path}", "error")
+            sys.exit(1)
+        
+        print_status(f"Modo LOTE: {len(csv_files)} arquivo(s) CSV encontrado(s)", "process")
+        for csv_file in csv_files:
+            print(f"\n{C_CYAN}{'─'*72}{C_END}")
+            print_status(f"Processando: {csv_file.name}", "process")
+            processar_arquivo(csv_file, args)
+        
+        print(f"\n{C_GREEN}✅ Processamento em lote concluído!{C_END}")
+        sys.exit(0)
+    
+    # Modo arquivo único
+    if not args.arquivo:
+        print_status("Erro: --arquivo ou --pasta é obrigatório", "error")
+        parser.print_help()
         sys.exit(1)
+    
+    csv_path = Path(args.arquivo).expanduser().resolve()
+    processar_arquivo(csv_path, args)
 
-    # ── 1. Ler todos os CSVs ───────────────────────────────────────────────────
-    print_status("Carregando CSVs...", "process")
 
-    f_despesas    = pasta / "VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv"
-    f_central     = pasta / "VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv"
-    f_liquidacao  = pasta / "VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv"
-    f_pagamentos  = pasta / "VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv"
-    f_captacao    = pasta / "VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv"
+def processar_arquivo(csv_path: Path, args):
+    """Processa um único arquivo CSV"""
+    print_status(f"Arquivo alvo: {csv_path.name}", "process")
+    print_status("MODO: Arquivo local — nenhuma conexão com internet.", "info")
 
-    rows_despesas   = ler_csv(f_despesas)   if f_despesas.exists()   else []
-    rows_central    = ler_csv(f_central)    if f_central.exists()    else []
-    rows_liquidacao = ler_csv(f_liquidacao) if f_liquidacao.exists() else []
-    rows_pagamentos = ler_csv(f_pagamentos) if f_pagamentos.exists() else []
-    rows_captacao   = ler_csv(f_captacao)   if f_captacao.exists()   else []
+    # ── 1. Verificar arquivo ───────────────────────────────────────────────────
+    if not csv_path.exists():
+        print_status(f"Arquivo não encontrado: {csv_path}", "error")
+        return
+    if csv_path.suffix.lower() not in [".csv", ".txt"]:
+        print_status(f"Extensão inesperada ({csv_path.suffix}). Esperado: .csv", "warn")
 
-    # ── 2. Indexar tabelas auxiliares ─────────────────────────────────────────
-    print_status("Indexando tabelas auxiliares...", "process")
+    tamanho_kb = round(csv_path.stat().st_size / 1024, 1)
+    print_status(f"Arquivo encontrado: {csv_path.name} ({tamanho_kb} KB)", "success")
 
-    idx_central: Dict[str, List[Dict]] = {}
-    for r in rows_central:
-        chave = r.get("num_codigo", "").strip()
-        if chave:
-            idx_central.setdefault(chave, []).append(r)
-
-    idx_liquidacao: Dict[str, Dict] = {}
-    for r in rows_liquidacao:
-        chave = r.get("num_codigo_liqu", "").strip()
-        if chave:
-            idx_liquidacao[chave] = r
-
-    idx_pagamentos: Dict[str, List[Dict]] = {}
-    for r in rows_pagamentos:
-        chave = r.get("num_codigo_exec", "").strip()
-        if chave:
-            idx_pagamentos.setdefault(chave, []).append(r)
-
-    # Instrumento de captação: num_codigo → dados (exclusivo federal)
-    idx_captacao: Dict[str, Dict] = {}
-    for r in rows_captacao:
-        chave = r.get("num_codigo", "").strip()
-        if chave:
-            idx_captacao[chave] = r
-
-    print_status(f"Centralização:       {len(idx_central)} chaves", "info")
-    print_status(f"Liquidações:         {len(idx_liquidacao)} registros", "info")
-    print_status(f"Pagamentos:          {len(idx_pagamentos)} chaves", "info")
-    print_status(f"Instr. Captação:     {len(idx_captacao)} registros (exclusivo federal)", "info")
-
-    # ── 3. Montar registros Bronze ─────────────────────────────────────────────
-    print_status("Montando registros Bronze...", "process")
-    bronze: List[Dict[str, Any]] = []
-    stats = {"com_central": 0, "com_pagamento": 0, "com_captacao": 0, "sem_central": 0}
-
-    for d in rows_despesas:
-        num_codigo = d.get("num_codigo", "").strip()
-        if not num_codigo:
+    # ── 2. Detectar encoding ───────────────────────────────────────────────────
+    encodings_tentar = [args.encoding] if args.encoding else ["utf-8-sig", "utf-8", "latin-1", "cp1252"]
+    conteudo_raw = None
+    encoding_usado = None
+    for enc in encodings_tentar:
+        try:
+            conteudo_raw = csv_path.read_text(encoding=enc)
+            encoding_usado = enc
+            break
+        except (UnicodeDecodeError, LookupError):
             continue
 
-        centrais = idx_central.get(num_codigo, [])
-        if centrais:
-            stats["com_central"] += 1
+    if not conteudo_raw:
+        print_status("Não foi possível decodificar o CSV. Tente --encoding latin-1", "error")
+        sys.exit(1)
+
+    print_status(f"Encoding detectado: {encoding_usado}", "info")
+
+    # ── 3. Ler CSV ─────────────────────────────────────────────────────────────
+    import io
+    # Detectar delimitador
+    delimitador = ","
+    primeira_linha = conteudo_raw.split("\n")[0]
+    if primeira_linha.count(";") > primeira_linha.count(","):
+        delimitador = ";"
+    print_status(f"Delimitador detectado: '{delimitador}'", "info")
+
+    reader = csv.DictReader(io.StringIO(conteudo_raw), delimiter=delimitador)
+    header = reader.fieldnames or []
+    if not header:
+        print_status("CSV sem cabeçalho detectado.", "error")
+        sys.exit(1)
+
+    print_status(f"Colunas encontradas ({len(header)}): {', '.join(header[:10])}{'...' if len(header)>10 else ''}", "info")
+
+    # ── 4. Mapear colunas ──────────────────────────────────────────────────────
+    mapa_final: Dict[str, str | None] = {}  # canônico → nome_real_no_csv
+    for canonico, variacoes in COLUNAS_MAPA.items():
+        mapa_final[canonico] = detectar_coluna(header, variacoes)
+
+    print(f"\n{C_WHITE}📋 Mapeamento de colunas:{C_END}")
+    for canonico, real in mapa_final.items():
+        if real:
+            print(f"   {C_GREEN}✅ {canonico:<15}{C_END} → {C_CYAN}{real}{C_END}")
         else:
-            stats["sem_central"] += 1
+            is_obrig = canonico in COLUNAS_OBRIGATORIAS
+            status = f"{C_RED}❌ {canonico:<15} (OBRIGATÓRIA — não encontrada){C_END}" if is_obrig else f"{C_YELLOW}⚠️  {canonico:<15} (não encontrada — será None){C_END}"
+            print(f"   {status}")
 
-        pagamentos_list: List[Dict] = []
-        liquidacoes_list: List[Dict] = []
-        orgao_exec = None
+    # Checar obrigatórias
+    faltando = [c for c in COLUNAS_OBRIGATORIAS if not mapa_final.get(c)]
+    if faltando:
+        print_status(f"Colunas obrigatórias ausentes: {faltando}. Abortando.", "error")
+        sys.exit(1)
 
-        for c in centrais:
-            orgao_exec = c.get("nom_orgao_orcamento_exec") or orgao_exec
-            exec_cod = c.get("num_codigo_exec", "").strip()
-            liqu_cod = c.get("num_codigo_liqu", "").strip()
+    # ── 5. Ler registros ───────────────────────────────────────────────────────
+    records_raw = list(reader)
+    total = len(records_raw)
+    print_status(f"Total de linhas no CSV: {total}", "info")
 
-            if exec_cod and exec_cod in idx_pagamentos:
-                pagamentos_list.extend(idx_pagamentos[exec_cod])
-                stats["com_pagamento"] += 1
+    if total == 0:
+        print_status("CSV vazio. Nenhum registro encontrado.", "error")
+        sys.exit(1)
 
-            if liqu_cod and liqu_cod in idx_liquidacao:
-                liquidacoes_list.append(idx_liquidacao[liqu_cod])
+    # ── 6. Detectar ano ───────────────────────────────────────────────────────
+    ano = args.ano or detectar_ano(records_raw, mapa_final.get("ano"))
+    print_status(f"Ano de referência: {ano}", "info")
 
-        # Instrumento de captação (exclusivo federal)
-        captacao = idx_captacao.get(num_codigo)
-        if captacao:
-            stats["com_captacao"] += 1
+    # ── 7. Construir Bronze ────────────────────────────────────────────────────
+    def get(row: Dict, canonico: str):
+        col = mapa_final.get(canonico)
+        return row.get(col, "").strip() if col else None
 
-        # Valores
-        val_orcado_inicial = parse_valor(d.get("valor_orcado_inicial", ""))
-        val_orcado_atual   = parse_valor(d.get("valor_orcado_atual", ""))
-        val_empenhado      = parse_valor(d.get("valor_empenhado_total", "") or d.get("valor_empenhado", ""))
-        val_liquidado      = parse_valor(d.get("valor_liquidado_total", "") or d.get("valor_liquidado", ""))
-        val_pago           = parse_valor(d.get("valor_pago", ""))
-        taxa_execucao      = round(val_pago / val_empenhado, 4) if val_empenhado > 0 else 0.0
+    bronze: List[Dict[str, Any]] = []
+    erros_linha = 0
+    for i, row in enumerate(records_raw):
+        dep = get(row, "parlamentar_nome")
+        if not dep:
+            erros_linha += 1
+            continue
+        bronze.append({
+            "linha_csv":           i + 2,  # +2 porque linha 1 é header
+            "parlamentar_nome":    dep,
+            "partido":             get(row, "partido"),
+            "uf":                  get(row, "uf") or "BA",
+            "ano":                 get(row, "ano") or ano,
+            "valor":               limpar_valor(get(row, "valor") or ""),
+            "tipo_emenda":         get(row, "tipo_emenda"),
+            "numero_emenda":       get(row, "numero_emenda"),
+            "funcao":              get(row, "funcao"),
+            "subfuncao":           get(row, "subfuncao"),
+            "programa":            get(row, "programa"),
+            "acao":                get(row, "acao"),
+            "localizador":         get(row, "localizador"),
+            "valor_orcado_inicial":limpar_valor(get(row, "valor_orcado_inicial") or ""),
+            "valor_empenhado":     limpar_valor(get(row, "valor_empenhado") or ""),
+            "valor_liquidado":     limpar_valor(get(row, "valor_liquidado") or ""),
+            "valor_pago":          limpar_valor(get(row, "valor_pago") or ""),
+            "beneficiario":        get(row, "beneficiario"),
+            "cnpj_cpf":            get(row, "cnpj_cpf"),
+            "objeto":              get(row, "objeto"),
+            "situacao":            get(row, "situacao"),
+            "_raw":                dict(row),  # linha original completa para auditoria
+        })
 
-        prisma_id = gerar_prisma_id(num_codigo, ORIGEM, args.ano)
+    validos = len(bronze)
+    print_status(f"Registros válidos: {validos} | Ignorados (sem parlamentar): {erros_linha}", "success")
 
-        record: Dict[str, Any] = {
-            # ── Identificadores ──────────────────────────────────────────
-            "prisma_id":             prisma_id,
-            "origem":                ORIGEM,
-            "sufixo_origem":         SUFIXO_ORIGEM,
-            "esfera":                "federal_transferencia",
-            "uf":                    "BA",
-            "fonte_portal":          "dados_ba_gov_br_transf_especial",
-            "ano_exercicio":         d.get("ano_exercicio", "").strip() or args.ano,
-
-            # ── Código único ─────────────────────────────────────────────
-            "num_codigo":            num_codigo,
-
-            # ── Deputado / Parlamentar federal ───────────────────────────
-            "deputado_cod":          d.get("deputado", "").strip(),
-            "deputado_nome":         None,  # não existe no federal — vem do Zidane no Pelé-C
-            # Campos exclusivos do federal
-            "ministerio_origem":     d.get("ministerio_de_origem_da_emenda", "").strip() or None,
-            "num_emenda_federal":    d.get("numero_da_emenda_parlamentar", "").strip() or None,
-            "ano_emenda_federal":    d.get("ano_da_emenda", "").strip() or None,
-
-            # ── Órgão / Ação ──────────────────────────────────────────────
-            "orgao":                 d.get("orgao", "").strip(),
-            "sgl_orgao":             d.get("sgl_orgao_orcamento", "").strip(),
-            "unidade_orcamentaria": d.get("unidade_orcamentaria", "").strip(),
-            "nom_res_unidade":       d.get("nom_res_unidade_orcamentaria", "").strip(),
-            "acao_programa":         d.get("acao_do_programa_de_governo", "").strip(),
-            "cod_subfonte_recurso":  (
-                d.get("cod_subfonte_recurso") or
-                d.get("cod_subfonte_recurso")  # normalizado pelo normalizar_chave_coluna
-            or "").strip(),
-            "orgao_executor":        orgao_exec,
-
-            # ── Valores ──────────────────────────────────────────────────
-            "valor_orcado_inicial":  val_orcado_inicial,
-            "valor_orcado_atual":    val_orcado_atual,
-            "valor_empenhado":       val_empenhado,
-            "valor_liquidado":       val_liquidado,
-            "valor_pago":            val_pago,
-            "taxa_execucao":         taxa_execucao,
-
-            # ── Instrumento de Captação (exclusivo federal) ──────────────
-            "instrumento_captacao": {
-                "tipo":         captacao.get("tipo_instrumento") if captacao else None,
-                "numero":       captacao.get("numero_instrumento") if captacao else None,
-                "convenio":     captacao.get("numero_convenio") if captacao else None,
-                "raw":          captacao or None,
-            } if captacao else None,
-
-            # ── Pagamentos (lista) ─────────────────────────────────────────
-            "pagamentos": [
-                {
-                    "num_pagto_nob":      p.get("num_pagto_nob", ""),
-                    "num_pagto_fmt":      p.get("n_do_pagamento_formatado", ""),
-                    "credor":             p.get("razaosocialcredorpagamento", ""),
-                    "cnpj_cpf_credor":    p.get("cnpj_cpf_credor_pagamento", "") or None,
-                    "data_pagamento":     p.get("data_do_pagamento", ""),
-                    "valor_pagto":        parse_valor(p.get("valor_pagamento_nob", "") or p.get("val_pagto_nob", "")),
-                    "pagamento_efetivado":p.get("pagamento_efetivado", ""),
-                    "valor_gcv":          parse_valor(p.get("valor_gcv", "") or p.get("val_gcv", "")),
-                    "objeto":             p.get("objeto", ""),
-                    "num_empenho":        None,  # exclusivo estadual
-                    "url_painel":         p.get("url_painel_de_pagamentos", "") or None,
-                    "ano_exercicio":      p.get("ano_exercicio", "") or None,
-                }
-                for p in pagamentos_list
-            ],
-
-            # ── Liquidações (lista) ────────────────────────────────────────
-            "liquidacoes": [
-                {
-                    "val_liquidacao":          parse_valor(liq.get("val_liquidacao", "")),
-                    "dtc_liquidacao":          liq.get("dtc_liquidacao", ""),
-                    "dtc_cadastro":            liq.get("dtc_cadastro", ""),
-                    "dtc_ultima_atualizacao":  liq.get("dtc_ultima_atualizacao", ""),
-                    "num_codigo_liqu":         liq.get("num_codigo_liqu", ""),
-                }
-                for liq in liquidacoes_list
-            ],
-
-            # SEI — exclusivo estadual, sempre None no federal
-            "processos_sei":         [],
-            "tem_processo_sei":      False,
-
-            # ── Metadados ─────────────────────────────────────────────────
-            "ingerido_em":           datetime.utcnow().isoformat() + "Z",
-            "versao_agente":         VERSAO,
-        }
-        bronze.append(record)
-
-    print(f"\n{C_WHITE}📊 Resultado da ingestão:{C_END}")
-    print(f"   🔹 Total registros DESPESA  : {len(rows_despesas)}")
-    print(f"   ✅ Com centralização         : {stats['com_central']}")
-    print(f"   ⚠️  Sem centralização        : {stats['sem_central']}")
-    print(f"   💰 Com pagamentos            : {stats['com_pagamento']}")
-    print(f"   🏛️  Com instr. captação       : {stats['com_captacao']} (exclusivo federal)")
-    print(f"   🟡 Bronze gerados            : {len(bronze)}")
+    total_valor = sum(r["valor"] for r in bronze)
+    print_status(f"Valor total: R$ {total_valor:,.2f}", "info")
 
     if args.dry_run:
-        print(f"\n{C_YELLOW}⚠️  DRY-RUN: Nenhum arquivo salvo.{C_END}")
-        if bronze:
-            print_status("Amostra do 1º registro Bronze:", "info")
-            sample = {k: v for k, v in bronze[0].items() if k not in ["pagamentos", "liquidacoes"]}
-            sample["pagamentos_count"] = len(bronze[0]["pagamentos"])
-            sample["liquidacoes_count"] = len(bronze[0]["liquidacoes"])
-            print(json.dumps(sample, ensure_ascii=False, indent=2))
+        print(f"\n{C_YELLOW}⚠️  DRY-RUN: Nenhum arquivo salvo. Validação concluída com sucesso!{C_END}")
+        print_status(f"Amostra do 1º registro Bronze:", "info")
+        print(json.dumps(bronze[0], ensure_ascii=False, indent=2) if bronze else "(vazio)")
         sys.exit(0)
 
-    # ── Salvar Bronze ─────────────────────────────────────────────────────────
-    base_dir  = Path(__file__).resolve().parent.parent.parent
-    out_dir   = base_dir / "data" / "saida" / "pele" / "bronze"
+    # ── 8. Salvar Bronze ───────────────────────────────────────────────────────
+    base_dir = Path(__file__).resolve().parent.parent.parent
+    out_dir  = base_dir / "data" / "saida" / "pele" / "bronze"
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_file  = out_dir / f"pele_federal_{args.ano}_bronze.json"
 
+    out_file = out_dir / f"pele_estadual_{ano}_bronze.json"
     output = {
-        "total":        len(bronze),
-        "origem":       ORIGEM,
-        "esfera":       "federal_transferencia",
-        "uf":           "BA",
-        "ano":          args.ano,
-        "gerado_em":    datetime.utcnow().isoformat() + "Z",
-        "versao":       VERSAO,
-        "stats":        stats,
-        "records":      bronze,
+        "total":            validos,
+        "ano":              ano,
+        "uf":               "BA",
+        "esfera":           "estadual",
+        "fonte_portal":     "siga_ba",
+        "tabela_destino":   "alba_emendas_master",
+        "arquivo_origem":   csv_path.name,
+        "encoding_csv":     encoding_usado,
+        "ingestado_em":     datetime.utcnow().isoformat() + "Z",
+        "versao":           VERSAO,
+        "referencias_documentais": [
+            "https://dados.ba.gov.br/dataset/emendas-parlamentares"
+        ],
+        "records":          bronze
     }
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print_status(f"PELÉ-A2 CONCLUÍDO! {C_BOLD}{len(bronze)}{C_END} registros Bronze (federal) gerados.", "success")
+    print_status(f"PELÉ-A CONCLUÍDO! {C_BOLD}{validos}{C_END} registros Bronze gerados.", "success")
     print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
-    print_status(f"Próximo passo: python agent_pele_b_parser.py --arquivo {out_file.name} --origem federal", "info")
+    print_status(f"Próximo passo: python agent_pele_b_parser.py --ano {ano}", "info")
     print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
 
 
