@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-C v2.1 — ÁGUIA ENRIQUECEDOR (EMENDAS ESTADUAIS BA)
+🇧🇷 AGENT PELÉ-C v3.0 — ÁGUIA ENRIQUECEDOR (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 MISSÃO:  Enriquecer os registros Prata (estadual BA) com parlamentar_id
          via cruzamento com a base Zidane (parlamentares.json),
@@ -13,10 +13,20 @@ OUTPUT:  data/saida/pele/ouro/pele_estadual_{ano}_ouro.json
 
 TABELA DESTINO: emendas_estaduais_ba
 
+MUDANÇAS v3.0:
+  - Campos de qualidade/enriquecimento agora são colunas FLAT (não dict aninhado)
+    para bater com o schema do banco Supabase (emendas_estaduais_ba)
+  - Adicionado campo `partido` no record Ouro
+  - Adicionado `enriquecido_em` como timestamp ISO direto no record
+  - Adicionado `--origem` no argparse (compatibilidade com orquestrador)
+  - Colunas flat adicionadas: cruzado_zidane, qualidade_score,
+    valor_total_deputado, qtd_emendas_deputado, media_emenda, ranking_valor
+
 USO:
     python agent_pele_c_aguia.py --ano 2024
     python agent_pele_c_aguia.py --ano 2024 --dry-run
     python agent_pele_c_aguia.py --ano 2024 --sem-cruzamento
+    python agent_pele_c_aguia.py --ano 2024 --origem estadual
 """
 
 import os
@@ -29,7 +39,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 from collections import defaultdict
 
-VERSAO = "v2.1-prisma-pele-c-estadual"
+VERSAO = "v3.0-prisma-pele-c-estadual"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
@@ -49,7 +59,8 @@ __PRISMA_MANIFEST__ = {
         "3. Calcula totais por deputado: valor_total, qtd_emendas, media_emenda.",
         "4. Eleva qualidade_score para registros enriquecidos com parlamentar_id.",
         "5. Adiciona ranking por valor dentro do período.",
-        "6. Salva JSON Ouro pronto para o Pelé-D (upsert em emendas_estaduais_ba)."
+        "6. Gera colunas FLAT alinhadas com emendas_estaduais_ba (sem metadados aninhado).",
+        "7. Salva JSON Ouro pronto para o Pelé-D (upsert em emendas_estaduais_ba)."
     ]
 }
 
@@ -157,14 +168,16 @@ def cruzar_com_zidane(parlamentar_nome: str, partido: str | None, mapa: Dict) ->
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Pelé-C v2.1: Águia Enriquecedor de Emendas Estaduais BA → emendas_estaduais_ba"
+        description="Pelé-C v3.0: Águia Enriquecedor de Emendas Estaduais BA → emendas_estaduais_ba"
     )
-    parser.add_argument("--ano",            type=str, required=True, help="Ano dos dados (ex: 2024)")
-    parser.add_argument("--dry-run",        action="store_true",     help="Processa sem salvar")
-    parser.add_argument("--sem-cruzamento", action="store_true",     help="Pula cruzamento com base Zidane")
+    parser.add_argument("--ano",            type=str, required=True,       help="Ano dos dados (ex: 2024)")
+    parser.add_argument("--dry-run",        action="store_true",            help="Processa sem salvar")
+    parser.add_argument("--sem-cruzamento", action="store_true",            help="Pula cruzamento com base Zidane")
+    # --origem: aceito pelo orquestrador; ignorado internamente (sempre estadual)
+    parser.add_argument("--origem",         type=str, default="estadual",  help="Origem dos dados (default: estadual)")
     args = parser.parse_args()
 
-    print_header(f"PEL\u00c9-C {VERSAO} | \u00c1GUIA — ESTADUAL BA {args.ano}")
+    print_header(f"PELÉ-C {VERSAO} | ÁGUIA — ESTADUAL BA {args.ano}")
 
     base_dir   = Path(__file__).resolve().parent.parent.parent
     prata_dir  = base_dir / "data" / "saida" / "pele" / "prata"
@@ -206,6 +219,7 @@ def main():
     # ── Enriquecer registros ─────────────────────────────────────────────────────────────────────
     ouro: List[Dict[str, Any]] = []
     stats = {"cruzados_zidane": 0, "sem_cruzamento": 0, "ouro": 0, "prata": 0, "bronze": 0}
+    agora_iso = datetime.utcnow().isoformat() + "Z"
 
     for r in records:
         dep     = r.get("parlamentar_nome", "")
@@ -222,57 +236,68 @@ def main():
         else:
             stats["sem_cruzamento"] += 1
 
-        # Eleva score se cruzado
+        # Score e nível de qualidade
         score_base  = float(r.get("qualidade_score") or 0.6)
         score_final = min(1.0, score_base + (0.10 if zid else 0))
         nivel_final = "ouro" if score_final >= 0.85 else ("prata" if score_final >= 0.60 else "bronze")
         stats[nivel_final] = stats.get(nivel_final, 0) + 1
 
-        # ── Monta record Ouro alinhado com emendas_estaduais_ba ────────────────────────
+        # Cálculos de totais do deputado
+        val_total  = t_dep.get("valor_total", 0.0)
+        qtd_emenda = t_dep.get("qtd", 0)
+        media_val  = round(val_total / qtd_emenda, 2) if qtd_emenda > 0 else 0.0
+
+        # ── Monta record Ouro FLAT — alinhado 1:1 com emendas_estaduais_ba ────────────────────
+        # IMPORTANTE: todos os campos de qualidade/enriquecimento são colunas diretas,
+        # NÃO aninhadas em dict metadados. Isso garante compatibilidade com o schema Supabase.
         record_ouro: Dict[str, Any] = {
-            # Chave de upsert (on_conflict=prisma_id no Pelé-D)
-            "prisma_id":            r.get("prisma_id"),
+            # ── Chave de upsert (on_conflict=prisma_id no Pelé-D) ──────────────────────
+            "prisma_id":                r.get("prisma_id"),
 
-            # FK e identidade
-            "parlamentar_id":       parlamentar_id,
-            "parlamentar_nome":     dep,
-            "ano":                  r.get("ano"),
+            # ── FK e identidade ────────────────────────────────────────────────────────
+            "parlamentar_id":           parlamentar_id,
+            "parlamentar_nome":         dep,
+            "partido":                  partido,                        # ← NOVO v3.0
+            "ano":                      r.get("ano"),
 
-            # Classificação orçamentária
-            "numero_emenda":        r.get("numero_emenda"),
-            "tipo_emenda":          r.get("tipo_emenda"),
-            "orgao":                r.get("orgao"),
-            "funcao":               r.get("funcao"),
-            "subfuncao":            r.get("subfuncao"),
-            "programa":             r.get("programa"),
-            "acao":                 r.get("acao"),
+            # ── Classificação orçamentária ─────────────────────────────────────────────
+            "numero_emenda":            r.get("numero_emenda"),
+            "tipo_emenda":              r.get("tipo_emenda"),
+            "orgao":                    r.get("orgao"),
+            "funcao":                   r.get("funcao"),
+            "subfuncao":                r.get("subfuncao"),
+            "programa":                 r.get("programa"),
+            "acao":                     r.get("acao"),
 
-            # Valores
-            "valor_orcado_atual":   float(r.get("valor_orcado_atual") or 0),
-            "valor_empenhado":      float(r.get("valor_empenhado") or 0),
-            "valor_liquidado":      float(r.get("valor_liquidado") or 0),
-            "valor_pago":           float(r.get("valor_pago") or 0),
-            "valor_restos_pagar":   float(r.get("valor_restos_pagar") or 0),
-            # percentual_empenhado e percentual_pago são GERADOS pelo banco
+            # ── Valores ────────────────────────────────────────────────────────────────
+            # percentual_empenhado e percentual_pago são GENERATED ALWAYS pelo banco
+            "valor_orcado_atual":       float(r.get("valor_orcado_atual") or 0),
+            "valor_empenhado":          float(r.get("valor_empenhado") or 0),
+            "valor_liquidado":          float(r.get("valor_liquidado") or 0),
+            "valor_pago":               float(r.get("valor_pago") or 0),
+            "valor_restos_pagar":       float(r.get("valor_restos_pagar") or 0),
 
-            # Localização
-            "municipio":            r.get("municipio"),
-            "uf":                   "BA",
+            # ── Localização ────────────────────────────────────────────────────────────
+            "municipio":                r.get("municipio"),
+            "uf":                       "BA",
 
-            # Portal e qualidade
-            "fonte_portal":         "siga_ba",
-            "url_transparencia":    r.get("url_transparencia"),
-            "nivel_qualidade":      nivel_final,
-            "metadados": {
-                "cruzado_zidane":   zid is not None,
-                "qualidade_score":  score_final,
-                "valor_total_deputado": t_dep.get("valor_total", 0.0),
-                "qtd_emendas_deputado": t_dep.get("qtd", 0),
-                "media_emenda":     round(t_dep["valor_total"] / t_dep["qtd"], 2) if t_dep.get("qtd", 0) > 0 else 0.0,
-                "ranking_valor":    rank_map.get(dep, 0),
-                "versao_agente":    VERSAO,
-            },
-            "coletado_em":          r.get("processado_em"),
+            # ── Portal e qualidade ─────────────────────────────────────────────────────
+            "fonte_portal":             "siga_ba",
+            "url_transparencia":        r.get("url_transparencia"),
+            "nivel_qualidade":          nivel_final,
+
+            # ── Colunas flat de enriquecimento (NOVO v3.0 — antes estavam em metadados) ──
+            "cruzado_zidane":           zid is not None,
+            "qualidade_score":          round(score_final, 4),
+            "valor_total_deputado":     round(val_total, 2),
+            "qtd_emendas_deputado":     qtd_emenda,
+            "media_emenda":             media_val,
+            "ranking_valor":            rank_map.get(dep, 0),
+            "versao_agente":            VERSAO,
+            "enriquecido_em":           agora_iso,                      # ← NOVO v3.0
+
+            # ── Timestamps ─────────────────────────────────────────────────────────────
+            "coletado_em":              r.get("processado_em"),
         }
         ouro.append(record_ouro)
 
@@ -300,7 +325,7 @@ def main():
         "esfera":         "estadual",
         "fonte_portal":   "siga_ba",
         "tabela_destino": "emendas_estaduais_ba",
-        "gerado_em":      datetime.utcnow().isoformat() + "Z",
+        "gerado_em":      agora_iso,
         "versao":         VERSAO,
         "stats":          stats,
         "records":        ouro
@@ -308,11 +333,11 @@ def main():
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n{C_PURPLE}\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501{C_END}")
-    print_status(f"PEL\u00c9-C CONCLU\u00cdDO! {C_BOLD}{len(ouro)}{C_END} registros Ouro (estadual BA) gerados.", "success")
+    print(f"\n{C_PURPLE}" + "\u2501"*74 + f"{C_END}")
+    print_status(f"PELÉ-C CONCLUÍDO! {C_BOLD}{len(ouro)}{C_END} registros Ouro (estadual BA) gerados.", "success")
     print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
-    print_status(f"Pr\u00f3ximo passo: python agent_pele_d_loader.py --ano {args.ano} --dry-run", "info")
-    print(f"{C_PURPLE}\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501{C_END}\n")
+    print_status(f"Próximo passo: python agent_pele_d_loader.py --ano {args.ano} --dry-run", "info")
+    print(f"{C_PURPLE}" + "\u2501"*74 + f"{C_END}\n")
 
 
 if __name__ == "__main__":
