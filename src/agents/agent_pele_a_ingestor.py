@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-A v1.0 — INGESTOR DE CSV LOCAL
+🇧🇷 AGENT PELÉ-A v1.1 — INGESTOR DE CSV LOCAL (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Receber o CSV de Emendas Federais BA fornecido manualmente
+MISSÃO:  Receber o CSV de Emendas Estaduais BA (SIGA-BA) fornecido manualmente
          pelo usuário, validar colunas e gerar JSON Bronze para o Pelé-B.
 
 FONTE:   [ARQUIVO LOCAL — fornecido pelo usuário via --arquivo]
 REFERENCIA (apenas documental, NÃO acessa):
-         https://www.camara.leg.br/legisladores/dep
-         https://www.transparencia.gov.br/emendas
+         https://dados.ba.gov.br/dataset/emendas-parlamentares
 
-OUTPUT:  data/saida/emendas_federais/raw/emendas_federais_ba_{ano}_bronze.json
+OUTPUT:  data/saida/pele/bronze/pele_estadual_{ano}_bronze.json
 
 USO:
     python agent_pele_a_ingestor.py --arquivo /caminho/emendas_ba_2024.csv
@@ -27,11 +26,11 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any
 
-VERSAO = "v1.0-prisma-pele-ingestor"
+VERSAO = "v1.1-prisma-pele-a-estadual"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Ingesta manual de CSV de Emendas Federais BA para camada Bronze.",
+        "missao": "Ingesta manual de CSV de Emendas Estaduais BA (SIGA-BA) para camada Bronze.",
         "especialidade": "Ingestão de Arquivo Local (CSV)",
         "protocolo_tecnico": "csv.DictReader + validação de colunas + JSON Bronze",
         "camada_dados": "Bronze (Raw Validado)",
@@ -46,38 +45,39 @@ __PRISMA_MANIFEST__ = {
         "6. NUNCA acessa internet — fonte é exclusivamente o arquivo local."
     ],
     "apuracao": {
-        "esfera": "federal",
+        "esfera": "estadual",
+        "fonte_portal": "siga_ba",
         "uf": "BA",
-        "saida_esperada": "data/saida/emendas_federais/raw/emendas_federais_ba_{ano}_bronze.json"
+        "saida_esperada": "data/saida/pele/bronze/pele_estadual_{ano}_bronze.json"
     }
 }
 
 # ── Colunas esperadas no CSV (aceita variações de nome) ────────────────────────
 COLUNAS_MAPA = {
     # Chave = nome canônico interno | Valores = variações aceitas no CSV
-    "deputado":      ["deputado", "nome_deputado", "parlamentar", "nome", "autor", "nome_autor"],
-    "partido":       ["partido", "sigla_partido", "sigla", "partido_politico"],
-    "uf":            ["uf", "estado", "sigla_uf"],
-    "ano":           ["ano", "exercicio", "ano_emenda", "competencia_ano"],
-    "valor":         ["valor", "valor_emenda", "valor_pago", "vl_emenda", "valor_total"],
-    "tipo_emenda":   ["tipo_emenda", "tipo", "modalidade", "especie"],
-    "codigo":        ["codigo", "codigo_emenda", "num_emenda", "numero_emenda", "id_emenda"],
-    "funcao":        ["funcao", "funcao_programatica", "area", "setor"],
-    "subfuncao":     ["subfuncao", "subfuncao_programatica"],
-    "programa":      ["programa", "programa_orcamentario"],
-    "acao":          ["acao", "acao_orcamentaria"],
-    "localizador":   ["localizador", "localizador_gasto"],
-    "resultado":     ["resultado", "resultado_primario"],
-    "dotacao":       ["dotacao", "dotacao_inicial", "dotacao_atualizada"],
-    "empenhado":     ["empenhado", "valor_empenhado"],
-    "liquidado":     ["liquidado", "valor_liquidado"],
-    "pago":          ["pago", "valor_pago_direto"],
-    "beneficiario":  ["beneficiario", "nome_beneficiario", "municipio", "cidade"],
-    "cnpj_cpf":      ["cnpj_cpf", "cnpj", "cpf", "documento_beneficiario"],
-    "objeto":        ["objeto", "descricao", "descricao_emenda"],
-    "situacao":      ["situacao", "status", "situacao_emenda"],
+    "parlamentar_nome": ["deputado", "nome_deputado", "parlamentar", "nome", "autor", "nome_autor"],
+    "partido":          ["partido", "sigla_partido", "sigla", "partido_politico"],
+    "uf":               ["uf", "estado", "sigla_uf"],
+    "ano":              ["ano", "exercicio", "ano_emenda", "competencia_ano"],
+    "valor":            ["valor", "valor_emenda", "valor_pago", "vl_emenda", "valor_total"],
+    "tipo_emenda":      ["tipo_emenda", "tipo", "modalidade", "especie"],
+    "numero_emenda":    ["codigo", "codigo_emenda", "num_emenda", "numero_emenda", "id_emenda"],
+    "funcao":           ["funcao", "funcao_programatica", "area", "setor"],
+    "subfuncao":        ["subfuncao", "subfuncao_programatica"],
+    "programa":         ["programa", "programa_orcamentario"],
+    "acao":             ["acao", "acao_orcamentaria"],
+    "localizador":      ["localizador", "localizador_gasto"],
+    "resultado":        ["resultado", "resultado_primario"],
+    "valor_orcado_inicial": ["dotacao", "dotacao_inicial", "dotacao_atualizada"],
+    "valor_empenhado":  ["empenhado", "valor_empenhado"],
+    "valor_liquidado":  ["liquidado", "valor_liquidado"],
+    "valor_pago":       ["pago", "valor_pago_direto"],
+    "beneficiario":     ["beneficiario", "nome_beneficiario", "municipio", "cidade"],
+    "cnpj_cpf":         ["cnpj_cpf", "cnpj", "cpf", "documento_beneficiario"],
+    "objeto":           ["objeto", "descricao", "descricao_emenda"],
+    "situacao":         ["situacao", "status", "situacao_emenda"],
 }
-COLUNAS_OBRIGATORIAS = ["deputado", "valor"]
+COLUNAS_OBRIGATORIAS = ["parlamentar_nome", "valor"]
 
 # ── Estética Terminal (igual família Zidane) ───────────────────────────────────
 C_PURPLE = "\033[95m"
@@ -90,7 +90,7 @@ C_WHITE  = "\033[97m"
 C_END    = "\033[0m"
 
 def print_header(title: str):
-    width = 70
+    width = 72
     print(f"\n{C_PURPLE}╔" + "═"*(width-2) + f"╗{C_END}")
     print(f"{C_PURPLE}║{C_BOLD}{C_CYAN} {title.center(width-4)} {C_END}{C_PURPLE}║{C_END}")
     print(f"{C_PURPLE}╚" + "═"*(width-2) + f"╝{C_END}\n")
@@ -136,14 +136,14 @@ def limpar_valor(v: str) -> float:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Pelé-A v1.0: Ingestor de CSV local de Emendas Federais BA")
+    parser = argparse.ArgumentParser(description="Pelé-A v1.1: Ingestor de CSV local de Emendas Estaduais BA")
     parser.add_argument("--arquivo",  type=str, required=True, help="Caminho do arquivo CSV")
     parser.add_argument("--ano",      type=str, default=None,   help="Ano de referência (ex: 2024)")
     parser.add_argument("--dry-run",  action="store_true",      help="Valida sem salvar")
     parser.add_argument("--encoding", type=str, default=None,   help="Encoding do CSV (auto-detecta se omitido)")
     args = parser.parse_args()
 
-    print_header(f"PELÉ-A {VERSAO} | INGESTOR CSV LOCAL — EMENDAS FEDERAIS BA")
+    print_header(f"PELÉ-A v1.1 | INGESTOR CSV LOCAL — EMENDAS ESTADUAIS BA — {args.ano or 'ANO NÃO DEFINIDO'}")
     print_status(f"Arquivo alvo: {args.arquivo}", "process")
     print_status("MODO: Arquivo local — nenhuma conexão com internet.", "info")
 
@@ -234,37 +234,37 @@ def main():
     bronze: List[Dict[str, Any]] = []
     erros_linha = 0
     for i, row in enumerate(records_raw):
-        dep = get(row, "deputado")
+        dep = get(row, "parlamentar_nome")
         if not dep:
             erros_linha += 1
             continue
         bronze.append({
-            "linha_csv":   i + 2,  # +2 porque linha 1 é header
-            "deputado":    dep,
-            "partido":     get(row, "partido"),
-            "uf":          get(row, "uf") or "BA",
-            "ano":         get(row, "ano") or ano,
-            "valor":       limpar_valor(get(row, "valor") or ""),
-            "tipo_emenda": get(row, "tipo_emenda"),
-            "codigo":      get(row, "codigo"),
-            "funcao":      get(row, "funcao"),
-            "subfuncao":   get(row, "subfuncao"),
-            "programa":    get(row, "programa"),
-            "acao":        get(row, "acao"),
-            "localizador": get(row, "localizador"),
-            "dotacao":     limpar_valor(get(row, "dotacao") or ""),
-            "empenhado":   limpar_valor(get(row, "empenhado") or ""),
-            "liquidado":   limpar_valor(get(row, "liquidado") or ""),
-            "pago":        limpar_valor(get(row, "pago") or ""),
-            "beneficiario":get(row, "beneficiario"),
-            "cnpj_cpf":    get(row, "cnpj_cpf"),
-            "objeto":      get(row, "objeto"),
-            "situacao":    get(row, "situacao"),
-            "_raw":        dict(row),  # linha original completa para auditoria
+            "linha_csv":           i + 2,  # +2 porque linha 1 é header
+            "parlamentar_nome":    dep,
+            "partido":             get(row, "partido"),
+            "uf":                  get(row, "uf") or "BA",
+            "ano":                 get(row, "ano") or ano,
+            "valor":               limpar_valor(get(row, "valor") or ""),
+            "tipo_emenda":         get(row, "tipo_emenda"),
+            "numero_emenda":       get(row, "numero_emenda"),
+            "funcao":              get(row, "funcao"),
+            "subfuncao":           get(row, "subfuncao"),
+            "programa":            get(row, "programa"),
+            "acao":                get(row, "acao"),
+            "localizador":         get(row, "localizador"),
+            "valor_orcado_inicial":limpar_valor(get(row, "valor_orcado_inicial") or ""),
+            "valor_empenhado":     limpar_valor(get(row, "valor_empenhado") or ""),
+            "valor_liquidado":     limpar_valor(get(row, "valor_liquidado") or ""),
+            "valor_pago":          limpar_valor(get(row, "valor_pago") or ""),
+            "beneficiario":        get(row, "beneficiario"),
+            "cnpj_cpf":            get(row, "cnpj_cpf"),
+            "objeto":              get(row, "objeto"),
+            "situacao":            get(row, "situacao"),
+            "_raw":                dict(row),  # linha original completa para auditoria
         })
 
     validos = len(bronze)
-    print_status(f"Registros válidos: {validos} | Ignorados (sem deputado): {erros_linha}", "success")
+    print_status(f"Registros válidos: {validos} | Ignorados (sem parlamentar): {erros_linha}", "success")
 
     total_valor = sum(r["valor"] for r in bronze)
     print_status(f"Valor total: R$ {total_valor:,.2f}", "info")
@@ -277,24 +277,25 @@ def main():
 
     # ── 8. Salvar Bronze ───────────────────────────────────────────────────────
     base_dir = Path(__file__).resolve().parent.parent.parent
-    out_dir  = base_dir / "data" / "saida" / "emendas_federais" / "raw"
+    out_dir  = base_dir / "data" / "saida" / "pele" / "bronze"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    out_file = out_dir / f"emendas_federais_ba_{ano}_bronze.json"
+    out_file = out_dir / f"pele_estadual_{ano}_bronze.json"
     output = {
-        "total":         validos,
-        "ano":           ano,
-        "uf":            "BA",
-        "esfera":        "federal",
-        "arquivo_origem":csv_path.name,
-        "encoding_csv":  encoding_usado,
-        "ingestado_em":  datetime.utcnow().isoformat() + "Z",
-        "versao":        VERSAO,
+        "total":            validos,
+        "ano":              ano,
+        "uf":               "BA",
+        "esfera":           "estadual",
+        "fonte_portal":     "siga_ba",
+        "tabela_destino":   "alba_emendas_master",
+        "arquivo_origem":   csv_path.name,
+        "encoding_csv":     encoding_usado,
+        "ingestado_em":     datetime.utcnow().isoformat() + "Z",
+        "versao":           VERSAO,
         "referencias_documentais": [
-            "https://www.camara.leg.br/legisladores/dep",
-            "https://www.transparencia.gov.br/emendas"
+            "https://dados.ba.gov.br/dataset/emendas-parlamentares"
         ],
-        "records":       bronze
+        "records":          bronze
     }
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
