@@ -557,9 +557,12 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                     </div>
                                 </div>
 
-                                {/* PELÉ-A: UPLOAD DE ARQUIVOS */}
-                                {agentId === 'pele_1' && (
-                                    <PeleUploadPanel selectedAno={selectedAno} />
+                                {/* PELÉ-A1 e PELÉ-A2: UPLOAD DE ARQUIVOS */}
+                                {(agentId === 'pele_a1' || agentId === 'pele_a2') && (
+                                    <PeleUploadPanel 
+                                        selectedAno={selectedAno} 
+                                        tipoFixo={agentId === 'pele_a1' ? 'parlamentares' : 'transferencias'}
+                                    />
                                 )}
 
                                 {/* CONFIGURAÇÕES */}

@@ -3,11 +3,12 @@ import { Upload, Download, FileText, CheckCircle2 } from 'lucide-react';
 
 interface PeleUploadPanelProps {
     selectedAno: number | 'all';
+    tipoFixo?: 'parlamentares' | 'transferencias';
 }
 
-const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
+const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno, tipoFixo }) => {
     const [uploadMode, setUploadMode] = useState<'manual' | 'auto'>('manual');
-    const [tipoEmenda, setTipoEmenda] = useState('parlamentares');
+    const [tipoEmenda, setTipoEmenda] = useState(tipoFixo || 'parlamentares');
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState('');
@@ -16,14 +17,18 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
         parlamentares: {
             nome: "Emendas Parlamentares (Estaduais BA)",
             arquivos: 5,
-            descricao: "Deputados estaduais — orçamento BA"
+            descricao: "Deputados estaduais — orçamento BA",
+            agente: "Pelé-A1"
         },
         transferencias: {
             nome: "Transferências Especiais (Emendas Pix)",
             arquivos: 5,
-            descricao: "Emendas federais repassadas ao estado"
+            descricao: "Emendas federais repassadas ao estado",
+            agente: "Pelé-A2"
         }
     };
+
+    const tipoAtual = tipoFixo || tipoEmenda;
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -94,25 +99,34 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
             {/* Upload Manual */}
             {uploadMode === 'manual' && (
                 <div className="space-y-3">
-                    <select
-                        value={tipoEmenda}
-                        onChange={(e) => {
-                            setTipoEmenda(e.target.value);
-                            setUploadedFiles([]);
-                            setUploadStatus('');
-                        }}
-                        className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white/70 text-[11px] focus:outline-none focus:border-blue-400/30"
-                    >
-                        <option value="parlamentares">📋 Emendas Parlamentares (Estaduais BA)</option>
-                        <option value="transferencias">💰 Transferências Especiais (Pix/Federais)</option>
-                    </select>
+                    {!tipoFixo && (
+                        <select
+                            value={tipoEmenda}
+                            onChange={(e) => {
+                                setTipoEmenda(e.target.value);
+                                setUploadedFiles([]);
+                                setUploadStatus('');
+                            }}
+                            className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white/70 text-[11px] focus:outline-none focus:border-blue-400/30"
+                        >
+                            <option value="parlamentares">📋 Emendas Parlamentares (Estaduais BA)</option>
+                            <option value="transferencias">💰 Transferências Especiais (Pix/Federais)</option>
+                        </select>
+                    )}
 
                     {/* Info Box */}
                     <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-400/20 space-y-2">
                         <div className="text-[10px] font-bold text-blue-300 uppercase tracking-wide">
-                            {tiposInfo[tipoEmenda as keyof typeof tiposInfo].nome}
+                            {tiposInfo[tipoAtual as keyof typeof tiposInfo].agente}: {tiposInfo[tipoAtual as keyof typeof tiposInfo].nome}
                         </div>
                         <div className="text-[9px] text-blue-300/70">
+                            {tiposInfo[tipoAtual as keyof typeof tiposInfo].descricao}
+                        </div>
+                        <div className="flex items-center gap-2 text-[9px] text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-400/20">
+                            <span>⚠️</span>
+                            <span>Selecione os <strong>{tiposInfo[tipoAtual as keyof typeof tiposInfo].arquivos} arquivos CSV</strong> deste tipo</span>
+                        </div>
+                    </div>
                             {tiposInfo[tipoEmenda as keyof typeof tiposInfo].descricao}
                         </div>
                         <div className="flex items-center gap-2 text-[9px] text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-400/20">
