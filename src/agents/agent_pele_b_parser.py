@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-B v2.1 — PARSER & NORMALIZADOR (EMENDAS ESTADUAIS BA)
+🇧🇷 AGENT PELÉ-B v2.2 — PARSER & NORMALIZADOR (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Ler o JSON Bronze gerado pelo Pelé-A, normalizar campos,
+MISSÃO:  Ler o JSON Bronze gerado pelo Pelé-A1, normalizar campos,
          padronizar partidos, gerar prisma_id e produzir JSON Prata
          pronto para o Pelé-C enriquecer.
 
@@ -10,7 +10,7 @@ ENTRADA: data/saida/pele/bronze/pele_estadual_{ano}_bronze.json
 OUTPUT:  data/saida/pele/prata/pele_estadual_{ano}_prata.json
 
 ORIGEM:  SEMPRE estadual (SIGA-BA / dados.ba.gov.br)
-TABELA DESTINO FINAL: alba_emendas_master
+TABELA DESTINO FINAL: emendas_estaduais_ba
 
 USO:
     python agent_pele_b_parser.py --ano 2024
@@ -28,18 +28,18 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
-VERSAO = "v2.1-prisma-pele-b-estadual"
+VERSAO = "v2.2-prisma-pele-b-estadual"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
         "missao": "Normalização Bronze → Prata para Emendas Estaduais BA (SIGA-BA).",
-        "especialidade": "Parser estadual BA — tabela destino: alba_emendas_master",
+        "especialidade": "Parser estadual BA — tabela destino: emendas_estaduais_ba",
         "protocolo_tecnico": "Pure Python (unicodedata + re + hashlib)",
         "camada_dados": "Prata (Normalizado)",
         "esfera": "estadual",
         "uf": "BA",
         "fonte_portal": "siga_ba",
-        "tabela_supabase": "alba_emendas_master",
+        "tabela_supabase": "emendas_estaduais_ba",
         "seguranca": "Sem acesso à internet. Processa apenas dados locais."
     },
     "diretrizes": [
@@ -53,7 +53,7 @@ __PRISMA_MANIFEST__ = {
     ]
 }
 
-# ── Normalização de Partidos ────────────────────────────────────────────────────
+# ── Normalização de Partidos ────────────────────────────────────────────────────────
 PARTIDOS_MAPA = {
     "pt dos trabalhadores": "PT", "partido dos trabalhadores": "PT",
     "psdb": "PSDB", "partido da social democracia brasileira": "PSDB",
@@ -81,7 +81,7 @@ PARTIDOS_MAPA = {
     "agir": "AGIR",
 }
 
-# ── Estética Terminal ──────────────────────────────────────────────────────────
+# ── Estética Terminal ──────────────────────────────────────────────────────────────────────────────
 C_PURPLE = "\033[95m"
 C_CYAN   = "\033[96m"
 C_GREEN  = "\033[92m"
@@ -93,14 +93,14 @@ C_END    = "\033[0m"
 
 def print_header(title: str):
     width = 72
-    print(f"\n{C_PURPLE}╔" + "═"*(width-2) + f"╗{C_END}")
-    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN} {title.center(width-4)} {C_END}{C_PURPLE}║{C_END}")
-    print(f"{C_PURPLE}╚" + "═"*(width-2) + f"╝{C_END}\n")
+    print(f"\n{C_PURPLE}\u2554" + "\u2550"*(width-2) + f"\u2557{C_END}")
+    print(f"{C_PURPLE}\u2551{C_BOLD}{C_CYAN} {title.center(width-4)} {C_END}{C_PURPLE}\u2551{C_END}")
+    print(f"{C_PURPLE}\u255a" + "\u2550"*(width-2) + f"\u255d{C_END}\n")
 
 def print_status(msg: str, status="info"):
-    icons  = {"info": "🔹", "success": "✅", "error": "❌", "warn": "⚠️", "process": "⚙️"}
+    icons  = {"info": "\U0001f539", "success": "\u2705", "error": "\u274c", "warn": "\u26a0\ufe0f", "process": "\u2699\ufe0f"}
     colors = {"info": C_CYAN, "success": C_GREEN, "error": C_RED, "warn": C_YELLOW, "process": C_PURPLE}
-    print(f"{colors.get(status, C_CYAN)}{icons.get(status, '🔹')} {msg}{C_END}")
+    print(f"{colors.get(status, C_CYAN)}{icons.get(status, '\U0001f539')} {msg}{C_END}")
 
 
 def normalizar_texto(s) -> Optional[str]:
@@ -116,19 +116,28 @@ def normalizar_partido(partido) -> Optional[str]:
     if chave in PARTIDOS_MAPA:
         return PARTIDOS_MAPA[chave]
     up = str(partido).strip().upper()
-    if re.match(r'^[A-ZÁÉÍÓÚÇ/\-]{1,12}$', up):
+    if re.match(r'^[A-Z\u00c1\u00c9\u00cd\u00d3\u00da\u00c7/\-]{1,12}$', up):
         return up.replace("-BA", "").replace("-RN", "").strip()
     return str(partido).strip().upper()
 
 
 def gerar_prisma_id(ano: str, parlamentar_nome: str, numero_emenda: str, orgao: str) -> str:
-    """Gera prisma_id MD5 único para emendas estaduais BA."""
+    """Gera prisma_id MD5 único para emendas estaduais BA.
+    
+    Chave: siga_ba:{ano}:{nome_normalizado}:{numero_emenda}:{orgao}
+    Garante idempotência no upsert do Pelé-D (on_conflict=prisma_id).
+    """
     chave = f"siga_ba:{ano}:{normalizar_texto(parlamentar_nome) or ''}:{numero_emenda or ''}:{orgao or ''}"
     return hashlib.md5(chave.encode("utf-8")).hexdigest()
 
 
 def calcular_qualidade(record: Dict) -> tuple:
-    """Retorna (nivel_qualidade, score) de 0.0 a 1.0."""
+    """Retorna (nivel_qualidade, score) de 0.0 a 1.0.
+    
+    Critérios:
+      prisma_id(2) + parlamentar_nome(1) + numero_emenda(1) + ano(1)
+      + valor_empenhado>0(1) + valor_pago>0(1) + orgao(1) + acao(1) + municipio(1)
+    """
     pontos = 0
     total  = 10
     if record.get("prisma_id"):                         pontos += 2
@@ -147,13 +156,13 @@ def calcular_qualidade(record: Dict) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Pelé-B v2.1: Parser/Normalizador Emendas Estaduais BA"
+        description="Pelé-B v2.2: Parser/Normalizador Emendas Estaduais BA → emendas_estaduais_ba"
     )
     parser.add_argument("--ano",     type=str, required=True, help="Ano dos dados (ex: 2024)")
     parser.add_argument("--dry-run", action="store_true",     help="Processa sem salvar")
     args = parser.parse_args()
 
-    print_header(f"PELÉ-B {VERSAO} | PARSER ESTADUAL BA — {args.ano}")
+    print_header(f"PEL\u00c9-B {VERSAO} | PARSER ESTADUAL BA — {args.ano}")
 
     base_dir    = Path(__file__).resolve().parent.parent.parent
     bronze_dir  = base_dir / "data" / "saida" / "pele" / "bronze"
@@ -161,7 +170,10 @@ def main():
 
     if not bronze_file.exists():
         print_status(f"Bronze não encontrado: {bronze_file.name}", "error")
-        print_status(f"Execute primeiro: python agent_pele_a_ingestor.py --pasta ./... --ano {args.ano}", "warn")
+        print_status(
+            f"Execute primeiro: python agent_pele_a1_estadual.py --pasta ./emendasparlamentares --ano {args.ano}",
+            "warn"
+        )
         sys.exit(1)
 
     print_status(f"Lendo Bronze: {bronze_file.name}", "process")
@@ -192,46 +204,49 @@ def main():
         if val_empenhado == 0:
             stats["sem_valor"] += 1
 
-        # Gera ou reutiliza prisma_id
+        # Gera ou reutiliza prisma_id (chave de upsert no Supabase)
         prisma_id = r.get("prisma_id") or gerar_prisma_id(ano_str, parlamentar_nome, numero_emenda, orgao)
 
         record_prata: Dict[str, Any] = {
-            # ── Identidade ────────────────────────────────────────────────
+            # ── Chave de upsert (on_conflict no Pelé-D) ───────────────────────────────────
             "prisma_id":          prisma_id,
+
+            # ── Identidade / Origem ──────────────────────────────────────────────────
             "esfera":             "estadual",
             "uf":                 "BA",
             "fonte_portal":       "siga_ba",
             "ano":                int(ano_str) if ano_str.isdigit() else None,
 
-            # ── Deputado normalizado ──────────────────────────────────────
+            # ── Deputado normalizado ───────────────────────────────────────────────────
             "parlamentar_nome":   parlamentar_nome,
             "parlamentar_nome_raw": r.get("parlamentar_nome") or r.get("deputado_nome"),
             "partido":            partido,
             # Preenchido pelo Pelé-C via cruzamento Zidane:
             "parlamentar_id":     None,
 
-            # ── Código / Emenda ───────────────────────────────────────────
+            # ── Código / Emenda ───────────────────────────────────────────────────────
             "numero_emenda":      numero_emenda or None,
             "tipo_emenda":        r.get("tipo_emenda"),
 
-            # ── Classificação orçamentária ────────────────────────────────
+            # ── Classificação orçamentária ───────────────────────────────────────────
             "orgao":              orgao or None,
             "funcao":             r.get("funcao"),
             "subfuncao":          r.get("subfuncao"),
             "programa":           r.get("programa"),
             "acao":               r.get("acao"),
 
-            # ── Localização ───────────────────────────────────────────────
+            # ── Localização ───────────────────────────────────────────────────────────────
             "municipio":          r.get("municipio"),
 
-            # ── Valores ──────────────────────────────────────────────────
+            # ── Valores ────────────────────────────────────────────────────────────────────
             "valor_orcado_atual":  val_orcado_atual,
             "valor_empenhado":     val_empenhado,
             "valor_liquidado":     val_liquidado,
             "valor_pago":          val_pago,
             "valor_restos_pagar":  val_restos,
+            # percentual_empenhado e percentual_pago são GERADOS pelo banco (colunas generated)
 
-            # ── Metadados ─────────────────────────────────────────────────
+            # ── Metadados ──────────────────────────────────────────────────────────────────
             "url_transparencia":   r.get("url_transparencia"),
             "nivel_qualidade":     None,
             "qualidade_score":     None,
@@ -246,17 +261,17 @@ def main():
 
         prata.append(record_prata)
 
-    print(f"\n{C_WHITE}📊 Resultado da normalização (estadual BA):{C_END}")
-    print(f"   🟡 Total Bronze       : {total}")
-    print(f"   🥇 Nível Ouro         : {stats['ouro']}")
-    print(f"   🥈 Nível Prata        : {stats['prata']}")
-    print(f"   🥉 Nível Bronze       : {stats['bronze']}")
-    print(f"   ⚠️  Sem valor empenh.  : {stats['sem_valor']}")
+    print(f"\n{C_WHITE}\U0001f4ca Resultado da normalização (estadual BA):{C_END}")
+    print(f"   \U0001f7e1 Total Bronze       : {total}")
+    print(f"   \U0001f947 Nível Ouro         : {stats['ouro']}")
+    print(f"   \U0001f948 Nível Prata        : {stats['prata']}")
+    print(f"   \U0001f949 Nível Bronze       : {stats['bronze']}")
+    print(f"   \u26a0\ufe0f  Sem valor empenh.  : {stats['sem_valor']}")
 
     if args.dry_run:
-        print(f"\n{C_YELLOW}⚠️  DRY-RUN: Nenhum arquivo salvo.{C_END}")
+        print(f"\n{C_YELLOW}\u26a0\ufe0f  DRY-RUN: Nenhum arquivo salvo.{C_END}")
         if prata:
-            print_status("Amostra do 1º registro Prata:", "info")
+            print_status("Amostra do 1\u00ba registro Prata:", "info")
             print(json.dumps(prata[0], ensure_ascii=False, indent=2))
         sys.exit(0)
 
@@ -265,26 +280,26 @@ def main():
     out_file   = prata_dir / f"pele_estadual_{args.ano}_prata.json"
 
     output = {
-        "total":        len(prata),
-        "origem":       "estadual",
-        "esfera":       "estadual",
-        "uf":           "BA",
-        "fonte_portal": "siga_ba",
-        "tabela_destino": "alba_emendas_master",
-        "ano":          args.ano,
-        "gerado_em":    datetime.utcnow().isoformat() + "Z",
-        "versao":       VERSAO,
-        "stats":        stats,
-        "records":      prata,
+        "total":          len(prata),
+        "origem":         "estadual",
+        "esfera":         "estadual",
+        "uf":             "BA",
+        "fonte_portal":   "siga_ba",
+        "tabela_destino": "emendas_estaduais_ba",
+        "ano":            args.ano,
+        "gerado_em":      datetime.utcnow().isoformat() + "Z",
+        "versao":         VERSAO,
+        "stats":          stats,
+        "records":        prata,
     }
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print_status(f"PELÉ-B CONCLUÍDO! {C_BOLD}{len(prata)}{C_END} registros Prata (estadual BA) gerados.", "success")
+    print(f"\n{C_PURPLE}\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501{C_END}")
+    print_status(f"PEL\u00c9-B CONCLU\u00cdDO! {C_BOLD}{len(prata)}{C_END} registros Prata (estadual BA) gerados.", "success")
     print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
-    print_status(f"Próximo passo: python agent_pele_c_aguia.py --ano {args.ano}", "info")
-    print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
+    print_status(f"Pr\u00f3ximo passo: python agent_pele_c_aguia.py --ano {args.ano}", "info")
+    print(f"{C_PURPLE}\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501{C_END}\n")
 
 
 if __name__ == "__main__":
