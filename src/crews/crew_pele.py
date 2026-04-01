@@ -1,39 +1,44 @@
 #!/usr/bin/env python3
 """
-🇧🇷 CREW PELÉ v1.0 — ORQUESTRADOR DE EMENDAS FEDERAIS BA
+⚽ CREW PELÉ v2.0 — ORQUESTRADOR DE EMENDAS PARLAMENTARES BA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Orquestrar toda a pipeline de Emendas Federais BA,
-         encadeando Pelé-A → Pelé-B → Pelé-C → Pelé-D em sequência
-         controlada, com checkpoints, dry-run e relatório final.
+MISSÃO:  Orquestrar a pipeline completa de Emendas Parlamentares BA.
+         Suporta ESTADUAL (A1), FEDERAL (A2), ou AMBOS em sequência:
 
-FLUXO:
-  [CSV LOCAL]
-      ↓ Pelé-A: Ingestor  → Bronze JSON
-      ↓ Pelé-B: Parser    → Prata JSON  (normalizado)
-      ↓ Pelé-C: Águia     → Ouro JSON   (enriquecido + validado)
-      ↓ Pelé-D: Loader    → Supabase DB (tabela emendas_federais)
+         ESTADUAL:  Pelé-A1 → Pelé-B → Pelé-C → Pelé-D
+         FEDERAL:   Pelé-A2 → Pelé-B → Pelé-C → Pelé-D
+         AMBOS:     A1 → A2 → B(estadual) → B(federal) → C(est) → C(fed) → D(est) → D(fed)
+
+PATHS DE SAÍDA:
+    data/saida/pele/bronze/pele_{origem}_{ano}_bronze.json
+    data/saida/pele/prata/pele_{origem}_{ano}_prata.json
+    data/saida/pele/ouro/pele_{origem}_{ano}_ouro.json
+    → Supabase: tabelas emendas_estaduais_ba | emendas_federais_ba
 
 USO:
-    # Pipeline completa
-    python crew_pele.py --arquivo /path/emendas_ba_2024.csv --ano 2024
+    # Pipeline estadual completa
+    python crew_pele.py --pasta ./emendasparlamentares --ano 2024 --origem estadual
+
+    # Pipeline federal completa
+    python crew_pele.py --pasta-federal ./transferenciasfederais --ano 2024 --origem federal
+
+    # Pipeline AMBAS as origens
+    python crew_pele.py \\
+        --pasta ./emendasparlamentares \\
+        --pasta-federal ./transferenciasfederais \\
+        --ano 2024 --origem ambos
 
     # Dry-run (valida sem gravar no banco)
-    python crew_pele.py --arquivo /path/emendas_ba_2024.csv --ano 2024 --dry-run
+    python crew_pele.py --pasta ./emendasparlamentares --ano 2024 --origem estadual --dry-run
 
-    # Rodar apenas a partir de uma fase (se Bronze já existe)
-    python crew_pele.py --ano 2024 --from-fase B
+    # Rodar a partir de uma fase já processada
+    python crew_pele.py --ano 2024 --origem estadual --from-fase B
 
-    # Rodar só até uma fase (sem subir para o banco)
-    python crew_pele.py --arquivo /path/emendas_ba_2024.csv --ano 2024 --ate-fase C
+    # Rodar até certa fase (sem subir ao banco)
+    python crew_pele.py --pasta ./emendasparlamentares --ano 2024 --origem estadual --ate-fase C
 
-    # Forçar re-processamento mesmo que arquivos intermediários existam
-    python crew_pele.py --arquivo /path/emendas_ba_2024.csv --ano 2024 --force
-
-SAÍDA ESPERADA (modo normal):
-    data/saida/emendas_federais/raw/emendas_federais_ba_{ano}_bronze.json
-    data/saida/emendas_federais/prata/emendas_federais_ba_{ano}_prata.json
-    data/saida/emendas_federais/ouro/emendas_federais_ba_{ano}_ouro.json
-    → Supabase: tabela emendas_federais (upsert por prisma_id)
+    # Forçar reprocessamento mesmo com arquivos existentes
+    python crew_pele.py --pasta ./emendasparlamentares --ano 2024 --origem estadual --force
 """
 
 import os
@@ -44,36 +49,47 @@ import argparse
 import subprocess
 from pathlib import Path
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Dict
 
-VERSAO = "v1.0-prisma-crew-pele"
+VERSAO = "v2.0-prisma-crew-pele"
 
-# ── Caminhos ──────────────────────────────────────────────────────────────────
-BASE_DIR    = Path(__file__).resolve().parent.parent          # src/
-AGENTS_DIR  = BASE_DIR / "agents"
-DATA_DIR    = BASE_DIR.parent / "data" / "saida" / "emendas_federais"
+# ── Caminhos ─────────────────────────────────────────────────────────────────────────────────
+BASE_DIR   = Path(__file__).resolve().parent.parent          # src/
+AGENTS_DIR = BASE_DIR / "agents"
+DATA_DIR   = BASE_DIR.parent / "data" / "saida" / "pele"    # data/saida/pele/
 
-FASES_ORDEM = ["A", "B", "C", "D"]
-FASES_NOME  = {
-    "A": "Pelé-A  │ Ingestor CSV → Bronze",
-    "B": "Pelé-B  │ Parser       → Prata",
-    "C": "Pelé-C  │ Águia        → Ouro",
-    "D": "Pelé-D  │ Loader       → Supabase",
+ORIGENS_VALIDAS = ["estadual", "federal", "ambos"]
+
+FASES_NOME = {
+    "A1": "Pelé-A1 │ Ingestor CSV Estadual   → Bronze",
+    "A2": "Pelé-A2 │ Ingestor CSV Federal    → Bronze",
+    "B":  "Pelé-B  │ Parser & Normalizador   → Prata",
+    "C":  "Pelé-C  │ Águia Zidane Matcher    → Ouro",
+    "D":  "Pelé-D  │ Loader Supabase         → DB",
 }
+
 FASES_SCRIPT = {
-    "A": AGENTS_DIR / "agent_pele_a_ingestor.py",
-    "B": AGENTS_DIR / "agent_pele_b_parser.py",
-    "C": AGENTS_DIR / "agent_pele_c_aguia.py",
-    "D": AGENTS_DIR / "agent_pele_d_loader.py",
-}
-FASES_OUTPUT = {
-    "A": lambda ano: DATA_DIR / "raw"   / f"emendas_federais_ba_{ano}_bronze.json",
-    "B": lambda ano: DATA_DIR / "prata" / f"emendas_federais_ba_{ano}_prata.json",
-    "C": lambda ano: DATA_DIR / "ouro"  / f"emendas_federais_ba_{ano}_ouro.json",
-    "D": None,  # saída é o banco, não um arquivo
+    "A1": AGENTS_DIR / "agent_pele_a1_estadual.py",
+    "A2": AGENTS_DIR / "agent_pele_a2_federal.py",
+    "B":  AGENTS_DIR / "agent_pele_b_parser.py",
+    "C":  AGENTS_DIR / "agent_pele_c_aguia.py",
+    "D":  AGENTS_DIR / "agent_pele_d_loader.py",
 }
 
-# ── Estética Terminal (padrão família Pelé/Zidane) ─────────────────────────────
+# Output esperado por fase/origem
+def fase_output(fase: str, origem: str, ano: str) -> Optional[Path]:
+    if fase == "A1":
+        return DATA_DIR / "bronze" / f"pele_estadual_{ano}_bronze.json"
+    if fase == "A2":
+        return DATA_DIR / "bronze" / f"pele_federal_{ano}_bronze.json"
+    if fase == "B":
+        return DATA_DIR / "prata" / f"pele_{origem}_{ano}_prata.json"
+    if fase == "C":
+        return DATA_DIR / "ouro"  / f"pele_{origem}_{ano}_ouro.json"
+    return None  # D = banco
+
+
+# ── Estética Terminal ────────────────────────────────────────────────────────────────────
 C_PURPLE = "\033[95m"
 C_CYAN   = "\033[96m"
 C_GREEN  = "\033[92m"
@@ -85,230 +101,240 @@ C_BLUE   = "\033[94m"
 C_END    = "\033[0m"
 
 def print_banner():
-    width = 70
-    titulo = f"CREW PELÉ {VERSAO}"
-    subtitulo = "PIPELINE EMENDAS FEDERAIS BA — A→B→C→D"
-    print(f"\n{C_PURPLE}╔{'═'*(width-2)}╗{C_END}")
-    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}{titulo.center(width-2)}{C_END}{C_PURPLE}║{C_END}")
-    print(f"{C_PURPLE}║{C_WHITE}{subtitulo.center(width-2)}{C_END}{C_PURPLE}║{C_END}")
-    print(f"{C_PURPLE}╚{'═'*(width-2)}╝{C_END}\n")
+    width = 72
+    linhas = [
+        f"CREW PELÉ {VERSAO}",
+        "PIPELINE EMENDAS PARLAMENTARES BA",
+        "ESTADUAL (A1) + FEDERAL (A2) → B → C → D",
+    ]
+    print(f"\n{C_PURPLE}\u256d" + "─"*(width-2) + f"\u256e{C_END}")
+    for linha in linhas:
+        print(f"{C_PURPLE}│{C_BOLD}{C_CYAN}{linha.center(width-2)}{C_END}{C_PURPLE}│{C_END}")
+    print(f"{C_PURPLE}\u2570" + "─"*(width-2) + f"\u256f{C_END}\n")
 
-def print_fase_header(letra: str, dry_run: bool):
-    nome = FASES_NOME[letra]
+def print_fase_header(fase: str, origem: str, dry_run: bool):
+    nome = FASES_NOME.get(fase, fase)
     modo = f"  {C_YELLOW}[DRY-RUN]{C_END}" if dry_run else ""
-    print(f"\n{C_BLUE}{'─'*70}{C_END}")
-    print(f"{C_BOLD}{C_WHITE}  FASE {letra} │ {nome}{C_END}{modo}")
-    print(f"{C_BLUE}{'─'*70}{C_END}")
+    orig_tag = f" [{origem.upper()}]" if origem else ""
+    print(f"\n{C_BLUE}{'\u2500'*72}{C_END}")
+    print(f"{C_BOLD}{C_WHITE}  FASE {fase}{orig_tag} │ {nome}{C_END}{modo}")
+    print(f"{C_BLUE}{'\u2500'*72}{C_END}")
 
 def print_status(msg: str, status="info"):
-    icons  = {"info": "🔹", "success": "✅", "error": "❌", "warn": "⚠️",
-               "process": "⚙️", "skip": "⏭️", "time": "⏱️"}
+    icons  = {"info": "\U0001f539", "success": "\u2705", "error": "\u274c",
+               "warn": "\u26a0\ufe0f", "process": "\u2699\ufe0f", "skip": "\u23ed\ufe0f", "time": "\u23f1\ufe0f"}
     colors = {"info": C_CYAN, "success": C_GREEN, "error": C_RED,
                "warn": C_YELLOW, "process": C_PURPLE, "skip": C_BLUE, "time": C_WHITE}
-    icon  = icons.get(status, "🔹")
+    icon  = icons.get(status, "\U0001f539")
     color = colors.get(status, C_CYAN)
     print(f"{color}{icon} {msg}{C_END}")
 
 def print_relatorio(relatorio: dict):
-    width = 70
-    print(f"\n{C_GREEN}╔{'═'*(width-2)}╗{C_END}")
-    print(f"{C_GREEN}║{C_BOLD}{C_WHITE}{'  RELATÓRIO FINAL — CREW PELÉ'.center(width-2)}{C_END}{C_GREEN}║{C_END}")
-    print(f"{C_GREEN}╠{'═'*(width-2)}╣{C_END}")
+    width = 72
+    print(f"\n{C_GREEN}\u256d" + "─"*(width-2) + f"\u256e{C_END}")
+    print(f"{C_GREEN}│{C_BOLD}{C_WHITE}{'  RELATÓRIO FINAL — CREW PELÉ'.center(width-2)}{C_END}{C_GREEN}│{C_END}")
+    print(f"{C_GREEN}├" + "─"*(width-2) + f"\u2524{C_END}")
     for k, v in relatorio.items():
-        linha = f"  {k:<25} {v}"
-        print(f"{C_GREEN}║{C_WHITE}{linha:<(width-2)}{C_END}{C_GREEN}║{C_END}")
-    print(f"{C_GREEN}╚{'═'*(width-2)}╝{C_END}\n")
+        linha = f"  {k:<28} {v}"
+        print(f"{C_GREEN}│{C_WHITE}{linha:<(width-2)}{C_END}{C_GREEN}│{C_END}")
+    print(f"{C_GREEN}\u2570" + "─"*(width-2) + f"\u256f{C_END}\n")
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
-def arquivo_existe(fase: str, ano: str) -> bool:
-    """Verifica se o arquivo de output da fase já existe."""
-    getter = FASES_OUTPUT.get(fase)
-    if getter is None:
+# ── Runner ────────────────────────────────────────────────────────────────────────────────────
+def rodar_fase(script: Path, args_extra: List[str], fase: str, dry_run: bool) -> bool:
+    """Executa um agente como subprocess e retorna True se OK."""
+    if not script.exists():
+        print_status(f"Script não encontrado: {script}", "error")
         return False
-    return getter(ano).exists()
 
-def contar_registros(fase: str, ano: str) -> int:
-    """Lê o JSON de output e retorna total de registros."""
-    getter = FASES_OUTPUT.get(fase)
-    if getter is None:
-        return 0
-    path = getter(ano)
-    if not path.exists():
-        return 0
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data.get("total", len(data.get("records", [])))
-    except Exception:
-        return 0
-
-def montar_cmd(fase: str, ano: str, arquivo: Optional[str], dry_run: bool) -> list:
-    """Monta o comando de execução para cada fase."""
-    script = str(FASES_SCRIPT[fase])
-    cmd = [sys.executable, script]
-
-    if fase == "A":
-        if not arquivo:
-            raise ValueError("Fase A requer --arquivo (caminho do CSV).")
-        cmd += ["--arquivo", arquivo, "--ano", ano]
-    else:
-        cmd += ["--ano", ano]
-
+    cmd = [sys.executable, str(script)] + args_extra
     if dry_run:
         cmd.append("--dry-run")
 
-    return cmd
-
-def executar_fase(fase: str, ano: str, arquivo: Optional[str],
-                  dry_run: bool, force: bool) -> dict:
-    """
-    Executa uma fase da pipeline.
-    Retorna dict com: {ok, duracao_s, registros, pulada}
-    """
-    resultado = {"ok": False, "duracao_s": 0.0, "registros": 0, "pulada": False}
-
-    # Verificar se pode pular (output já existe e não é force)
-    if fase != "D" and not force and arquivo_existe(fase, ano):
-        regs = contar_registros(fase, ano)
-        print_status(
-            f"Output já existe ({FASES_OUTPUT[fase](ano).name}, {regs} registros). "
-            f"Use --force para re-processar.", "skip"
-        )
-        resultado["ok"]       = True
-        resultado["pulada"]   = True
-        resultado["registros"] = regs
-        return resultado
-
-    # Montar e executar comando
-    try:
-        cmd = montar_cmd(fase, ano, arquivo, dry_run)
-    except ValueError as e:
-        print_status(str(e), "error")
-        return resultado
-
     print_status(f"Executando: {' '.join(cmd)}", "process")
     t0 = time.time()
+    result = subprocess.run(cmd, text=True, capture_output=False)
+    elapsed = round(time.time() - t0, 1)
 
-    proc = subprocess.run(cmd, capture_output=False, text=True)
-
-    duracao = round(time.time() - t0, 2)
-    resultado["duracao_s"] = duracao
-
-    if proc.returncode == 0:
-        resultado["ok"] = True
-        if fase != "D":
-            resultado["registros"] = contar_registros(fase, ano)
-        print_status(f"Fase {fase} concluída em {duracao}s.", "success")
+    if result.returncode == 0:
+        print_status(f"Fase {fase} concluída em {elapsed}s", "time")
+        return True
     else:
-        print_status(f"Fase {fase} falhou (exit code {proc.returncode}).", "error")
+        print_status(f"Fase {fase} FALHOU (código {result.returncode})", "error")
+        return False
 
-    return resultado
+
+def arquivo_existe(fase: str, origem: str, ano: str) -> bool:
+    p = fase_output(fase, origem, ano)
+    return p is not None and p.exists()
 
 
-# ── Orquestrador principal ────────────────────────────────────────────────────
+def contar_registros(fase: str, origem: str, ano: str) -> int:
+    p = fase_output(fase, origem, ano)
+    if p is None or not p.exists():
+        return 0
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("total", len(data.get("records", [])))
+    except:
+        return 0
 
+
+# ── Pipeline por Origem ─────────────────────────────────────────────────────────────────────────
+def pipeline_origem(
+    origem: str,
+    ano: str,
+    pasta: Optional[str],
+    pasta_federal: Optional[str],
+    dry_run: bool,
+    force: bool,
+    from_fase: str,
+    ate_fase: str,
+) -> Dict:
+    """Executa pipeline A → B → C → D para uma origem e retorna stats."""
+    fases_ordem_origem = ["A1" if origem == "estadual" else "A2", "B", "C", "D"]
+
+    # Ordem de fases para navegação
+    ordem_geral = ["A1", "A2", "B", "C", "D"]
+    idx_from = ordem_geral.index(from_fase) if from_fase in ordem_geral else 0
+    idx_ate  = ordem_geral.index(ate_fase)  if ate_fase  in ordem_geral else len(ordem_geral) - 1
+
+    resultados = {}
+    falhou = False
+
+    for fase in fases_ordem_origem:
+        idx_fase = ordem_geral.index(fase)
+        if idx_fase < idx_from:
+            print_status(f"Pulando fase {fase} (--from-fase {from_fase})", "skip")
+            continue
+        if idx_fase > idx_ate:
+            print_status(f"Parando após fase {ate_fase} (--ate-fase {ate_fase})", "skip")
+            break
+
+        print_fase_header(fase, origem, dry_run)
+
+        # Verificar se pode pular (output já existe e não é force)
+        if fase != "D" and not force and arquivo_existe(fase, origem, ano):
+            n = contar_registros(fase, origem, ano)
+            print_status(f"Output já existe ({n} registros). Use --force para re-processar.", "skip")
+            resultados[fase] = {"status": "skip", "registros": n}
+            continue
+
+        # Montar args por fase
+        script = FASES_SCRIPT[fase]
+        args_extra = []
+
+        if fase == "A1":
+            if not pasta:
+                print_status("--pasta é obrigatório para origem estadual", "error")
+                falhou = True
+                break
+            args_extra = ["--pasta", pasta, "--ano", ano]
+
+        elif fase == "A2":
+            p = pasta_federal or pasta
+            if not p:
+                print_status("--pasta-federal é obrigatório para origem federal", "error")
+                falhou = True
+                break
+            args_extra = ["--pasta", p, "--ano", ano]
+
+        elif fase in ("B", "C", "D"):
+            args_extra = ["--origem", origem, "--ano", ano]
+
+        ok = rodar_fase(script, args_extra, fase, dry_run)
+        if not ok:
+            falhou = True
+            resultados[fase] = {"status": "erro"}
+            break
+
+        n = contar_registros(fase, origem, ano) if fase != "D" else "(banco)"
+        resultados[fase] = {"status": "ok", "registros": n}
+
+    return {"origem": origem, "falhou": falhou, "fases": resultados}
+
+
+# ── Main ────────────────────────────────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(
-        description="Crew Pelé v1.0 — Orquestrador de Emendas Federais BA",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
+    ap = argparse.ArgumentParser(
+        description=f"Crew Pelé {VERSAO}: Orquestrador Emendas Parlamentares BA"
     )
-    parser.add_argument("--arquivo",   type=str,  default=None,
-                        help="Caminho do CSV de emendas (obrigatório para Fase A)")
-    parser.add_argument("--ano",       type=str,  required=True,
-                        help="Ano dos dados (ex: 2024)")
-    parser.add_argument("--dry-run",   action="store_true",
-                        help="Valida pipeline completa SEM gravar no banco")
-    parser.add_argument("--force",     action="store_true",
-                        help="Re-processa mesmo que arquivos intermediários existam")
-    parser.add_argument("--from-fase", type=str,  default="A", choices=FASES_ORDEM,
-                        help="Iniciar a partir desta fase (A/B/C/D)")
-    parser.add_argument("--ate-fase",  type=str,  default="D", choices=FASES_ORDEM,
-                        help="Parar após esta fase (A/B/C/D)")
-    args = parser.parse_args()
+    ap.add_argument("--ano",          type=str, required=True,
+                    help="Ano de exercício (ex: 2024)")
+    ap.add_argument("--origem",       type=str, default="estadual",
+                    choices=ORIGENS_VALIDAS,
+                    help="estadual | federal | ambos (default: estadual)")
+    ap.add_argument("--pasta",        type=str, default=None,
+                    help="Pasta com CSVs estaduais (emendasparlamentares/)")
+    ap.add_argument("--pasta-federal",type=str, default=None, dest="pasta_federal",
+                    help="Pasta com CSVs federais (transferenciasfederais/)")
+    ap.add_argument("--dry-run",      action="store_true",
+                    help="Processa sem gravar arquivos/banco")
+    ap.add_argument("--force",        action="store_true",
+                    help="Re-processa mesmo que arquivos intermediários já existam")
+    ap.add_argument("--from-fase",    type=str, default="A1",
+                    choices=["A1", "A2", "B", "C", "D"],
+                    help="Iniciar a partir desta fase (default: A1)")
+    ap.add_argument("--ate-fase",     type=str, default="D",
+                    choices=["A1", "A2", "B", "C", "D"],
+                    help="Parar nesta fase (default: D)")
+    args = ap.parse_args()
 
     print_banner()
 
-    ts_inicio = datetime.utcnow()
-    print_status(f"Ano alvo       : {args.ano}", "info")
-    print_status(f"Arquivo CSV    : {args.arquivo or '(não informado — iniciando de fase ' + args.from_fase + ')'}", "info")
-    print_status(f"Fases          : {args.from_fase} → {args.ate_fase}", "info")
-    print_status(f"Modo           : {'⚠️  DRY-RUN (nenhum dado será gravado no banco)' if args.dry_run else '🚀 PRODUÇÃO'}", "warn" if args.dry_run else "success")
-    print_status(f"Force          : {'sim (re-processa tudo)' if args.force else 'não (pula fases prontas)'}", "info")
+    t_inicio = time.time()
+    origens_rodar = ["estadual", "federal"] if args.origem == "ambos" else [args.origem]
 
-    # Validar range de fases
-    idx_from = FASES_ORDEM.index(args.from_fase)
-    idx_ate  = FASES_ORDEM.index(args.ate_fase)
-    if idx_from > idx_ate:
-        print_status("--from-fase não pode ser posterior a --ate-fase.", "error")
-        sys.exit(1)
+    todos_resultados = []
+    algum_falhou = False
 
-    fases_rodar = FASES_ORDEM[idx_from : idx_ate + 1]
+    for origem in origens_rodar:
+        print(f"\n{C_PURPLE}{'='*72}{C_END}")
+        print(f"{C_BOLD}{C_CYAN}  INICIANDO PIPELINE: {origem.upper()}{C_END}")
+        print(f"{C_PURPLE}{'='*72}{C_END}")
 
-    # Verificar se Fase A precisa do --arquivo
-    if "A" in fases_rodar and not args.arquivo:
-        print_status("Fase A requer --arquivo com o caminho do CSV.", "error")
-        sys.exit(1)
-
-    # Verificar se scripts existem
-    for fase in fases_rodar:
-        script = FASES_SCRIPT[fase]
-        if not script.exists():
-            print_status(f"Script da Fase {fase} não encontrado: {script}", "error")
-            sys.exit(1)
-
-    # ── Executar cada fase ────────────────────────────────────────────────────
-    resultados = {}
-    pipeline_ok = True
-
-    for fase in fases_rodar:
-        print_fase_header(fase, args.dry_run)
-        res = executar_fase(
-            fase=fase,
+        res = pipeline_origem(
+            origem=origem,
             ano=args.ano,
-            arquivo=args.arquivo,
+            pasta=args.pasta,
+            pasta_federal=args.pasta_federal,
             dry_run=args.dry_run,
             force=args.force,
+            from_fase=args.from_fase,
+            ate_fase=args.ate_fase,
         )
-        resultados[fase] = res
+        todos_resultados.append(res)
+        if res["falhou"]:
+            algum_falhou = True
+            print_status(f"Pipeline {origem.upper()} FALHOU. Abortando.", "error")
+            if args.origem != "ambos":
+                break
 
-        if not res["ok"]:
-            pipeline_ok = False
-            print_status(f"Pipeline interrompida na Fase {fase}. Corrija o erro e re-execute.", "error")
-            print_status(f"Dica: rode 'python crew_pele.py --ano {args.ano} --from-fase {fase} ...' para retomar.", "warn")
-            break
-
-    # ── Relatório final ───────────────────────────────────────────────────────
-    ts_fim     = datetime.utcnow()
-    duracao_total = round((ts_fim - ts_inicio).total_seconds(), 2)
-
+    # ─ Relatório Final
+    elapsed_total = round(time.time() - t_inicio, 1)
     relatorio = {
-        "Ano":             args.ano,
-        "Modo":            "DRY-RUN" if args.dry_run else "PRODUÇÃO",
-        "Fases executadas": " → ".join(fases_rodar),
-        "Status pipeline": "✅ SUCESSO" if pipeline_ok else "❌ FALHOU",
-        "Duração total":   f"{duracao_total}s",
+        "Versão":              VERSAO,
+        "Timestamp":           datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        "Ano processado":      args.ano,
+        "Origens":             " + ".join(origens_rodar).upper(),
+        "Dry-run":             "SIM" if args.dry_run else "NÃO",
+        "Fases executadas":    f"{args.from_fase} → {args.ate_fase}",
+        "Tempo total":         f"{elapsed_total}s",
     }
-    for fase in fases_rodar:
-        res = resultados.get(fase, {})
-        estado = "PULADA" if res.get("pulada") else ("OK" if res.get("ok") else "ERRO")
-        regs   = res.get("registros", 0)
-        dur    = res.get("duracao_s", 0)
-        label  = FASES_NOME[fase].split("│")[1].strip()
-        relatorio[f"Fase {fase} ({label[:20]})"] = f"{estado} | {regs} registros | {dur}s"
 
+    for res in todos_resultados:
+        origem = res["origem"]
+        for fase, info in res["fases"].items():
+            st = info.get("status", "?")
+            recs = info.get("registros", "")
+            label = f"{origem[:3].upper()} | Fase {fase}"
+            relatorio[label] = f"{st.upper()} {'(' + str(recs) + ' reg)' if recs else ''}"
+
+    relatorio["Status Final"] = "FALHA \u274c" if algum_falhou else "SUCESSO \u2705"
     print_relatorio(relatorio)
 
-    if not pipeline_ok:
-        sys.exit(1)
-
-    if args.dry_run:
-        print_status("DRY-RUN finalizado. Nenhum dado foi gravado no Supabase.", "warn")
-        print_status(f"Para rodar de verdade: python crew_pele.py --arquivo {args.arquivo or 'SEU_CSV.csv'} --ano {args.ano}", "info")
-    else:
-        print_status(f"Pipeline Pelé concluída! Emendas BA {args.ano} estão no banco. 🇧🇷⚽", "success")
+    sys.exit(1 if algum_falhou else 0)
 
 
 if __name__ == "__main__":
