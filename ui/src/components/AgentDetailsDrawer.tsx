@@ -9,6 +9,7 @@ import {
 import AgentAvatar from './AgentAvatar';
 import DataPreviewStudio from './DataPreviewStudio';
 import AgentTerminal from './AgentTerminal';
+import PeleUploadPanel from './PeleUploadPanel';
 import { crewDefs } from './crewDefs';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -555,6 +556,11 @@ const AgentDetailsDrawer = ({ isOpen, onClose, agentId, agentLabel, selectedCrew
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* PELÉ-A: UPLOAD DE ARQUIVOS */}
+                                {agentId === 'pele_1' && (
+                                    <PeleUploadPanel selectedAno={selectedAno} />
+                                )}
 
                                 {/* CONFIGURAÇÕES */}
                                 {(needsYear || needsLegislatura || needsCity || needsLLM || (isZidaneCrew && safras.length > 0)) && (

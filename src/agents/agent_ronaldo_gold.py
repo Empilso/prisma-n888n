@@ -29,19 +29,26 @@ CHANGELOG v2.0:
   - prisma_id hash mais robusto: usa num_processo quando num_nf vazio
 """
 
-__PRISMA_MANIFEST__ = """
-=============================================================================
-PRISMA MANIFEST - AGENT 3 (RONALDO GOLD v2.2)
-- Visão Geral  : Finalizador da Camada Gold Financeira.
-- Matching     : Exato > Fuzzy (0.82) > Token Sort > ORFAO (nunca descarta)
-- Garantia     : 100% dos registros Prata chegam ao banco.
-                 Com vínculo = parlamentar_id preenchido.
-                 Sem vínculo = parlamentar_id NULL + metadados.orfao=True.
-- Schema       : Alinhado com despesas_gabinete enterprise v2.
-- FIX v2.2     : nome_fornecedor_limpo e valor_raw agora nos metadados
-                 (compatibilidade com Bebeto v2.5).
-=============================================================================
-"""
+__PRISMA_MANIFEST__ = {
+    "visao_geral": {
+        "missao": "Finalizador da Camada Gold Financeira com matching parlamentar e carga no Supabase",
+        "especialidade": "Consolidação e Matching Fuzzy",
+        "protocolo_tecnico": "Supabase REST API + FuzzyWuzzy + Pydantic + JSON",
+        "camada_dados": "Ouro",
+        "seguranca": "Idempotência via prisma_id + 100% dos registros garantidos (com ou sem vínculo)"
+    },
+    "diretrizes": [
+        "1. Matching parlamentar: Exato > Fuzzy (0.82) > Token Sort > ORFAO (nunca descarta)",
+        "2. Garantia: 100% dos registros Prata chegam ao banco (com vínculo = parlamentar_id preenchido, sem vínculo = parlamentar_id NULL + metadados.orfao=True)",
+        "3. Schema alinhado com despesas_gabinete enterprise v2",
+        "4. nome_fornecedor_limpo e valor_raw nos metadados (compatibilidade Bebeto v2.5)"
+    ],
+    "apuracao": {
+        "safras_suportadas": ["2022", "2023", "2024"],
+        "entrada_esperada": "data/saida/prata/alba_{ano}_prata.json",
+        "saida_esperada": "Tabela despesas_gabinete (Supabase)"
+    }
+}
 
 import os
 import sys

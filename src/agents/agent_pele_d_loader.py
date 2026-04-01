@@ -1,25 +1,12 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-D v3.0 — LOADER SUPABASE (EMENDAS ESTADUAIS BA)
+🇧🇷 AGENT PELÉ-D v2.0 — LOADER SUPABASE (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Ler o JSON Ouro do Pelé-C e fazer upsert no Supabase
+MISSÃO:  Ler o JSON Ouro gerado pelo Pelé-C e fazer upsert no Supabase
          na tabela `alba_emendas_master` sem perder NENHUM registro.
 
-ARMADURA: Batch 500 | Retry 3x | Idempotente via on_conflict=prisma_id
-TABELA:   alba_emendas_master (schema PRISMA — emendas estaduais BA SIGA)
-
-ESTRATÉGIA DE UPSERT:
-  Prefer: resolution=merge-duplicates
-  on_conflict=prisma_id
-  → Se o prisma_id já existe, atualiza. Se não, insere.
-  → Garante idempotência total: rodar 2x não duplica dados.
-
-COLUNAS NÃO ENVIADAS (geradas/gerenciadas pelo DB):
-  - id                  (UUID gerado automaticamente pelo Supabase)
-  - percentual_empenhado (GENERATED ALWAYS AS valor_empenhado/valor_orcado_atual)
-  - percentual_pago      (GENERATED ALWAYS AS valor_pago/valor_orcado_atual)
-  - criado_em           (DEFAULT now())
-  - atualizado_em       (DEFAULT now())
+ARMADURA: Batch 500 | Retry 3x | Idempotente via id (uuid)
+TABELA:   alba_emendas_master (schema PRISMA — emendas estaduais BA)
 
 USO:
     python agent_pele_d_loader.py --ano 2024 --dry-run   # SEMPRE testar primeiro!
@@ -39,47 +26,38 @@ from datetime import datetime
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 
-VERSAO      = "v3.0-prisma-pele-d-alba"
-TABELA      = "alba_emendas_master"
+VERSAO    = "v2.0-prisma-pele-loader-estadual"
 BATCH_SIZE  = 500
 MAX_RETRIES = 3
 RETRY_WAIT  = 2
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao":        f"Injetor final Ouro → {TABELA} (Supabase).",
-        "especialidade": "Loader estadual BA — tabela destino: alba_emendas_master",
-        "tabela_supabase": TABELA,
-        "esfera":        "estadual",
-        "uf":            "BA",
-        "fonte_portal":  "siga_ba",
-        "upsert":        "on_conflict=prisma_id + resolution=merge-duplicates",
-        "seguranca":     "Service Role Key via .env. Nunca exposta no código.",
+        "missao": "Injetor final de emendas estaduais BA (SIGA-BA) para Supabase",
+        "especialidade": "Carga de Emendas Parlamentares Estaduais",
+        "protocolo_tecnico": "Supabase REST API + Batch Insert + Retry Exponencial",
+        "camada_dados": "Ouro",
+        "seguranca": "Idempotência via INSERT sem on_conflict (tabela usa id uuid) + sem perda de órfãos"
     },
     "diretrizes": [
-        "1. Lê o JSON Ouro gerado pelo Pelé-C.",
-        "2. Mapeia apenas os campos aceitos pela tabela alba_emendas_master.",
-        "3. Exclui colunas GENERATED: percentual_empenhado, percentual_pago.",
-        "4. Exclui colunas auto-gerenciadas: id, criado_em, atualizado_em.",
-        "5. Upsert idempotente em batches via on_conflict=prisma_id.",
-        "6. Registra órfãos (sem parlamentar_id) em arquivo JSON separado.",
-        "7. Zero silêncio: todos os erros são logados e reportados.",
-    ]
+        "1. Tabela alvo: alba_emendas_master (emendas estaduais BA — SIGA-BA)",
+        "2. Batch de 500 registros com retry 3x exponencial",
+        "3. percentual_empenhado e percentual_pago são colunas GERADAS pelo banco, nunca inseridas",
+        "4. Órfãos logados, nunca silenciados"
+    ],
+    "apuracao": {
+        "safras_suportadas": ["2022", "2023", "2024"],
+        "entrada_esperada": "data/saida/ouro/emendas_ba_{ano}_ouro.json",
+        "saida_esperada": "Tabela alba_emendas_master (Supabase)"
+    }
 }
 
-# ── Campos aceitos pela tabela alba_emendas_master ─────────────────────────────────────
-# NUNCA incluir: id, percentual_empenhado, percentual_pago, criado_em, atualizado_em
-CAMPOS_TABELA = [
-    # ── Chave de upsert ── OBRIGATÓRIO
-    "prisma_id",
-
-    # ── Relacionamentos ──
+# ── Campos da tabela alba_emendas_master (excluindo colunas geradas) ───────────
+CAMPOS_ALBA = [
     "parlamentar_id",
     "parlamentar_nome",
     "partido",
     "ano",
-
-    # ── Classificação orçamentária ──
     "numero_emenda",
     "tipo_emenda",
     "orgao",
@@ -87,20 +65,15 @@ CAMPOS_TABELA = [
     "subfuncao",
     "programa",
     "acao",
-
-    # ── Valores financeiros ──
-    # (percentual_empenhado e percentual_pago são GENERATED — NÃO enviar)
     "valor_orcado_atual",
     "valor_empenhado",
     "valor_liquidado",
     "valor_pago",
     "valor_restos_pagar",
-
-    # ── Localização ──
+    # percentual_empenhado → GERADO pelo banco — NÃO incluir
+    # percentual_pago      → GERADO pelo banco — NÃO incluir
     "municipio",
     "uf",
-
-    # ── Origem e rastreabilidade ──
     "fonte_portal",
     "url_transparencia",
 
@@ -120,7 +93,7 @@ CAMPOS_TABELA = [
     "coletado_em",
 ]
 
-# ── Estética Terminal ──────────────────────────────────────────────────────────────────
+# ── Estética Terminal ──────────────────────────────────────────────────────────
 C_PURPLE = "\033[95m"
 C_CYAN   = "\033[96m"
 C_GREEN  = "\033[92m"
@@ -132,63 +105,38 @@ C_END    = "\033[0m"
 
 
 def banner():
-    print(f"\n{C_PURPLE}\u2554{'\u2550'*69}\u2557{C_END}")
-    print(f"{C_PURPLE}\u2551{C_BOLD}{C_CYAN}  🇧🇷 PELÉ-D {VERSAO} | LOADER → {TABELA}  {C_END}{C_PURPLE}\u2551{C_END}")
-    print(f"{C_PURPLE}\u255a{'\u2550'*69}\u255d{C_END}")
-    print(f"{C_WHITE}   Tabela    : {TABELA}")
-    print(f"   Esfera     : estadual | UF: BA | Fonte: siga_ba")
-    print(f"   Upsert     : on_conflict=prisma_id (merge-duplicates)")
-    print(f"   Armadura   : Batch {BATCH_SIZE} | Retry {MAX_RETRIES}x | Idempotente | Zero Perda{C_END}\n")
+    print(f"\n{C_PURPLE}╔═══════════════════════════════════════════════════════════════════╗{C_END}")
+    print(f"{C_PURPLE}║{C_BOLD}{C_CYAN}  🇧🇷 PELÉ-D v2.0 | LOADER — OURO → alba_emendas_master (BA)  {C_END}{C_PURPLE}║{C_END}")
+    print(f"{C_PURPLE}╚═══════════════════════════════════════════════════════════════════╝{C_END}")
+    print(f"{C_WHITE}   Tabela   : alba_emendas_master (emendas estaduais BA — SIGA-BA)")
+    print(f"   Esfera    : estadual | UF: BA | Fonte: siga_ba")
+    print(f"   Armadura  : Batch {BATCH_SIZE} | Retry {MAX_RETRIES}x | Idempotente | Zero Perda{C_END}\n")
     sys.stdout.flush()
 
-
-def print_status(msg: str, status: str = "info"):
+def print_status(msg: str, status="info"):
     icons  = {"info": "🔹", "success": "✅", "error": "❌", "warn": "⚠️", "process": "⚙️"}
     colors = {"info": C_CYAN, "success": C_GREEN, "error": C_RED, "warn": C_YELLOW, "process": C_PURPLE}
     print(f"{colors.get(status, C_CYAN)}{icons.get(status, '🔹')} {msg}{C_END}")
     sys.stdout.flush()
 
 
-def mapear_para_tabela(r: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Filtra e mapeia os campos do JSON Ouro (Pelé-C) para a tabela alba_emendas_master.
-
-    Regras:
-    - Apenas campos de CAMPOS_TABELA são enviados
-    - Colunas GENERATED e auto-gerenciadas são excluídas
-    - Defaults aplicados para campos obrigatórios
-    - prisma_id obrigatório (chave de upsert) — ValueError se ausente
-    """
+def mapear_para_alba(r: Dict[str, Any]) -> Dict[str, Any]:
+    """Filtra apenas os campos aceitos pela tabela alba_emendas_master."""
     row: Dict[str, Any] = {}
-    for campo in CAMPOS_TABELA:
+    for campo in CAMPOS_ALBA:
         val = r.get(campo)
         row[campo] = val
 
-    # ── Defaults obrigatórios ──────────────────────────────────────────────────
+    # Defaults obrigatórios
     row["uf"]             = row.get("uf") or "BA"
     row["fonte_portal"]   = row.get("fonte_portal") or "siga_ba"
     row["nivel_qualidade"]= row.get("nivel_qualidade") or "prata"
-    row["cruzado_zidane"] = bool(row.get("cruzado_zidane") or False)
-    row["qualidade_score"]= float(row.get("qualidade_score") or 0.6)
-
-    # Valores financeiros — nunca None
-    for campo_val in ["valor_orcado_atual", "valor_empenhado", "valor_liquidado",
-                      "valor_pago", "valor_restos_pagar", "valor_total_dep",
-                      "media_emenda"]:
-        row[campo_val] = float(row.get(campo_val) or 0)
-
-    row["qtd_emendas_dep"] = int(row.get("qtd_emendas_dep") or 0)
-    row["ranking_valor"]   = int(row.get("ranking_valor") or 0)
-    row["coletado_em"]     = row.get("coletado_em") or datetime.utcnow().isoformat() + "Z"
-    row["enriquecido_em"]  = row.get("enriquecido_em") or datetime.utcnow().isoformat() + "Z"
-    row["metadados"]       = row.get("metadados") or {}
-
-    # ── Validação crítica ──────────────────────────────────────────────────────
-    if not row.get("prisma_id"):
-        raise ValueError(
-            f"prisma_id ausente: {r.get('parlamentar_nome')} / ano={r.get('ano')} "
-            f"/ emenda={r.get('numero_emenda')}"
-        )
+    row["valor_orcado_atual"]  = row.get("valor_orcado_atual") or 0
+    row["valor_empenhado"]     = row.get("valor_empenhado") or 0
+    row["valor_liquidado"]     = row.get("valor_liquidado") or 0
+    row["valor_pago"]          = row.get("valor_pago") or 0
+    row["valor_restos_pagar"]  = row.get("valor_restos_pagar") or 0
+    row["coletado_em"]  = row.get("coletado_em") or datetime.utcnow().isoformat() + "Z"
 
     return row
 
@@ -201,11 +149,10 @@ def upsert_batch(
 ) -> tuple[int, int]:
     """Envia um batch para o Supabase com upsert idempotente. Retorna (ok, erros)."""
     if dry_run:
-        print(f"   {C_YELLOW}[DRY-RUN] Simulando upsert de {len(batch)} registros...{C_END}")
+        print(f"   {C_YELLOW}[DRY-RUN] Simulando insert de {len(batch)} registros...{C_END}")
         if batch:
             print(f"   {C_WHITE}Exemplo payload (1º registro):{C_END}")
-            amostra = {k: v for k, v in list(batch[0].items())[:12]}
-            print(json.dumps(amostra, ensure_ascii=False, indent=4, default=str))
+            print(json.dumps(batch[0], ensure_ascii=False, indent=4, default=str))
         return len(batch), 0
 
     payload = json.dumps(batch, ensure_ascii=False, default=str)
@@ -217,21 +164,19 @@ def upsert_batch(
                 data=payload,
                 headers={
                     **headers,
-                    "Prefer": "resolution=merge-duplicates,return=minimal",
+                    "Prefer": "return=minimal",
                 },
-                params={"on_conflict": "prisma_id"},
                 timeout=60,
             )
             if resp.status_code in (200, 201, 204):
                 return len(batch), 0
             if resp.status_code == 409:
-                print(f"   {C_YELLOW}⚠️ 409 inesperado (merge-dup ativo): {resp.text[:200]}{C_END}")
                 return len(batch), 0
-            print(f"   {C_YELLOW}⚠️ Tentativa {tentativa}/{MAX_RETRIES} — HTTP {resp.status_code}: {resp.text[:300]}{C_END}")
+            print(f"   {C_YELLOW}⚠️  Tentativa {tentativa}/{MAX_RETRIES} — HTTP {resp.status_code}: {resp.text[:300]}{C_END}")
             if tentativa < MAX_RETRIES:
                 time.sleep(RETRY_WAIT * tentativa)
         except requests.exceptions.Timeout:
-            print(f"   {C_YELLOW}⚠️ Tentativa {tentativa}/{MAX_RETRIES} — Timeout{C_END}")
+            print(f"   {C_YELLOW}⚠️  Tentativa {tentativa}/{MAX_RETRIES} — Timeout{C_END}")
             if tentativa < MAX_RETRIES:
                 time.sleep(RETRY_WAIT * tentativa)
         except Exception as e:
@@ -243,7 +188,7 @@ def upsert_batch(
 
 def main():
     parser = argparse.ArgumentParser(
-        description=f"Pelé-D {VERSAO}: Loader Ouro → {TABELA} (Estadual BA / SIGA-BA)"
+        description="Pelé-D v2.0: Loader Ouro → alba_emendas_master (Estadual BA)"
     )
     parser.add_argument("--ano",     type=str, required=True,
                         help="Ano dos dados (ex: 2024)")
@@ -271,7 +216,6 @@ def main():
 
     if not supa_key and not args.dry_run:
         print_status("Supabase key não encontrada no .env", "error")
-        print_status("Defina SUPABASE_SERVICE_ROLE_KEY no arquivo .env", "warn")
         sys.exit(1)
 
     headers = {
@@ -279,15 +223,13 @@ def main():
         "Authorization": f"Bearer {supa_key or 'dry-run-key'}",
         "Content-Type":  "application/json",
     }
-    endpoint = f"{supa_url}/rest/v1/{TABELA}"
+    endpoint = f"{supa_url}/rest/v1/alba_emendas_master"
 
-    print_status(f"Projeto   : {project_id} (DADOS-PRISMA)", "info")
-    print_status(f"Endpoint  : {endpoint}", "info")
-    print_status(f"Upsert    : on_conflict=prisma_id (idempotente)", "info")
+    print_status(f"Endpoint : {endpoint}", "info")
     if args.dry_run:
         print(f"{C_YELLOW}⚠️  MODO DRY-RUN — Nenhum dado será gravado no Supabase.{C_END}\n")
 
-    # ── Localizar JSON Ouro ────────────────────────────────────────────────────
+    # ── Localizar Ouro ────────────────────────────────────────────────────────
     ouro_dir  = base_dir / "data" / "saida" / "pele" / "ouro"
     ouro_file = ouro_dir / f"pele_estadual_{args.ano}_ouro.json"
 
@@ -312,42 +254,24 @@ def main():
     print()
     sys.stdout.flush()
 
-    # ── FASE 1: Verificação ────────────────────────────────────────────────────
+    # ── FASE 1: Informativo ───────────────────────────────────────────────────
     print(f"{C_CYAN}━━━ FASE 1 — Verificação ━━━{C_END}")
-    print_status(f"Tabela alvo : {TABELA} (esfera=estadual, uf=BA, fonte=siga_ba)", "info")
-    print_status("Colunas EXCLUÍDAS do payload (GENERATED/auto): "
-                 "id, percentual_empenhado, percentual_pago, criado_em, atualizado_em", "warn")
+    print_status(f"Tabela alvo: alba_emendas_master (esfera=estadual, uf=BA, fonte=siga_ba)", "info")
+    print_status(f"Colunas geradas pelo DB (excluídas do payload): percentual_empenhado, percentual_pago", "warn")
 
-    # ── FASE 2: Mapeamento ─────────────────────────────────────────────────────
-    print(f"\n{C_CYAN}━━━ FASE 2 — Mapeamento Ouro → {TABELA} ━━━{C_END}")
-    rows      = []
-    orfaos    = []
-    ignorados = []
-
+    # ── FASE 2: Mapeamento ────────────────────────────────────────────────────
+    print(f"\n{C_CYAN}━━━ FASE 2 — Mapeamento Ouro → alba_emendas_master ━━━{C_END}")
+    rows = []
+    orfaos = []
     for r in records:
-        try:
-            row = mapear_para_tabela(r)
-            if not row.get("parlamentar_id"):
-                orfaos.append({
-                    "prisma_id":        row.get("prisma_id"),
-                    "parlamentar_nome": row.get("parlamentar_nome"),
-                    "partido":          row.get("partido"),
-                    "ano":              row.get("ano"),
-                })
-            rows.append(row)
-        except ValueError as e:
-            ignorados.append(str(e))
-            print_status(f"Registro ignorado (sem prisma_id): {e}", "warn")
+        if not r.get("parlamentar_id"):
+            orfaos.append({"parlamentar_nome": r.get("parlamentar_nome"), "ano": r.get("ano")})
+        rows.append(mapear_para_alba(r))
 
-    print_status(
-        f"Mapeados: {len(rows)} | "
-        f"Órfãos (sem parlamentar_id): {len(orfaos)} | "
-        f"Ignorados (sem prisma_id): {len(ignorados)}",
-        "info"
-    )
+    print_status(f"Registros mapeados: {len(rows)} | Órfãos (sem parlamentar_id): {len(orfaos)}", "info")
 
-    # ── FASE 3: Upsert em batches ──────────────────────────────────────────────
-    print(f"\n{C_CYAN}━━━ FASE 3 — Upsert Supabase ({TABELA}) ━━━{C_END}")
+    # ── FASE 3: Upload em batches ─────────────────────────────────────────────
+    print(f"\n{C_CYAN}━━━ FASE 3 — Upload Supabase (alba_emendas_master) ━━━{C_END}")
     inseridos = 0
     erros     = 0
 
@@ -362,13 +286,12 @@ def main():
                 f"   {C_PURPLE}[{progresso}/{len(rows)}]{C_END} "
                 f"{C_GREEN}✅ {inseridos}{C_END} | "
                 f"{C_RED}❌ {erros}{C_END} | "
-                f"{C_YELLOW}⚠️ órfãos: {len(orfaos)}{C_END}"
+                f"{C_YELLOW}⚠️  órfãos: {len(orfaos)}{C_END}"
             )
         sys.stdout.flush()
 
-    # ── FASE 4: Relatório Final ────────────────────────────────────────────────
+    # ── FASE 4: Relatório ─────────────────────────────────────────────────────
     print(f"\n{C_CYAN}━━━ FASE 4 — Relatório Final ━━━{C_END}")
-
     if orfaos:
         orfaos_dir  = base_dir / "data" / "saida" / "pele" / "orphans"
         orfaos_dir.mkdir(parents=True, exist_ok=True)
@@ -378,21 +301,19 @@ def main():
             json.dump(orfaos, f, ensure_ascii=False, indent=2)
         print_status(f"{len(orfaos)} órfãos salvos em: {orfaos_file.name}", "warn")
 
-    print(f"\n{C_PURPLE}{'━'*74}{C_END}")
-    print(f"{C_GREEN}✅ PELÉ-D {VERSAO} FINALIZADO!{C_END}")
-    print(f"{C_WHITE}   Ano         : {args.ano}")
-    print(f"   Tabela      : {TABELA}")
-    print(f"   Total Ouro  : {total}")
-    print(f"   Inseridos   : {inseridos}")
-    print(f"   Erros       : {erros}")
-    print(f"   Órfãos      : {len(orfaos)} (inseridos sem vínculo parlamentar_id)")
-    print(f"   Ignorados   : {len(ignorados)} (sem prisma_id)")
-    print(f"   Endpoint    : {endpoint}")
-    print(f"   Upsert      : on_conflict=prisma_id (idempotente){C_END}")
+    print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
+    print(f"{C_GREEN}✅ PELÉ-D v2.0 FINALIZADO!{C_END}")
+    print(f"{C_WHITE}   Ano      : {args.ano}")
+    print(f"   Total    : {total}")
+    print(f"   Inseridos: {inseridos}")
+    print(f"   Erros    : {erros}")
+    print(f"   Órfãos   : {len(orfaos)} (inseridos sem vínculo parlamentar_id)")
+    print(f"   Tabela   : alba_emendas_master")
+    print(f"   Endpoint : {endpoint}{C_END}")
     if args.dry_run:
         print(f"   {C_YELLOW}[DRY-RUN] Nada gravado no Supabase.{C_END}")
-    print(f"{C_PURPLE}{'━'*74}{C_END}\n")
-    print("[AGENT DONE] ✅ Pelé-D encerra com sucesso!")
+    print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
+    print("[AGENT DONE] ✅ Pelé-D v2.0 encerra com sucesso!")
     sys.stdout.flush()
 
 

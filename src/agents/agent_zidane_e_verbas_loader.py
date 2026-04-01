@@ -17,18 +17,26 @@ USO:
     python agent_zidane_e_verbas_loader.py --batch 200  # batch size customizado
 """
 
-__PRISMA_MANIFEST__ = """
-=============================================================================
-PRISMA MANIFEST - AGENT ZIDANE-E v2.1 (VERBAS LOADER)
-- Tabela alvo  : despesas_gabinete (schema enterprise multi-portal)
-- Visão Geral  : Injetor final da Camada Ouro → Supabase.
-- Garantias    : Idempotência via upsert no prisma_id.
-                 Sem perda: órfãos logados, nunca silenciados.
-                 Sem duplicatas: on_conflict=prisma_id (query param) → update.
-- Estratégia  : Batch 500 com retry 3x exponencial.
-- valor_liquido: coluna GERADA pelo banco, nunca inserida aqui.
-=============================================================================
-"""
+__PRISMA_MANIFEST__ = {
+    "visao_geral": {
+        "missao": "Injetor final da Camada Ouro de verbas ALBA para Supabase",
+        "especialidade": "Carga em Lote com Idempotência",
+        "protocolo_tecnico": "Supabase REST API + Batch Insert + Retry Exponencial",
+        "camada_dados": "Ouro",
+        "seguranca": "Idempotência via upsert no prisma_id + sem perda de órfãos"
+    },
+    "diretrizes": [
+        "1. Upsert via on_conflict=prisma_id (query param) para evitar duplicatas",
+        "2. Batch de 500 registros com retry 3x exponencial",
+        "3. valor_liquido é coluna GERADA pelo banco, nunca inserida",
+        "4. Órfãos logados, nunca silenciados"
+    ],
+    "apuracao": {
+        "safras_suportadas": ["2022", "2023", "2024"],
+        "entrada_esperada": "data/saida/ouro/alba_{ano}_ouro.json",
+        "saida_esperada": "Tabela despesas_gabinete (Supabase)"
+    }
+}
 
 import os
 import sys

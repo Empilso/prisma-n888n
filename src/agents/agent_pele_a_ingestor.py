@@ -28,26 +28,49 @@ from typing import List, Dict, Any
 
 VERSAO = "v1.1-prisma-pele-a-estadual"
 
+TIPOS_EMENDAS = {
+    "parlamentares": {
+        "nome": "Emendas Parlamentares",
+        "url_base": "https://dados.ba.gov.br/dataset/emendas-parlamentares",
+        "arquivos": [
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_DESPESAS.csv",
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_PAGAMENTOS.csv",
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_LIQUIDACAO_ORCAMENTO.csv",
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_CENTRALIZACAO_DESCENTRALIZACAO.csv",
+            "VW_PROCESSO_SEI.csv"
+        ]
+    },
+    "transferencias": {
+        "nome": "Transferências Especiais",
+        "url_base": "https://dados.ba.gov.br/dataset/transferencias-especiais",
+        "arquivos": [
+            "VW_TRANSFERENCIAS_ESPECIAIS.csv"
+        ]
+    }
+}
+
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Ingesta manual de CSV de Emendas Estaduais BA (SIGA-BA) para camada Bronze.",
-        "especialidade": "Ingestão de Arquivo Local (CSV)",
-        "protocolo_tecnico": "csv.DictReader + validação de colunas + JSON Bronze",
+        "missao": "Ingesta de Emendas Estaduais BA via upload manual ou download automático do portal dados.ba.gov.br",
+        "especialidade": "Ingestão Híbrida (Manual + Automática)",
+        "protocolo_tecnico": "csv.DictReader + requests + FastAPI Upload",
         "camada_dados": "Bronze (Raw Validado)",
-        "seguranca": "Não acessa internet. Só lê arquivo local informado pelo usuário."
+        "seguranca": "Upload local + Download HTTPS com timeout 30s"
     },
     "diretrizes": [
-        "1. Recebe caminho do CSV via --arquivo (upload manual do usuário).",
-        "2. Valida existência do arquivo e colunas obrigatórias.",
-        "3. Lê todas as linhas e converte para lista de dicionários.",
-        "4. Detecta ano automaticamente se não fornecido via --ano.",
-        "5. Salva JSON Bronze com metadados de ingestão.",
-        "6. NUNCA acessa internet — fonte é exclusivamente o arquivo local."
+        "1. Modo Manual: Aceita upload de múltiplos CSVs via interface web ou CLI --arquivo/--pasta",
+        "2. Modo Automático: Baixa CSVs diretamente do portal dados.ba.gov.br via --download",
+        "3. Suporta 2 tipos: 'parlamentares' (5 arquivos) e 'transferencias' (1 arquivo)",
+        "4. Valida colunas obrigatórias e detecta encoding automaticamente",
+        "5. Gera Bronze JSON unificado: pele/bronze/pele_estadual_{ano}_bronze.json",
+        "6. Checkpoint por tipo e ano para evitar reprocessamento"
     ],
     "apuracao": {
         "esfera": "estadual",
         "fonte_portal": "siga_ba",
         "uf": "BA",
+        "tipos_suportados": ["parlamentares", "transferencias"],
+        "entrada_esperada": "CSV manual OU download automático",
         "saida_esperada": "data/saida/pele/bronze/pele_estadual_{ano}_bronze.json"
     }
 }
@@ -137,21 +160,55 @@ def limpar_valor(v: str) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description="Pelé-A v1.1: Ingestor de CSV local de Emendas Estaduais BA")
-    parser.add_argument("--arquivo",  type=str, required=True, help="Caminho do arquivo CSV")
-    parser.add_argument("--ano",      type=str, default=None,   help="Ano de referência (ex: 2024)")
-    parser.add_argument("--dry-run",  action="store_true",      help="Valida sem salvar")
-    parser.add_argument("--encoding", type=str, default=None,   help="Encoding do CSV (auto-detecta se omitido)")
+    parser.add_argument("--arquivo",  type=str, help="Caminho do arquivo CSV")
+    parser.add_argument("--pasta",    type=str, help="Pasta com múltiplos CSVs para processar em lote")
+    parser.add_argument("--ano",      type=str, default=None, help="Ano de referência (ex: 2024)")
+    parser.add_argument("--dry-run",  action="store_true", help="Valida sem salvar")
+    parser.add_argument("--encoding", type=str, default=None, help="Encoding do CSV (auto-detecta se omitido)")
     args = parser.parse_args()
 
     print_header(f"PELÉ-A v1.1 | INGESTOR CSV LOCAL — EMENDAS ESTADUAIS BA — {args.ano or 'ANO NÃO DEFINIDO'}")
-    print_status(f"Arquivo alvo: {args.arquivo}", "process")
+    
+    # Modo pasta: processar múltiplos CSVs
+    if args.pasta:
+        pasta_path = Path(args.pasta).expanduser().resolve()
+        if not pasta_path.exists():
+            print_status(f"Pasta não encontrada: {pasta_path}", "error")
+            sys.exit(1)
+        
+        csv_files = list(pasta_path.glob("*.csv"))
+        if not csv_files:
+            print_status(f"Nenhum arquivo CSV encontrado em: {pasta_path}", "error")
+            sys.exit(1)
+        
+        print_status(f"Modo LOTE: {len(csv_files)} arquivo(s) CSV encontrado(s)", "process")
+        for csv_file in csv_files:
+            print(f"\n{C_CYAN}{'─'*72}{C_END}")
+            print_status(f"Processando: {csv_file.name}", "process")
+            processar_arquivo(csv_file, args)
+        
+        print(f"\n{C_GREEN}✅ Processamento em lote concluído!{C_END}")
+        sys.exit(0)
+    
+    # Modo arquivo único
+    if not args.arquivo:
+        print_status("Erro: --arquivo ou --pasta é obrigatório", "error")
+        parser.print_help()
+        sys.exit(1)
+    
+    csv_path = Path(args.arquivo).expanduser().resolve()
+    processar_arquivo(csv_path, args)
+
+
+def processar_arquivo(csv_path: Path, args):
+    """Processa um único arquivo CSV"""
+    print_status(f"Arquivo alvo: {csv_path.name}", "process")
     print_status("MODO: Arquivo local — nenhuma conexão com internet.", "info")
 
     # ── 1. Verificar arquivo ───────────────────────────────────────────────────
-    csv_path = Path(args.arquivo).expanduser().resolve()
     if not csv_path.exists():
         print_status(f"Arquivo não encontrado: {csv_path}", "error")
-        sys.exit(1)
+        return
     if csv_path.suffix.lower() not in [".csv", ".txt"]:
         print_status(f"Extensão inesperada ({csv_path.suffix}). Esperado: .csv", "warn")
 

@@ -16,6 +16,7 @@ import collections
 import re
 from datetime import datetime
 from pathlib import Path
+from fastapi import UploadFile, File, Form
 
 # Permite rodar de dentro de n888n ou da raiz
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -1477,3 +1478,68 @@ async def datalake_reset():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("api_server:app", host="0.0.0.0", port=8003)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PELÉ-A: ENDPOINTS DE UPLOAD E DOWNLOAD
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/api/pele/upload-csv")
+async def upload_csv_pele(file: UploadFile = File(...), ano: str = Form(...), tipo: str = Form(...)):
+    """Recebe upload de CSV do frontend para o Pelé-A"""
+    try:
+        upload_dir = Path(__file__).parent.parent / "data" / "raw" / "pele_uploads" / tipo
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        
+        filename = f"{tipo}_{ano}_{file.filename}"
+        filepath = upload_dir / filename
+        
+        content = await file.read()
+        with open(filepath, "wb") as f:
+            f.write(content)
+        
+        tamanho_kb = len(content) // 1024
+        return {
+            "status": "ok",
+            "filename": filename,
+            "path": str(filepath),
+            "tamanho_kb": tamanho_kb
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/api/pele/tipos-emendas")
+async def get_tipos_emendas():
+    """Retorna os tipos de emendas disponíveis"""
+    tipos = {
+        "parlamentares": {
+            "nome": "Emendas Parlamentares",
+            "arquivos_esperados": 5
+        },
+        "transferencias": {
+            "nome": "Transferências Especiais",
+            "arquivos_esperados": 1
+        }
+    }
+    return {"status": "ok", "tipos": tipos}
+
+@app.get("/api/pele/arquivos-disponiveis")
+async def get_arquivos_disponiveis(tipo: str):
+    """Lista arquivos CSV já carregados para um tipo específico"""
+    try:
+        upload_dir = Path(__file__).parent.parent / "data" / "raw" / "pele_uploads" / tipo
+        if not upload_dir.exists():
+            return {"status": "ok", "arquivos": []}
+        
+        arquivos = []
+        for csv_file in upload_dir.glob("*.csv"):
+            stat = csv_file.stat()
+            arquivos.append({
+                "nome": csv_file.name,
+                "tamanho_kb": stat.st_size // 1024,
+                "data_upload": datetime.fromtimestamp(stat.st_mtime).isoformat()
+            })
+        
+        return {"status": "ok", "arquivos": arquivos, "total": len(arquivos)}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
