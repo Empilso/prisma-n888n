@@ -244,7 +244,7 @@ export const crewDefs: CrewDef[] = [
         agents: [
             {
                 id: 'pele_1',
-                name: 'Zrix-Tostão: O Coletor de Planilhas',
+                name: 'Pelé-A: Ingestor CSV Local',
                 role: 'Integrador de Fontes — Emendas BA',
                 tech: 'python',
                 color: '#ff9f0a',
@@ -261,7 +261,7 @@ export const crewDefs: CrewDef[] = [
             },
             {
                 id: 'pele_2',
-                name: 'Xylos-Bebeto: O Purificador de Plasma',
+                name: 'Pelé-B: Parser e Normalizador',
                 role: 'Motor de Purificação — Emendas BA',
                 tech: 'python',
                 color: '#ff9f0a',
@@ -277,7 +277,7 @@ export const crewDefs: CrewDef[] = [
             },
             {
                 id: 'pele_3',
-                name: 'Ronaldo Gold: O Finalizador de Emendas',
+                name: 'Pelé-C: Águia Analítica',
                 role: 'Engenheiro Relacional — Emendas BA',
                 tech: 'python',
                 color: '#ffd60a',
@@ -293,11 +293,11 @@ export const crewDefs: CrewDef[] = [
             },
             {
                 id: 'pele_4',
-                name: 'Vorx-Garrincha: O Injetor de Emendas',
+                name: 'Pelé-D: Loader Supabase',
                 role: 'Loader Supabase — Emendas BA',
                 tech: 'python',
                 color: '#ff9f0a',
-                description: 'Agente 4 do Pelé — etapa final. Lê todos os JSONs Ouro gerados pelo Ronaldo Gold e executa o Upsert definitivo na tabela emendas_estaduais_ba no Supabase. Batches de 500 registros, retry 3x, idempotente via prisma_id.',
+                description: 'Agente 4 do Pelé — etapa final. Lê todos os JSONs Ouro gerados pelo Pelé-C e executa o Upsert definitivo na tabela emendas_estaduais_ba no Supabase. Batches de 500 registros, retry 3x, idempotente via prisma_id.',
                 howItWorks: [
                     'Ingestão em Lote: Processa os arquivos Ouro em batches de 500 registros para máxima performance.',
                     'Idempotência Garantida: on_conflict=prisma_id garante que re-execuções não criem duplicatas — operação segura.',
