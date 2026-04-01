@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { crewDefs } from './crewDefs';
 
 const statusBadge = {
@@ -31,11 +31,33 @@ interface SidebarProps {
 const Sidebar = ({ selectedCrew = '1', onCrewSelect }: SidebarProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [hoveredCrew, setHoveredCrew] = useState<string | null>(null);
+    const [sidebarWidth, setSidebarWidth] = useState<number | null>(null);
+    const isResizing = useRef(false);
+
+    const startResize = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        isResizing.current = true;
+        const onMouseMove = (ev: MouseEvent) => {
+            if (!isResizing.current) return;
+            const newWidth = Math.max(60, Math.min(400, ev.clientX));
+            setSidebarWidth(newWidth);
+            setIsExpanded(newWidth > 100);
+        };
+        const onMouseUp = () => {
+            isResizing.current = false;
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+        };
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+    }, []);
 
     return (
         <aside 
-            className={`${isExpanded ? 'w-[240px]' : 'w-[70px]'} h-full flex flex-col py-6 shrink-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/[0.04] relative group/sidebar`}
+            className={`h-full flex flex-col py-6 shrink-0 z-50 transition-[background,border] duration-300 border-r border-white/[0.04] relative group/sidebar`}
             style={{
+                width: sidebarWidth ? `${sidebarWidth}px` : isExpanded ? '240px' : '70px',
+                transition: isResizing.current ? 'none' : 'width 300ms cubic-bezier(0.25,1,0.5,1)',
                 background: 'linear-gradient(180deg, rgba(8,8,12,0.95), rgba(4,4,8,0.98))',
                 backdropFilter: 'blur(20px)',
             }}
@@ -123,6 +145,13 @@ const Sidebar = ({ selectedCrew = '1', onCrewSelect }: SidebarProps) => {
                     );
                 })}
             </nav>
+
+            {/* Resize Handle */}
+            <div
+                onMouseDown={startResize}
+                className="absolute top-0 right-0 w-1 h-full cursor-col-resize z-50 hover:bg-[var(--accent-purple)]/40 transition-colors group-hover/sidebar:bg-white/10"
+                title="Arraste para redimensionar"
+            />
 
             {/* Bottom User Profile */}
             <div className={`px-4 pt-4 mt-2 border-t border-white/[0.04] transition-all overflow-hidden whitespace-nowrap flex ${isExpanded ? 'items-center gap-3 justify-start' : 'justify-center'}`}>

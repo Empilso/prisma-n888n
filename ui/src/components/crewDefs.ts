@@ -76,7 +76,7 @@ export const crewDefs: CrewDef[] = [
     // ───────────────────── CREW 00 — Zidane: Biografias Parlamentares ─────────────
     {
         id: '0',
-        name: 'Zidane: Biografias',
+        name: 'Zidane (Biografia)',
         icon: '👤',
         color: '#ffd60a',
         sourceUrl: 'https://www.al.ba.gov.br/deputados',
@@ -147,7 +147,7 @@ export const crewDefs: CrewDef[] = [
     // ───────────────────── CREW 1 — Verbas ALBA (RESTAURADA) ─────────────────────
     {
         id: '1',
-        name: 'Verbas ALBA',
+        name: 'Verbas Gabinete Alba',
         icon: '🏛️',
         color: '#bf5af2',
         sourceUrl: 'https://transparencia.alba.ba.gov.br',
@@ -236,7 +236,7 @@ export const crewDefs: CrewDef[] = [
     // ───────────────────── CREW 2 — Emendas Estaduais (BA) Pelé ─────────────────
     {
         id: '2',
-        name: '📜 Emendas Estaduais (BA) Pelé',
+        name: 'Pelé - Emendas Estaduais BA',
         icon: '📜',
         color: '#ff9f0a',
         sourceUrl: 'https://dados.ba.gov.br/dataset/emendas-parlamentares',
