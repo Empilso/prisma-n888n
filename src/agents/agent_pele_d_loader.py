@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-D v2.1 — LOADER SUPABASE (EMENDAS ESTADUAIS BA)
+🇧🇷 AGENT PELÉ-D v2.2 — LOADER SUPABASE (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 MISSÃO:  Ler o JSON Ouro gerado pelo Pelé-C e fazer upsert no Supabase
          na tabela `emendas_estaduais_ba` sem perder NENHUM registro.
@@ -17,6 +17,15 @@ ESTRATÉGIA DE UPSERT:
 COLUNAS GERADAS PELO BANCO (NÃO enviar no payload):
   - percentual_empenhado  (GENERATED ALWAYS AS valor_empenhado/valor_orcado_atual)
   - percentual_pago       (GENERATED ALWAYS AS valor_pago/valor_empenhado)
+
+MUDANÇAS v2.2:
+  - Remove 'metadados' de CAMPOS_TABELA (campo removido no Pelé-C v3.0)
+  - Adiciona campos flat do enriquecimento:
+    partido, cruzado_zidane, qualidade_score, valor_total_deputado,
+    qtd_emendas_deputado, media_emenda, ranking_valor, versao_agente,
+    enriquecido_em
+  - mapear_para_tabela() aplica defaults para todos os novos campos
+  - Schema 100% alinhado com emendas_estaduais_ba (Supabase)
 
 USO:
     python agent_pele_d_loader.py --ano 2024 --dry-run   # SEMPRE testar primeiro!
@@ -35,8 +44,8 @@ from datetime import datetime
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 
-VERSAO    = "v2.1-prisma-pele-loader-estadual"
-TABELA    = "emendas_estaduais_ba"
+VERSAO      = "v2.2-prisma-pele-loader-estadual"
+TABELA      = "emendas_estaduais_ba"
 BATCH_SIZE  = 500
 MAX_RETRIES = 3
 RETRY_WAIT  = 2
@@ -58,17 +67,21 @@ PRISMA MANIFEST - AGENT PELÉ-D {VERSAO}
 =============================================================================
 """
 
-# ── Campos aceitos pela tabela emendas_estaduais_ba ────────────────────────────────────
+# ── Campos aceitos pela tabela emendas_estaduais_ba ─────────────────────────────────────
+# IMPORTANTE: Alinhados 1:1 com o JSON Ouro produzido pelo Pelé-C v3.0.
+# NÃO incluir colunas GENERATED: percentual_empenhado, percentual_pago.
+# 'metadados' foi REMOVIDO — campos agora são flat (v2.2).
 CAMPOS_TABELA = [
-    # Chave de upsert ─ OBRIGATÓRIO no payload
+    # ── Chave de upsert — OBRIGATÓRIO ──────────────────────────────────────────
     "prisma_id",
 
-    # Relacionamentos
+    # ── FK e identidade ─────────────────────────────────────────────────────────
     "parlamentar_id",
     "parlamentar_nome",
+    "partido",                    # <- adicionado v2.2
     "ano",
 
-    # Classificação orçamentária
+    # ── Classificação orçamentária ───────────────────────────────────────────────
     "numero_emenda",
     "tipo_emenda",
     "orgao",
@@ -77,22 +90,33 @@ CAMPOS_TABELA = [
     "programa",
     "acao",
 
-    # Valores (percentual_empenhado e percentual_pago são GENERATED — não incluir)
+    # ── Valores (GENERATED excluídos: percentual_empenhado, percentual_pago) ────
     "valor_orcado_atual",
     "valor_empenhado",
     "valor_liquidado",
     "valor_pago",
     "valor_restos_pagar",
 
-    # Localização
+    # ── Localização ──────────────────────────────────────────────────────────────
     "municipio",
     "uf",
 
-    # Origem e qualidade
+    # ── Origem e qualidade ───────────────────────────────────────────────────────
     "fonte_portal",
     "url_transparencia",
     "nivel_qualidade",
-    "metadados",
+
+    # ── Campos flat de enriquecimento (adicionados v2.2 — antes em 'metadados') ─
+    "cruzado_zidane",
+    "qualidade_score",
+    "valor_total_deputado",
+    "qtd_emendas_deputado",
+    "media_emenda",
+    "ranking_valor",
+    "versao_agente",
+    "enriquecido_em",
+
+    # ── Timestamps ───────────────────────────────────────────────────────────────
     "coletado_em",
 ]
 
@@ -108,7 +132,7 @@ C_END    = "\033[0m"
 
 def banner():
     print(f"\n{C_PURPLE}\u2554{'\u2550'*69}\u2557{C_END}")
-    print(f"{C_PURPLE}\u2551{C_BOLD}{C_CYAN}  \U0001f1e7\U0001f1f7 PEL\u00c9-D v2.1 | LOADER — OURO \u2192 {TABELA}  {C_END}{C_PURPLE}\u2551{C_END}")
+    print(f"{C_PURPLE}\u2551{C_BOLD}{C_CYAN}  🇧🇷 PELÉ-D {VERSAO} | LOADER — OURO → {TABELA}  {C_END}{C_PURPLE}\u2551{C_END}")
     print(f"{C_PURPLE}\u255a{'\u2550'*69}\u255d{C_END}")
     print(f"{C_WHITE}   Tabela    : {TABELA}")
     print(f"   Esfera     : estadual | UF: BA | Fonte: siga_ba")
@@ -125,29 +149,39 @@ def print_status(msg: str, status="info"):
 
 def mapear_para_tabela(r: Dict[str, Any]) -> Dict[str, Any]:
     """Filtra apenas os campos aceitos pela tabela emendas_estaduais_ba.
-    
+
     Garante que:
     - prisma_id esteja sempre presente (chave de upsert)
-    - Colunas GENERATED não sejam enviadas
-    - Valores defaults são aplicados
+    - Colunas GENERATED não sejam enviadas (percentual_empenhado, percentual_pago)
+    - Valores defaults são aplicados para todos os campos obrigatórios
     """
     row: Dict[str, Any] = {}
     for campo in CAMPOS_TABELA:
         val = r.get(campo)
         row[campo] = val
 
-    # Defaults obrigatórios
-    row["uf"]              = row.get("uf") or "BA"
-    row["fonte_portal"]    = row.get("fonte_portal") or "siga_ba"
-    row["nivel_qualidade"] = row.get("nivel_qualidade") or "prata"
-    row["valor_orcado_atual"]  = row.get("valor_orcado_atual") or 0
-    row["valor_empenhado"]     = row.get("valor_empenhado") or 0
-    row["valor_liquidado"]     = row.get("valor_liquidado") or 0
-    row["valor_pago"]          = row.get("valor_pago") or 0
-    row["valor_restos_pagar"]  = row.get("valor_restos_pagar") or 0
-    row["coletado_em"]         = row.get("coletado_em") or datetime.utcnow().isoformat() + "Z"
+    # ── Defaults campos obrigatórios ────────────────────────────────────────────
+    row["uf"]                   = row.get("uf") or "BA"
+    row["fonte_portal"]         = row.get("fonte_portal") or "siga_ba"
+    row["nivel_qualidade"]      = row.get("nivel_qualidade") or "prata"
+    row["valor_orcado_atual"]   = row.get("valor_orcado_atual") or 0
+    row["valor_empenhado"]      = row.get("valor_empenhado") or 0
+    row["valor_liquidado"]      = row.get("valor_liquidado") or 0
+    row["valor_pago"]           = row.get("valor_pago") or 0
+    row["valor_restos_pagar"]   = row.get("valor_restos_pagar") or 0
+    row["coletado_em"]          = row.get("coletado_em") or datetime.utcnow().isoformat() + "Z"
 
-    # Validação: prisma_id é a chave de upsert — nunca pode ser None
+    # ── Defaults campos flat enriquecimento (v2.2) ──────────────────────────────
+    row["cruzado_zidane"]         = row.get("cruzado_zidane") if row.get("cruzado_zidane") is not None else False
+    row["qualidade_score"]        = row.get("qualidade_score") or 0.0
+    row["valor_total_deputado"]   = row.get("valor_total_deputado") or 0.0
+    row["qtd_emendas_deputado"]   = row.get("qtd_emendas_deputado") or 0
+    row["media_emenda"]           = row.get("media_emenda") or 0.0
+    row["ranking_valor"]          = row.get("ranking_valor") or 0
+    row["versao_agente"]          = row.get("versao_agente") or VERSAO
+    row["enriquecido_em"]         = row.get("enriquecido_em") or datetime.utcnow().isoformat() + "Z"
+
+    # ── Validação: prisma_id nunca pode ser None ────────────────────────────────
     if not row.get("prisma_id"):
         raise ValueError(f"prisma_id ausente no registro: {r.get('parlamentar_nome')} / {r.get('ano')}")
 
@@ -163,7 +197,7 @@ def upsert_batch(
     if dry_run:
         print(f"   {C_YELLOW}[DRY-RUN] Simulando upsert de {len(batch)} registros...{C_END}")
         if batch:
-            print(f"   {C_WHITE}Exemplo payload (1\u00ba registro):{C_END}")
+            print(f"   {C_WHITE}Exemplo payload (1º registro):{C_END}")
             print(json.dumps(batch[0], ensure_ascii=False, indent=4, default=str))
         return len(batch), 0
 
@@ -176,8 +210,6 @@ def upsert_batch(
                 data=payload,
                 headers={
                     **headers,
-                    # resolution=merge-duplicates + on_conflict=prisma_id
-                    # garante idempotência total: rodar 2x não duplica dados
                     "Prefer": "resolution=merge-duplicates,return=minimal",
                 },
                 params={"on_conflict": "prisma_id"},
@@ -186,18 +218,17 @@ def upsert_batch(
             if resp.status_code in (200, 201, 204):
                 return len(batch), 0
             if resp.status_code == 409:
-                # Conflito tratado pelo merge-duplicates, não deveria chegar aqui
-                print(f"   {C_YELLOW}\u26a0\ufe0f 409 inesperado (merge-dup ativo): {resp.text[:200]}{C_END}")
+                print(f"   {C_YELLOW}⚠️ 409 inesperado (merge-dup ativo): {resp.text[:200]}{C_END}")
                 return len(batch), 0
-            print(f"   {C_YELLOW}\u26a0\ufe0f Tentativa {tentativa}/{MAX_RETRIES} — HTTP {resp.status_code}: {resp.text[:300]}{C_END}")
+            print(f"   {C_YELLOW}⚠️ Tentativa {tentativa}/{MAX_RETRIES} — HTTP {resp.status_code}: {resp.text[:300]}{C_END}")
             if tentativa < MAX_RETRIES:
                 time.sleep(RETRY_WAIT * tentativa)
         except requests.exceptions.Timeout:
-            print(f"   {C_YELLOW}\u26a0\ufe0f Tentativa {tentativa}/{MAX_RETRIES} — Timeout{C_END}")
+            print(f"   {C_YELLOW}⚠️ Tentativa {tentativa}/{MAX_RETRIES} — Timeout{C_END}")
             if tentativa < MAX_RETRIES:
                 time.sleep(RETRY_WAIT * tentativa)
         except Exception as e:
-            print(f"   {C_RED}\u274c Erro inesperado: {e}{C_END}")
+            print(f"   {C_RED}❌ Erro inesperado: {e}{C_END}")
             break
 
     return 0, len(batch)
@@ -205,7 +236,7 @@ def upsert_batch(
 
 def main():
     parser = argparse.ArgumentParser(
-        description=f"Pelé-D v2.1: Loader Ouro → {TABELA} (Estadual BA)"
+        description=f"Pelé-D {VERSAO}: Loader Ouro → {TABELA} (Estadual BA)"
     )
     parser.add_argument("--ano",     type=str, required=True, help="Ano dos dados (ex: 2024)")
     parser.add_argument("--dry-run", action="store_true",      help="Simula sem inserir no Supabase")
@@ -240,7 +271,7 @@ def main():
     print_status(f"Endpoint : {endpoint}", "info")
     print_status(f"Upsert   : on_conflict=prisma_id (idempotente)", "info")
     if args.dry_run:
-        print(f"{C_YELLOW}\u26a0\ufe0f  MODO DRY-RUN — Nenhum dado será gravado no Supabase.{C_END}\n")
+        print(f"{C_YELLOW}⚠️  MODO DRY-RUN — Nenhum dado será gravado no Supabase.{C_END}\n")
 
     # ── Localizar Ouro ──────────────────────────────────────────────────────────────────────
     ouro_dir  = base_dir / "data" / "saida" / "pele" / "ouro"
@@ -264,14 +295,15 @@ def main():
     sys.stdout.flush()
 
     # ── FASE 1: Verificação ───────────────────────────────────────────────────────────────────
-    print(f"{C_CYAN}\u2501\u2501\u2501 FASE 1 — Verificação \u2501\u2501\u2501{C_END}")
+    print(f"{C_CYAN}━━━ FASE 1 — Verificação ━━━{C_END}")
     print_status(f"Tabela alvo: {TABELA} (esfera=estadual, uf=BA, fonte=siga_ba)", "info")
     print_status(f"Colunas GENERATED excluídas do payload: percentual_empenhado, percentual_pago", "warn")
+    print_status(f"Campos flat de enriquecimento (v2.2): cruzado_zidane, qualidade_score, ranking_valor, ...", "info")
 
     # ── FASE 2: Mapeamento ─────────────────────────────────────────────────────────────────────
-    print(f"\n{C_CYAN}\u2501\u2501\u2501 FASE 2 — Mapeamento Ouro → {TABELA} \u2501\u2501\u2501{C_END}")
-    rows   = []
-    orfaos = []
+    print(f"\n{C_CYAN}━━━ FASE 2 — Mapeamento Ouro → {TABELA} ━━━{C_END}")
+    rows       = []
+    orfaos     = []
     erros_mapa = []
 
     for r in records:
@@ -289,19 +321,19 @@ def main():
             print_status(f"Registro ignorado: {e}", "warn")
 
     print_status(
-        f"Registros mapeados: {len(rows)} | "
-        f"\u00d3rfãos (sem parlamentar_id): {len(orfaos)} | "
+        f"Mapeados: {len(rows)} | "
+        f"Órfãos (sem parlamentar_id): {len(orfaos)} | "
         f"Ignorados (sem prisma_id): {len(erros_mapa)}",
         "info"
     )
 
     # ── FASE 3: Upload em batches (upsert idempotente) ────────────────────────────────────
-    print(f"\n{C_CYAN}\u2501\u2501\u2501 FASE 3 — Upsert Supabase ({TABELA}) \u2501\u2501\u2501{C_END}")
+    print(f"\n{C_CYAN}━━━ FASE 3 — Upsert Supabase ({TABELA}) ━━━{C_END}")
     inseridos = 0
     erros     = 0
 
     for i in range(0, len(rows), args.batch):
-        batch = rows[i : i + args.batch]
+        batch  = rows[i : i + args.batch]
         n_ok, n_err = upsert_batch(batch, endpoint, headers, args.dry_run)
         inseridos += n_ok
         erros     += n_err
@@ -309,14 +341,14 @@ def main():
         if not args.dry_run:
             print(
                 f"   {C_PURPLE}[{progresso}/{len(rows)}]{C_END} "
-                f"{C_GREEN}\u2705 {inseridos}{C_END} | "
-                f"{C_RED}\u274c {erros}{C_END} | "
-                f"{C_YELLOW}\u26a0\ufe0f \u00f3rfãos: {len(orfaos)}{C_END}"
+                f"{C_GREEN}✅ {inseridos}{C_END} | "
+                f"{C_RED}❌ {erros}{C_END} | "
+                f"{C_YELLOW}⚠️ órfãos: {len(orfaos)}{C_END}"
             )
         sys.stdout.flush()
 
     # ── FASE 4: Relatório ────────────────────────────────────────────────────────────────────
-    print(f"\n{C_CYAN}\u2501\u2501\u2501 FASE 4 — Relatório Final \u2501\u2501\u2501{C_END}")
+    print(f"\n{C_CYAN}━━━ FASE 4 — Relatório Final ━━━{C_END}")
     if orfaos:
         orfaos_dir  = base_dir / "data" / "saida" / "pele" / "orphans"
         orfaos_dir.mkdir(parents=True, exist_ok=True)
@@ -326,20 +358,20 @@ def main():
             json.dump(orfaos, f, ensure_ascii=False, indent=2)
         print_status(f"{len(orfaos)} órfãos salvos em: {orfaos_file.name}", "warn")
 
-    print(f"\n{C_PURPLE}{'\u2501'*74}{C_END}")
-    print(f"{C_GREEN}\u2705 PEL\u00c9-D v2.1 FINALIZADO!{C_END}")
+    print(f"\n{C_PURPLE}{'━'*74}{C_END}")
+    print(f"{C_GREEN}✅ PELÉ-D {VERSAO} FINALIZADO!{C_END}")
     print(f"{C_WHITE}   Ano       : {args.ano}")
     print(f"   Tabela    : {TABELA}")
     print(f"   Total     : {total}")
     print(f"   Inseridos : {inseridos}")
     print(f"   Erros     : {erros}")
-    print(f"   \u00d3rfãos    : {len(orfaos)} (inseridos sem vínculo parlamentar_id)")
+    print(f"   Órfãos    : {len(orfaos)} (inseridos sem vínculo parlamentar_id)")
     print(f"   Endpoint  : {endpoint}")
     print(f"   Upsert    : on_conflict=prisma_id (idempotente){C_END}")
     if args.dry_run:
         print(f"   {C_YELLOW}[DRY-RUN] Nada gravado no Supabase.{C_END}")
-    print(f"{C_PURPLE}{'\u2501'*74}{C_END}\n")
-    print("[AGENT DONE] \u2705 Pelé-D v2.1 encerra com sucesso!")
+    print(f"{C_PURPLE}{'━'*74}{C_END}\n")
+    print("[AGENT DONE] ✅ Pelé-D encerra com sucesso!")
     sys.stdout.flush()
 
 
