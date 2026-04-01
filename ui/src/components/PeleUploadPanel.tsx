@@ -12,6 +12,19 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState('');
 
+    const tiposInfo = {
+        parlamentares: {
+            nome: "Emendas Parlamentares (Estaduais BA)",
+            arquivos: 5,
+            descricao: "Deputados estaduais — orçamento BA"
+        },
+        transferencias: {
+            nome: "Transferências Especiais (Emendas Pix)",
+            arquivos: 5,
+            descricao: "Emendas federais repassadas ao estado"
+        }
+    };
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
@@ -87,8 +100,14 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno }) => {
                         className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white/70 text-[11px] focus:outline-none focus:border-blue-400/30"
                     >
                         <option value="parlamentares">Emendas Parlamentares (5 arquivos)</option>
-                        <option value="transferencias">Transferências Especiais (1 arquivo)</option>
+                        <option value="transferencias">Transferências Especiais (5 arquivos)</option>
                     </select>
+
+                    <div className="p-2 rounded-lg bg-blue-500/5 border border-blue-400/20 text-[9px] text-blue-300">
+                        📋 {tiposInfo[tipoEmenda as keyof typeof tiposInfo].descricao}
+                        <br />
+                        ⚠️ Selecione os {tiposInfo[tipoEmenda as keyof typeof tiposInfo].arquivos} arquivos CSV deste tipo
+                    </div>
 
                     <div className="relative">
                         <input

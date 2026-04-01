@@ -30,48 +30,78 @@ VERSAO = "v1.1-prisma-pele-a-estadual"
 
 TIPOS_EMENDAS = {
     "parlamentares": {
-        "nome": "Emendas Parlamentares",
+        "nome": "Emendas Parlamentares (Estaduais BA)",
+        "origem": "Deputados estaduais — orçamento BA",
         "url_base": "https://dados.ba.gov.br/dataset/emendas-parlamentares",
         "arquivos": [
-            "VW_PAINEL_EMENDAS_PARLAMENTARES_DESPESAS.csv",
-            "VW_PAINEL_EMENDAS_PARLAMENTARES_PAGAMENTOS.csv",
-            "VW_PAINEL_EMENDAS_PARLAMENTARES_LIQUIDACAO_ORCAMENTO.csv",
-            "VW_PAINEL_EMENDAS_PARLAMENTARES_CENTRALIZACAO_DESCENTRALIZACAO.csv",
-            "VW_PROCESSO_SEI.csv"
-        ]
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_DESPESAS.csv",           # Principal
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_PAGAMENTOS.csv",         # Pagamentos detalhados
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_LIQUIDACAO_ORCAMENTO.csv",  # Liquidações
+            "VW_PAINEL_EMENDAS_PARLAMENTARES_CENTRALIZACAO_DESCENTRALIZACAO.csv",  # Ligação
+            "VW_PROCESSO_SEI.csv"                                      # Processos SEI
+        ],
+        "arquivo_principal": "VW_PAINEL_EMENDAS_PARLAMENTARES_DESPESAS.csv",
+        "tem_processo_sei": True,
+        "tem_cnpj_credor": False,
+        "tem_emenda_federal": False,
+        "tem_instrumento_captacao": False
     },
     "transferencias": {
-        "nome": "Transferências Especiais",
+        "nome": "Transferências Especiais (Emendas Pix/Federais)",
+        "origem": "Emendas federais repassadas ao estado BA",
         "url_base": "https://dados.ba.gov.br/dataset/transferencias-especiais",
         "arquivos": [
-            "VW_TRANSFERENCIAS_ESPECIAIS.csv"
-        ]
+            "VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv",           # Principal
+            "VW_PAINEL_TRANSFERENCIA_ESPECIAL_PAGAMENTO.csv",         # Pagamentos com CNPJ
+            "VW_PAINEL_TRANSFERENCIA_ESPECIAL_LIQUIDACAO_ORCAMENTO.csv",  # Liquidações
+            "VW_PAINEL_TRANSFERENCIA_ESPECIAL_CENTRALIZACAO_DESCENTRALIZACAO.csv",  # Ligação
+            "VW_PAINEL_TRANSFERENCIA_ESPECIAL_INSTRUMENTO_CAPTACAO.csv"  # Convênios
+        ],
+        "arquivo_principal": "VW_PAINEL_TRANSFERENCIA_ESPECIAL_DESPESA.csv",
+        "tem_processo_sei": False,
+        "tem_cnpj_credor": True,
+        "tem_emenda_federal": True,
+        "tem_instrumento_captacao": True
     }
 }
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Ingesta de Emendas Estaduais BA via upload manual ou download automático do portal dados.ba.gov.br",
-        "especialidade": "Ingestão Híbrida (Manual + Automática)",
-        "protocolo_tecnico": "csv.DictReader + requests + FastAPI Upload",
+        "missao": "Ingesta de Emendas Estaduais BA (2 tipos: Parlamentares + Transferências Especiais) via upload manual ou download automático",
+        "especialidade": "Ingestão Híbrida Multi-Arquivo (5 CSVs por tipo)",
+        "protocolo_tecnico": "csv.DictReader + requests + FastAPI Upload + Merge Multi-Tabelas",
         "camada_dados": "Bronze (Raw Validado)",
         "seguranca": "Upload local + Download HTTPS com timeout 30s"
     },
     "diretrizes": [
-        "1. Modo Manual: Aceita upload de múltiplos CSVs via interface web ou CLI --arquivo/--pasta",
-        "2. Modo Automático: Baixa CSVs diretamente do portal dados.ba.gov.br via --download",
-        "3. Suporta 2 tipos: 'parlamentares' (5 arquivos) e 'transferencias' (1 arquivo)",
-        "4. Valida colunas obrigatórias e detecta encoding automaticamente",
-        "5. Gera Bronze JSON unificado: pele/bronze/pele_estadual_{ano}_bronze.json",
-        "6. Checkpoint por tipo e ano para evitar reprocessamento"
+        "1. Modo Manual: Aceita upload de múltiplos CSVs via interface web ou CLI --pasta",
+        "2. Modo Automático: Baixa CSVs diretamente do portal dados.ba.gov.br (em desenvolvimento)",
+        "3. Tipo 1 - Parlamentares: 5 arquivos (DESPESAS, PAGAMENTOS, LIQUIDACAO, CENTRALIZACAO, PROCESSO_SEI)",
+        "4. Tipo 2 - Transferências: 5 arquivos (DESPESA, PAGAMENTO, LIQUIDACAO, CENTRALIZACAO, INSTRUMENTO_CAPTACAO)",
+        "5. Processa arquivo principal (DESPESAS/DESPESA) e cruza com tabelas auxiliares",
+        "6. Gera Bronze JSON unificado: pele/bronze/pele_{tipo}_{ano}_bronze.json"
     ],
     "apuracao": {
         "esfera": "estadual",
         "fonte_portal": "siga_ba",
         "uf": "BA",
-        "tipos_suportados": ["parlamentares", "transferencias"],
-        "entrada_esperada": "CSV manual OU download automático",
-        "saida_esperada": "data/saida/pele/bronze/pele_estadual_{ano}_bronze.json"
+        "tipos_suportados": {
+            "parlamentares": {
+                "arquivos": 5,
+                "origem": "Deputados estaduais BA",
+                "tem_processo_sei": True,
+                "tem_cnpj_credor": False
+            },
+            "transferencias": {
+                "arquivos": 5,
+                "origem": "Emendas federais (Pix) repassadas ao estado",
+                "tem_cnpj_credor": True,
+                "tem_emenda_federal": True,
+                "tem_instrumento_captacao": True
+            }
+        },
+        "entrada_esperada": "5 CSVs por tipo (upload manual ou pasta local)",
+        "saida_esperada": "data/saida/pele/bronze/pele_{tipo}_{ano}_bronze.json"
     }
 }
 
