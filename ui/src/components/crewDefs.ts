@@ -233,10 +233,10 @@ export const crewDefs: CrewDef[] = [
         ],
     },
 
-    // ───────────────────── CREW 2 — Emendas BA ───────────────────────────────────
+    // ───────────────────── CREW 2 — Emendas Estaduais (BA) Pelé ─────────────────
     {
         id: '2',
-        name: 'Emendas Estaduais (BA)',
+        name: '📜 Emendas Estaduais (BA) Pelé',
         icon: '📜',
         color: '#ff9f0a',
         sourceUrl: 'https://dados.ba.gov.br/dataset/emendas-parlamentares',
