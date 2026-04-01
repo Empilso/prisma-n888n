@@ -127,13 +127,6 @@ const PeleUploadPanel: React.FC<PeleUploadPanelProps> = ({ selectedAno, tipoFixo
                             <span>Selecione os <strong>{tiposInfo[tipoAtual as keyof typeof tiposInfo].arquivos} arquivos CSV</strong> deste tipo</span>
                         </div>
                     </div>
-                            {tiposInfo[tipoEmenda as keyof typeof tiposInfo].descricao}
-                        </div>
-                        <div className="flex items-center gap-2 text-[9px] text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-400/20">
-                            <span>⚠️</span>
-                            <span>Selecione os <strong>{tiposInfo[tipoEmenda as keyof typeof tiposInfo].arquivos} arquivos CSV</strong> deste tipo</span>
-                        </div>
-                    </div>
 
                     <div className="relative">
                         <input
