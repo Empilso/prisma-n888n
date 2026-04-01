@@ -490,11 +490,16 @@ async def get_agent_manifest(agent_id: str):
             "zidane_b": "agent_zidane_b_scraper.py",
             "zidane_c": "agent_zidane_c_brain.py",
             "zidane_d": "agent_zidane_d_loader.py",
+            "zidane_e": "agent_zidane_e_verbas_loader.py",
+            "pele_1": "agent_pele_a_ingestor.py",
+            "pele_2": "agent_pele_b_parser.py",
+            "pele_3": "agent_pele_c_aguia.py",
+            "pele_4": "agent_pele_d_loader.py",
             "4": "agent_4_prisma_db.py",
             "dunga": "agent_4_prisma_db.py",
             "5": "agent_5_pdf_forensic.py",
             "6": "agent_6_merge.py",
-            "ronaldo": "agent_6_merge.py"
+            "ronaldo": "agent_ronaldo_gold.py"
         }
         
         filename = mapping.get(agent_id.lower())
