@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 """
-🇧🇷 AGENT PELÉ-B v2.0 — PARSER & NORMALIZADOR UNIFICADO
+🇧🇷 AGENT PELÉ-B v2.1 — PARSER & NORMALIZADOR (EMENDAS ESTADUAIS BA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MISSÃO:  Ler o JSON Bronze gerado pelo Pelé-A1 (estadual) OU Pelé-A2 (federal),
-         normalizar campos comuns, tratar NULLs dos exclusivos de cada origem,
-         padronizar partidos, gerar prisma_id e produzir JSON Prata unificado.
+MISSÃO:  Ler o JSON Bronze gerado pelo Pelé-A, normalizar campos,
+         padronizar partidos, gerar prisma_id e produzir JSON Prata
+         pronto para o Pelé-C enriquecer.
 
-ENTRADA: data/saida/pele/bronze/pele_{origem}_{ano}_bronze.json
-OUTPUT:  data/saida/pele/prata/pele_{origem}_{ano}_prata.json
+ENTRADA: data/saida/pele/bronze/pele_estadual_{ano}_bronze.json
+OUTPUT:  data/saida/pele/prata/pele_estadual_{ano}_prata.json
 
-CHAVE DE SEPARAÇÃO: campo 'origem' = 'estadual' | 'federal'
-SUFIXO num_codigo:  *.5 = estadual | *.6 = federal
+ORIGEM:  SEMPRE estadual (SIGA-BA / dados.ba.gov.br)
+TABELA DESTINO FINAL: alba_emendas_master
 
 USO:
-    python agent_pele_b_parser.py --origem estadual --ano 2024
-    python agent_pele_b_parser.py --origem federal  --ano 2024
-    python agent_pele_b_parser.py --origem estadual --ano 2024 --dry-run
+    python agent_pele_b_parser.py --ano 2024
+    python agent_pele_b_parser.py --ano 2024 --dry-run
 """
 
 import os
@@ -29,26 +28,28 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
-VERSAO = "v2.0-prisma-pele-b-parser-unificado"
+VERSAO = "v2.1-prisma-pele-b-estadual"
 
 __PRISMA_MANIFEST__ = {
     "visao_geral": {
-        "missao": "Normalização unificada de Bronze → Prata para Emendas Estaduais e Transferências Federais BA.",
-        "especialidade": "Parser multi-origem: estadual (*.5) e federal (*.6)",
+        "missao": "Normalização Bronze → Prata para Emendas Estaduais BA (SIGA-BA).",
+        "especialidade": "Parser estadual BA — tabela destino: alba_emendas_master",
         "protocolo_tecnico": "Pure Python (unicodedata + re + hashlib)",
         "camada_dados": "Prata (Normalizado)",
+        "esfera": "estadual",
+        "uf": "BA",
+        "fonte_portal": "siga_ba",
+        "tabela_supabase": "alba_emendas_master",
         "seguranca": "Sem acesso à internet. Processa apenas dados locais."
     },
-    "origens_suportadas": ["estadual", "federal"],
     "diretrizes": [
-        "1. Lê o JSON Bronze da origem especificada.",
+        "1. Lê o JSON Bronze estadual (SIGA-BA).",
         "2. Normaliza nome do deputado (title case).",
         "3. Padroniza sigla do partido (uppercase).",
-        "4. Normaliza valores monetários para float (já vêm normalizados do A1/A2).",
-        "5. Trata campos exclusivos: NULL p/ campos que não existem na origem.",
-        "6. Calcula taxa_execucao se não calculada.",
-        "7. Detecta qualidade do registro (ouro/prata/bronze).",
-        "8. Salva JSON Prata pronto para o Pelé-C."
+        "4. Normaliza valores monetários para float.",
+        "5. Gera prisma_id MD5 único por registro.",
+        "6. Detecta qualidade do registro (ouro/prata/bronze).",
+        "7. Salva JSON Prata pronto para o Pelé-C."
     ]
 }
 
@@ -120,22 +121,25 @@ def normalizar_partido(partido) -> Optional[str]:
     return str(partido).strip().upper()
 
 
+def gerar_prisma_id(ano: str, parlamentar_nome: str, numero_emenda: str, orgao: str) -> str:
+    """Gera prisma_id MD5 único para emendas estaduais BA."""
+    chave = f"siga_ba:{ano}:{normalizar_texto(parlamentar_nome) or ''}:{numero_emenda or ''}:{orgao or ''}"
+    return hashlib.md5(chave.encode("utf-8")).hexdigest()
+
+
 def calcular_qualidade(record: Dict) -> tuple:
     """Retorna (nivel_qualidade, score) de 0.0 a 1.0."""
     pontos = 0
     total  = 10
-    if record.get("prisma_id"):                 pontos += 1
-    if record.get("deputado_nome") or record.get("deputado_cod"): pontos += 1
-    if record.get("num_codigo"):                pontos += 1
-    if record.get("ano_exercicio"):             pontos += 1
-    if record.get("valor_empenhado", 0) > 0:    pontos += 1
-    if record.get("valor_pago", 0) > 0:         pontos += 1
-    if record.get("orgao"):                     pontos += 1
-    if record.get("acao_programa"):             pontos += 1
-    if record.get("pagamentos"):                pontos += 1
-    # Bônus por campos exclusivos preenchidos
-    if record.get("origem") == "estadual" and record.get("tem_processo_sei"): pontos += 1
-    if record.get("origem") == "federal"  and record.get("ministerio_origem"): pontos += 1
+    if record.get("prisma_id"):                         pontos += 2
+    if record.get("parlamentar_nome"):                  pontos += 1
+    if record.get("numero_emenda"):                     pontos += 1
+    if record.get("ano"):                               pontos += 1
+    if float(record.get("valor_empenhado") or 0) > 0:  pontos += 1
+    if float(record.get("valor_pago") or 0) > 0:       pontos += 1
+    if record.get("orgao"):                             pontos += 1
+    if record.get("acao"):                              pontos += 1
+    if record.get("municipio"):                         pontos += 1
     score = round(min(pontos, total) / total, 2)
     nivel = "ouro" if score >= 0.85 else ("prata" if score >= 0.60 else "bronze")
     return nivel, score
@@ -143,27 +147,21 @@ def calcular_qualidade(record: Dict) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Pelé-B v2.0: Parser/Normalizador Unificado (estadual + federal)"
+        description="Pelé-B v2.1: Parser/Normalizador Emendas Estaduais BA"
     )
-    parser.add_argument("--origem",  type=str, required=True,
-                        choices=["estadual", "federal"],
-                        help="Origem dos dados: estadual | federal")
-    parser.add_argument("--ano",     type=str, required=True,
-                        help="Ano dos dados (ex: 2024)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Processa sem salvar")
+    parser.add_argument("--ano",     type=str, required=True, help="Ano dos dados (ex: 2024)")
+    parser.add_argument("--dry-run", action="store_true",     help="Processa sem salvar")
     args = parser.parse_args()
 
-    print_header(f"PELÉ-B {VERSAO} | PARSER UNIFICADO — {args.origem.upper()} {args.ano}")
+    print_header(f"PELÉ-B {VERSAO} | PARSER ESTADUAL BA — {args.ano}")
 
     base_dir    = Path(__file__).resolve().parent.parent.parent
     bronze_dir  = base_dir / "data" / "saida" / "pele" / "bronze"
-    bronze_file = bronze_dir / f"pele_{args.origem}_{args.ano}_bronze.json"
+    bronze_file = bronze_dir / f"pele_estadual_{args.ano}_bronze.json"
 
     if not bronze_file.exists():
         print_status(f"Bronze não encontrado: {bronze_file.name}", "error")
-        agente = "agent_pele_a1_estadual.py" if args.origem == "estadual" else "agent_pele_a2_federal.py"
-        print_status(f"Execute primeiro: python {agente} --pasta ./... --ano {args.ano}", "warn")
+        print_status(f"Execute primeiro: python agent_pele_a_ingestor.py --pasta ./... --ano {args.ano}", "warn")
         sys.exit(1)
 
     print_status(f"Lendo Bronze: {bronze_file.name}", "process")
@@ -172,101 +170,73 @@ def main():
 
     records_bronze = bronze_data.get("records", [])
     total = len(records_bronze)
-    print_status(f"Registros Bronze ({args.origem}): {total}", "info")
+    print_status(f"Registros Bronze (estadual BA): {total}", "info")
 
     prata: List[Dict[str, Any]] = []
-    stats = {"ouro": 0, "prata": 0, "bronze": 0, "sem_valor": 0,
-             "com_sei": 0, "com_ministerio": 0}
+    stats = {"ouro": 0, "prata": 0, "bronze": 0, "sem_valor": 0}
 
     for r in records_bronze:
-        deputado_nome = normalizar_texto(r.get("deputado_nome")) or ""
-        deputado_cod  = str(r.get("deputado_cod") or "").strip()
-        partido       = normalizar_partido(r.get("partido"))
-        origem        = r.get("origem", args.origem)
+        parlamentar_nome = normalizar_texto(r.get("parlamentar_nome") or r.get("deputado_nome")) or ""
+        partido          = normalizar_partido(r.get("partido"))
+        ano_str          = str(r.get("ano") or args.ano).strip()
+        numero_emenda    = str(r.get("numero_emenda") or r.get("num_codigo") or "").strip()
+        orgao            = str(r.get("orgao") or "").strip()
 
-        val_empenhado = float(r.get("valor_empenhado") or 0)
-        val_pago      = float(r.get("valor_pago") or 0)
-        taxa_exec     = float(r.get("taxa_execucao") or 0)
-        if taxa_exec == 0 and val_empenhado > 0:
-            taxa_exec = round(val_pago / val_empenhado, 4)
+        val_orcado_inicial = float(r.get("valor_orcado_inicial") or 0)
+        val_orcado_atual   = float(r.get("valor_orcado_atual") or r.get("valor_orcado_inicial") or 0)
+        val_empenhado      = float(r.get("valor_empenhado") or 0)
+        val_liquidado      = float(r.get("valor_liquidado") or 0)
+        val_pago           = float(r.get("valor_pago") or 0)
+        val_restos         = float(r.get("valor_restos_pagar") or 0)
 
         if val_empenhado == 0:
             stats["sem_valor"] += 1
 
-        # Campos exclusivos por origem
-        ministerio   = r.get("ministerio_origem")    # None se estadual
-        num_emenda_f = r.get("num_emenda_federal")   # None se estadual
-        ano_emenda_f = r.get("ano_emenda_federal")   # None se estadual
-        processos_sei = r.get("processos_sei", [])   # [] se federal
-        tem_sei       = r.get("tem_processo_sei", False)
-
-        if ministerio:   stats["com_ministerio"] += 1
-        if tem_sei:       stats["com_sei"] += 1
+        # Gera ou reutiliza prisma_id
+        prisma_id = r.get("prisma_id") or gerar_prisma_id(ano_str, parlamentar_nome, numero_emenda, orgao)
 
         record_prata: Dict[str, Any] = {
-            # ── Identidade ───────────────────────────────────────────────
-            "prisma_id":             r.get("prisma_id"),
-            "origem":                origem,
-            "sufixo_origem":         r.get("sufixo_origem"),
-            "esfera":                r.get("esfera"),
-            "uf":                    "BA",
-            "fonte_portal":          r.get("fonte_portal"),
-            "ano_exercicio":         str(r.get("ano_exercicio") or args.ano).strip(),
-
-            # ── Código ───────────────────────────────────────────────────
-            "num_codigo":            r.get("num_codigo"),
+            # ── Identidade ────────────────────────────────────────────────
+            "prisma_id":          prisma_id,
+            "esfera":             "estadual",
+            "uf":                 "BA",
+            "fonte_portal":       "siga_ba",
+            "ano":                int(ano_str) if ano_str.isdigit() else None,
 
             # ── Deputado normalizado ──────────────────────────────────────
-            "deputado_cod":          deputado_cod,
-            "deputado_nome":         deputado_nome,
-            "deputado_nome_raw":     r.get("deputado_nome"),
-            "partido":               partido,
-            # Será preenchido pelo Pelé-C via cruzamento Zidane:
-            "parlamentar_id":        None,
-            "url_perfil":            None,
+            "parlamentar_nome":   parlamentar_nome,
+            "parlamentar_nome_raw": r.get("parlamentar_nome") or r.get("deputado_nome"),
+            "partido":            partido,
+            # Preenchido pelo Pelé-C via cruzamento Zidane:
+            "parlamentar_id":     None,
 
-            # ── Campos exclusivos por origem ──────────────────────────────
-            # Federal: ministerio, num_emenda, ano_emenda | NULL se estadual
-            "ministerio_origem":     ministerio,
-            "num_emenda_federal":    num_emenda_f,
-            "ano_emenda_federal":    ano_emenda_f,
-            # Estadual: processos SEI | [] se federal
-            "processos_sei":         processos_sei,
-            "tem_processo_sei":      tem_sei,
+            # ── Código / Emenda ───────────────────────────────────────────
+            "numero_emenda":      numero_emenda or None,
+            "tipo_emenda":        r.get("tipo_emenda"),
 
-            # ── Órgão / Ação ──────────────────────────────────────────────
-            "orgao":                 r.get("orgao"),
-            "sgl_orgao":             r.get("sgl_orgao"),
-            "unidade_orcamentaria": r.get("unidade_orcamentaria"),
-            "nom_res_unidade":       r.get("nom_res_unidade"),
-            "acao_programa":         r.get("acao_programa"),
-            "cod_subfonte_recurso":  r.get("cod_subfonte_recurso"),
-            "orgao_executor":        r.get("orgao_executor"),
+            # ── Classificação orçamentária ────────────────────────────────
+            "orgao":              orgao or None,
+            "funcao":             r.get("funcao"),
+            "subfuncao":          r.get("subfuncao"),
+            "programa":           r.get("programa"),
+            "acao":               r.get("acao"),
+
+            # ── Localização ───────────────────────────────────────────────
+            "municipio":          r.get("municipio"),
 
             # ── Valores ──────────────────────────────────────────────────
-            "valor_orcado_inicial":  float(r.get("valor_orcado_inicial") or 0),
-            "valor_orcado_atual":    float(r.get("valor_orcado_atual") or 0),
-            "valor_empenhado":       val_empenhado,
-            "valor_liquidado":       float(r.get("valor_liquidado") or 0),
-            "valor_pago":            val_pago,
-            "taxa_execucao":         taxa_exec,
-
-            # ── Instrumento de Captação (exclusivo federal) ───────────────
-            "instrumento_captacao":  r.get("instrumento_captacao"),  # None se estadual
-
-            # ── Pagamentos e liquidações ──────────────────────────────────
-            "pagamentos":            r.get("pagamentos", []),
-            "liquidacoes":           r.get("liquidacoes", []),
-            "qtd_pagamentos":        len(r.get("pagamentos", [])),
-            "qtd_liquidacoes":       len(r.get("liquidacoes", [])),
-
-            # ── Qualidade ─────────────────────────────────────────────────
-            "nivel_qualidade":       None,
-            "qualidade_score":       None,
+            "valor_orcado_atual":  val_orcado_atual,
+            "valor_empenhado":     val_empenhado,
+            "valor_liquidado":     val_liquidado,
+            "valor_pago":          val_pago,
+            "valor_restos_pagar":  val_restos,
 
             # ── Metadados ─────────────────────────────────────────────────
-            "processado_em":         datetime.utcnow().isoformat() + "Z",
-            "versao_agente":         VERSAO,
+            "url_transparencia":   r.get("url_transparencia"),
+            "nivel_qualidade":     None,
+            "qualidade_score":     None,
+            "processado_em":       datetime.utcnow().isoformat() + "Z",
+            "versao_agente":       VERSAO,
         }
 
         nivel, score = calcular_qualidade(record_prata)
@@ -276,36 +246,31 @@ def main():
 
         prata.append(record_prata)
 
-    print(f"\n{C_WHITE}📊 Resultado da normalização ({args.origem}):{C_END}")
+    print(f"\n{C_WHITE}📊 Resultado da normalização (estadual BA):{C_END}")
     print(f"   🟡 Total Bronze       : {total}")
     print(f"   🥇 Nível Ouro         : {stats['ouro']}")
     print(f"   🥈 Nível Prata        : {stats['prata']}")
     print(f"   🥉 Nível Bronze       : {stats['bronze']}")
     print(f"   ⚠️  Sem valor empenh.  : {stats['sem_valor']}")
-    if args.origem == "estadual":
-        print(f"   📋 Com processo SEI   : {stats['com_sei']}")
-    if args.origem == "federal":
-        print(f"   🏛️  Com ministério     : {stats['com_ministerio']}")
 
     if args.dry_run:
         print(f"\n{C_YELLOW}⚠️  DRY-RUN: Nenhum arquivo salvo.{C_END}")
         if prata:
             print_status("Amostra do 1º registro Prata:", "info")
-            sample = {k: v for k, v in prata[0].items()
-                      if k not in ["pagamentos", "liquidacoes"]}
-            sample["pagamentos_count"] = prata[0]["qtd_pagamentos"]
-            print(json.dumps(sample, ensure_ascii=False, indent=2))
+            print(json.dumps(prata[0], ensure_ascii=False, indent=2))
         sys.exit(0)
 
     prata_dir  = base_dir / "data" / "saida" / "pele" / "prata"
     prata_dir.mkdir(parents=True, exist_ok=True)
-    out_file   = prata_dir / f"pele_{args.origem}_{args.ano}_prata.json"
+    out_file   = prata_dir / f"pele_estadual_{args.ano}_prata.json"
 
     output = {
         "total":        len(prata),
-        "origem":       args.origem,
-        "esfera":       bronze_data.get("esfera"),
+        "origem":       "estadual",
+        "esfera":       "estadual",
         "uf":           "BA",
+        "fonte_portal": "siga_ba",
+        "tabela_destino": "alba_emendas_master",
         "ano":          args.ano,
         "gerado_em":    datetime.utcnow().isoformat() + "Z",
         "versao":       VERSAO,
@@ -316,9 +281,9 @@ def main():
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print(f"\n{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}")
-    print_status(f"PELÉ-B CONCLUÍDO! {C_BOLD}{len(prata)}{C_END} registros Prata ({args.origem}) gerados.", "success")
+    print_status(f"PELÉ-B CONCLUÍDO! {C_BOLD}{len(prata)}{C_END} registros Prata (estadual BA) gerados.", "success")
     print_status(f"Arquivo: {C_BOLD}{out_file.name}{C_END}", "info")
-    print_status(f"Próximo passo: python agent_pele_c_aguia.py --origem {args.origem} --ano {args.ano}", "info")
+    print_status(f"Próximo passo: python agent_pele_c_aguia.py --ano {args.ano}", "info")
     print(f"{C_PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C_END}\n")
 
 
