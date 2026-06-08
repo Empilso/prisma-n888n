@@ -1,0 +1,84 @@
+{
+  "crew": "alesp_verbas_gabinete",
+  "descricao": "Despesas de Gabinete dos Deputados Estaduais de São Paulo (ALESP)",
+  "status": "implementada",
+  "versao": "v1.0",
+  "tabela_destino": "alesp_verbas_gabinete",
+  "registros_esperados": 614000,
+  "periodo": {
+    "inicio": "2002",
+    "fim": "atual",
+    "observacoes": "A ALESP publica o histórico completo desde 2002 em um único XML atualizado continuamente. São ~6 legislaturas com ~94 deputados cada."
+  },
+  "fonte": {
+    "portal": "ALESP — Assembleia Legislativa do Estado de São Paulo",
+    "url": "https://www.al.sp.gov.br/repositorioDados/deputados/despesas_gabinetes.xml",
+    "formato": "XML único, ~14 MB, atualizado continuamente",
+    "campos_origem": ["Ano", "Mes", "Matricula", "Deputado", "Tipo", "Fornecedor", "CNPJ", "Valor"]
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Baixa o XML da ALESP e salva como Bronze JSON",
+      "entrada": "URL pública ALESP",
+      "saida": "data/alesp_verbas_gabinete/bronze/alesp_verbas_bronze.json",
+      "args": ["--force (re-baixa mesmo se já existe)"]
+    },
+    {
+      "id": "B",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Normaliza Bronze → Prata. Gera id determinístico SHA256(matricula|competencia|cnpj|valor). Faz fuzzy match de nome contra politicos(uf=SP, cargo=DEPUTADO ESTADUAL) para vincular politico_id.",
+      "entrada": "data/alesp_verbas_gabinete/bronze/alesp_verbas_bronze.json",
+      "saida": "data/alesp_verbas_gabinete/prata/alesp_verbas_prata.json",
+      "rejeicoes": ["valor ausente ou <= 0", "matricula ausente", "ano/mes inválido"]
+    },
+    {
+      "id": "C",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Carrega Prata → tabela alesp_verbas_gabinete. ON CONFLICT (id) DO NOTHING — idempotente.",
+      "entrada": "data/alesp_verbas_gabinete/prata/alesp_verbas_prata.json",
+      "saida": "tabela alesp_verbas_gabinete + etl_log",
+      "args": ["--dry-run (valida sem inserir)"]
+    },
+    {
+      "id": "V",
+      "arquivo": "agent_verify.py",
+      "descricao": "Quality Gate com 8 verificações enterprise. Usa --strict para CI (exit 1 se falhar).",
+      "checks": [
+        "[1] Volume >= 50.000 registros (crítico)",
+        "[2] Período: ano_min <= 2016, ano_max >= 2024 (crítico)",
+        "[3] Deputados únicos: 80–600 (crítico, histórico multi-legislatura desde 2002)",
+        "[4] Valor total R$ 50M–R$ 2B (crítico)",
+        "[5] Zero valores <= 0 (crítico)",
+        "[6] Cobertura politico_id >= 60% (aviso)",
+        "[7] Zero duplicatas de id (crítico)",
+        "[8] Categorias distintas >= 5 (aviso)"
+      ]
+    }
+  ],
+  "execucao": {
+    "primeira_vez": [
+      "python agent_a_coletor.py",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py"
+    ],
+    "atualizacao_mensal": [
+      "python agent_a_coletor.py --force",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py"
+    ]
+  },
+  "schema_tabela": {
+    "pk": "id (SHA256[:32])",
+    "campos": ["id", "politico_id", "matricula", "nome_deputado", "cnpj_fornecedor", "nome_fornecedor", "tipo_despesa", "valor", "mes", "ano", "competencia", "status_lneg"]
+  },
+  "notas": [
+    "ALESP usa Matricula (código interno) como identificador, não CPF. Linkagem ao politico_id via fuzzy match de nome (rapidfuzz, threshold 80%).",
+    "Cobertura politico_id esperada: ~72% (deputies com nome_urna matchável no TSE).",
+    "XML publica histórico completo desde 2002 — não há necessidade de baixar por ano.",
+    "Valor no XML está em formato US (ponto como decimal): '200.0', '2850.0'."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "camara_ceap",
+  "nome": "Câmara CEAP",
+  "descricao": "Cota para Exercício da Atividade Parlamentar — gastos de gabinete dos 513 deputados federais",
+  "icone": "📋",
+  "cor": "#bf5af2",
+  "fase": 1,
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "camara_verbas_ceap",
+  "portal": "Câmara Federal — Gastos Parlamentares",
+  "url_fonte": "https://www.camara.leg.br/cotas/Ano-{ANO}.csv.zip",
+  "formato_origem": "CSV nacional anual (latin-1, sep ;)",
+  "tipo_pipeline": "csv_download",
+  "periodo_inicio": 2015,
+  "periodo_fim": 2025,
+  "frequencia_atualizacao": "mensal",
+  "dependencias": ["politicos", "fornecedores_rf"],
+  "status": "implementada",
+  "versao": "v1.0",
+  "registros_esperados": 3700000,
+  "tempo_estimado_carga_completa": "60–90 min (download) + 15 min (ETL)",
+  "stack": ["psycopg2", "requests", "tenacity", "tqdm"],
+  "caminhos": {
+    "raw":        "data/camara_ceap/raw/",
+    "bronze":     "data/camara_ceap/bronze/",
+    "prata":      "data/camara_ceap/prata/",
+    "rejeitados": "data/camara_ceap/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Download do ZIP anual da Câmara → Bronze JSON",
+      "args": ["--ano {ANO}", "--todos", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: mapeia colunas, computa politico_id=SHA256(CPF), id_documento",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → camara_verbas_ceap via upsert ON CONFLICT (id_documento) DO NOTHING",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    },
+    {
+      "id": "V",
+      "nome": "Verify (Quality Gate)",
+      "arquivo": "agent_verify.py",
+      "descricao": "8 checks enterprise: volume, período, deputados, valor, negativos, nulos, duplicatas, categorias",
+      "args": ["--ano {ANO}", "--todos", "--strict"]
+    }
+  ]
+}
