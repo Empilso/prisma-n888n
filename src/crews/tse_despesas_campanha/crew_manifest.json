@@ -1,0 +1,30 @@
+{
+  "id": "tse_despesas_campanha",
+  "nome": "TSE Despesas de Campanha",
+  "descricao": "Despesas declaradas por candidatos nas prestações de contas eleitorais",
+  "icone": "💸",
+  "cor": "#30d158",
+  "fase": 0,
+  "fase_nome": "Hub Central",
+  "tabela_destino": "despesas_campanha",
+  "portal": "TSE — Prestação de Contas Eleitorais",
+  "url_fonte": "https://dadosabertos.tse.jus.br/dataset/prestacao-de-contas-eleitorais",
+  "formato_origem": "CSV compactado (latin-1)",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [
+    "politicos"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/tse_despesas_campanha/raw/",
+    "bronze": "data/tse_despesas_campanha/",
+    "prata": "data/tse_despesas_campanha/",
+    "ouro": "data/tse_despesas_campanha/",
+    "rejeitados": "data/tse_despesas_campanha/"
+  },
+  "agentes": []
+}

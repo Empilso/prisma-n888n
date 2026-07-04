@@ -1,0 +1,101 @@
+{
+  "id": "tse_receitas_campanha",
+  "nome": "TSE — Receitas de Campanha",
+  "descricao": "Extrai doações e receitas de campanha dos candidatos (2014-2024) dos ZIPs do TSE e carrega na tabela receitas_campanha. Permite cruzar doadores com fornecedores de verbas de gabinete.",
+  "icone": "💰",
+  "cor": "#ff9f0a",
+  "fase": "0",
+  "fase_nome": "Hub Central",
+  "tabela_destino": "receitas_campanha",
+  "portal": "TSE — Prestação de Contas Eleitorais",
+  "url_fonte": "https://dadosabertos.tse.jus.br/dataset/prestacao-de-contas-eleitorais",
+  "formato_origem": "CSV compactado em ZIP (latin-1, separador ;)",
+  "dependencias": ["ibge_municipios", "tse_candidatos"],
+  "status": "ativo",
+  "versao": "v1.0",
+  "registros_esperados": 5000000,
+  "tempo_total_estimado": "60min",
+  "stack": ["requests", "tenacity", "tqdm", "pydantic", "psycopg2", "rapidfuzz", "hashlib"],
+  "caminhos": {
+    "raw":        "data/tse_receitas_campanha/raw/",
+    "bronze":     "data/tse_receitas_campanha/bronze/",
+    "prata":      "data/tse_receitas_campanha/prata/",
+    "rejeitados": "data/tse_receitas_campanha/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "agent_a",
+      "nome": "Coletor TSE Receitas",
+      "role": "Downloader de ZIP + Extrator CSV",
+      "tech": "python",
+      "cor": "#ff9f0a",
+      "camada": "bronze",
+      "arquivo": "agent_a_coletor.py",
+      "tempo_estimado": "20min",
+      "missao": "Baixa ZIPs do CDN do TSE, extrai CSVs de receitas e salva Bronze JSON imutável por UF com SHA256",
+      "como_funciona": [
+        "Download do ZIP nacional via requests + tenacity (3 tentativas, backoff 2s/4s/10s)",
+        "Barra de progresso com tqdm durante download",
+        "Não re-baixa se ZIP já existe em raw/",
+        "Abre ZIP em memória, localiza CSVs de receitas via regex",
+        "Agrupa registros por UF (coluna SG_UF ou SG_UF_CANDIDATO)",
+        "Salva Bronze por UF: bronze/receitas_{ano}_{uf}_bronze.json",
+        "Bronze NUNCA sobrescrito se já existe"
+      ],
+      "args": {
+        "--ano 2024": "Baixar ano específico",
+        "--todos": "Baixar todos os anos (2014-2024)",
+        "--ufs BA SP": "Filtrar UFs (opcional — sem filtro processa 27 estados)"
+      },
+      "input": "CDN TSE (ZIP nacional por ano)",
+      "output": "data/tse_receitas_campanha/bronze/receitas_{ano}_{uf}_bronze.json",
+      "tem_periodo": true
+    },
+    {
+      "id": "agent_b",
+      "nome": "Normalizador",
+      "role": "Purificador de Dados",
+      "tech": "python",
+      "cor": "#5e5ce6",
+      "camada": "prata",
+      "arquivo": "agent_b_normalizador.py",
+      "tempo_estimado": "30min",
+      "missao": "Normaliza campos, resolve politico_id via CPF/SQ/fuzzy, valida com Pydantic, separa rejeitados",
+      "como_funciona": [
+        "Lê Bronze por UF/ano",
+        "Resolve politico_id: CPF → SQ_CANDIDATO → fuzzy match (threshold 85)",
+        "Normaliza doador_cnpj_cpf: 11 dígitos (CPF) ou 14 dígitos (CNPJ)",
+        "Converte valor: vírgula → ponto, Decimal",
+        "Converte data_receita: DD/MM/YYYY → DATE",
+        "Gera prisma_id via MD5(sq_candidato + doador + valor + data)",
+        "Valida com Pydantic (valor > 0, ano 2006-2026, data válida)",
+        "Rejeitados com motivo_rejeicao"
+      ],
+      "input": "data/tse_receitas_campanha/bronze/receitas_{ano}_{uf}_bronze.json",
+      "output": "data/tse_receitas_campanha/prata/receitas_{ano}_{uf}_prata.json",
+      "tem_periodo": true
+    },
+    {
+      "id": "agent_c",
+      "nome": "Loader PostgreSQL",
+      "role": "Injetor de Banco",
+      "tech": "python",
+      "cor": "#30d158",
+      "camada": "ouro",
+      "arquivo": "agent_c_loader.py",
+      "tempo_estimado": "10min",
+      "missao": "Carrega receitas normalizadas no PostgreSQL via UPSERT idempotente",
+      "como_funciona": [
+        "Lê Prata por UF/ano",
+        "UPSERT em batches de 500: INSERT ... ON CONFLICT (prisma_id) DO NOTHING",
+        "Registra em etl_log: portal, ano, uf, total, novos, duracao_seg",
+        "Flag --dry-run: valida payload sem gravar",
+        "Flag --todos: processa todos os pratas disponíveis"
+      ],
+      "input": "data/tse_receitas_campanha/prata/receitas_{ano}_{uf}_prata.json",
+      "output": "PostgreSQL: tabela receitas_campanha",
+      "aviso": "Requer migration 004_add_receitas_campanha.sql aplicada antes",
+      "tem_periodo": true
+    }
+  ]
+}

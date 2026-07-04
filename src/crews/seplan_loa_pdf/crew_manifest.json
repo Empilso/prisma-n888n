@@ -1,0 +1,31 @@
+{
+  "id": "seplan_loa_pdf",
+  "nome": "SEPLAN-BA LOA PDF",
+  "descricao": "Lei Orçamentária Anual da Bahia com emendas parlamentares extraídas de PDF",
+  "icone": "📑",
+  "cor": "#ff9f0a",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "loa_emendas_pdf",
+  "portal": "SEPLAN-BA / DOE-BA — LOA em PDF",
+  "url_fonte": "https://www.doe.ba.gov.br",
+  "formato_origem": "PDF → PyMuPDF",
+  "tipo_pipeline": "pdf",
+  "dependencias": [
+    "politicos",
+    "municipios"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/seplan_loa_pdf/raw/",
+    "bronze": "data/seplan_loa_pdf/",
+    "prata": "data/seplan_loa_pdf/",
+    "ouro": "data/seplan_loa_pdf/",
+    "rejeitados": "data/seplan_loa_pdf/"
+  },
+  "agentes": []
+}

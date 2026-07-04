@@ -1,0 +1,56 @@
+{
+  "id": "cgu_lista_negra",
+  "nome": "CGU Lista Negra",
+  "descricao": "Empresas e pessoas sancionadas — CEIS, CNEP e CEPIM",
+  "icone": "🚫",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "lista_negra_governo",
+  "portal": "CGU — Portal da Transparência Federal",
+  "url_fonte": "https://portaldatransparencia.gov.br/download-de-dados/{ceis|cnep|cepim}/{YYYYMMDD}",
+  "formato_origem": "ZIP → CSV (latin-1, sep ;)",
+  "tipo_pipeline": "csv_download_auto_data",
+  "dependencias": [],
+  "status": "implementada",
+  "versao": "v1.0",
+  "registros_esperados": 30000,
+  "tempo_estimado_carga_completa": "~5 min (3 downloads + ETL)",
+  "stack": ["psycopg2", "requests", "tenacity", "tqdm"],
+  "caminhos": {
+    "raw":        "data/cgu_lista_negra/raw/",
+    "bronze":     "data/cgu_lista_negra/bronze/",
+    "prata":      "data/cgu_lista_negra/prata/",
+    "rejeitados": "data/cgu_lista_negra/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Download automático ZIP mais recente de CEIS/CNEP/CEPIM → Bronze JSON",
+      "args": ["--fonte CEIS|CNEP|CEPIM|todos", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: mapeamento defensivo de colunas, normaliza CNPJ/CPF, computa id_registro",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → lista_negra_governo via ON CONFLICT DO NOTHING",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    },
+    {
+      "id": "V",
+      "nome": "Verify",
+      "arquivo": "agent_verify.py",
+      "descricao": "8 checks: volume, 3 fontes, cnpj_cpf, datas, duplicatas, CEIS volume, ativos, órgãos",
+      "args": ["--strict"]
+    }
+  ]
+}

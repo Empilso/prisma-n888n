@@ -21,8 +21,20 @@ Execução:
 """
 import argparse, psycopg2, sys
 from datetime import datetime, timezone
+import os
 
-DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password='prisma2026')
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+if not DB_PASSWORD:
+    raise RuntimeError("DB_PASSWORD não definido — defina DB_PASSWORD no ambiente ou no .env da raiz do projeto")
+
+
+DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password=DB_PASSWORD)
 
 # Limites históricos por faixa de ano (R$ total esperado/ano)
 VALOR_MIN_ANO = {

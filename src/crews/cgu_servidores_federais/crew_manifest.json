@@ -1,0 +1,28 @@
+{
+  "id": "cgu_servidores_federais",
+  "nome": "CGU Servidores Federais",
+  "descricao": "Servidores públicos federais com remuneração e vínculos empregatícios",
+  "icone": "👔",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "servidores_federais",
+  "portal": "Portal da Transparência — CGU",
+  "url_fonte": "https://portaldatransparencia.gov.br/download-de-dados/servidores",
+  "formato_origem": "CSV mensal",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/cgu_servidores_federais/raw/",
+    "bronze": "data/cgu_servidores_federais/",
+    "prata": "data/cgu_servidores_federais/",
+    "ouro": "data/cgu_servidores_federais/",
+    "rejeitados": "data/cgu_servidores_federais/"
+  },
+  "agentes": []
+}

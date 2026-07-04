@@ -1,0 +1,12 @@
+{
+  "name": "tse_locais_votacao",
+  "version": "1.0.0",
+  "description": "ETL: Locais de votação TSE → PostgreSQL. 96k locais únicos, Brasil inteiro, com lat/lon.",
+  "fonte": "https://cdn.tse.jus.br/estatistica/sead/odsele/perfil_eleitorado/eleitorado_local_votacao_ATUAL.zip",
+  "tabela_destino": "locais_votacao_tse",
+  "volume_estimado": "96k locais únicos (Brasil) / 11k SP",
+  "frequencia": "Anual (TSE atualiza após cada eleição)",
+  "status": "implementado",
+  "agentes": ["agent_a_coletor", "agent_b_normalizador", "agent_c_loader"],
+  "dependencias": []
+}

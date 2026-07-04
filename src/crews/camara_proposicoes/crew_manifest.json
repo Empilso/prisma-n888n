@@ -1,0 +1,61 @@
+{
+  "id": "camara_proposicoes",
+  "nome": "Câmara Proposições",
+  "descricao": "Projetos de lei e proposições legislativas da Câmara Federal (PL, PEC, MP, PLP, PRC) via API Dados Abertos. Tabela wide com autores em JSONB + autores_politico_ids[] denormalizado + camada legada (1 linha por autor) para compatibilidade.",
+  "icone": "📜",
+  "cor": "#bf5af2",
+  "fase": 1,
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "camara_proposicoes",
+  "tabela_destino_wide": "camara_proposicoes_wide",
+  "portal": "Câmara Federal — Dados Abertos",
+  "url_fonte": "https://dadosabertos.camara.leg.br/api/v2/proposicoes",
+  "formato_origem": "JSON API REST",
+  "tipo_pipeline": "api_simples",
+  "legislaturas": [55, 56, 57],
+  "periodo_inicio": 2015,
+  "periodo_fim": 2026,
+  "tipos_cobertos": ["PL", "PEC", "MP", "PLP", "PRC"],
+  "frequencia_atualizacao": "semanal",
+  "dependencias": ["politicos"],
+  "status": "implementado",
+  "versao": "v1.0",
+  "registros_esperados": 250000,
+  "tempo_estimado_carga_completa": "4-8 h (download API com rate-limit) + 5 min (ETL)",
+  "stack": ["psycopg2", "requests", "tenacity", "tqdm"],
+  "caminhos": {
+    "raw":        "data/camara_proposicoes/raw/",
+    "bronze":     "data/camara_proposicoes/bronze/",
+    "prata":      "data/camara_proposicoes/prata/",
+    "rejeitados": "data/camara_proposicoes/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "API Câmara /proposicoes (lista paginada por tipo × ano) + /proposicoes/{id} (detalhe) + /proposicoes/{id}/autores. Bronze JSON por legislatura.",
+      "args": ["--legislatura {N}", "--todos", "--tipos PL,PEC,MP,PLP,PRC", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: extrai id, tipo, numero, ano, ementa, status, keywords, autores (sem politico_id ainda). Dedup por raw_hash.",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → Postgres. (1) DDL idempotente cria camara_proposicoes_wide e patcha legada via ALTER TABLE ADD COLUMN IF NOT EXISTS. (2) Resolve autores contra politicos por nome+UF+partido (exato) com fallback fuzzy pg_trgm sim≥0.85. (3) UPSERT wide ON CONFLICT (id) + UPSERT legada ON CONFLICT (id, politico_id).",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    }
+  ],
+  "observacoes": [
+    "Banco prisma_data já tem `camara_proposicoes` legada com 724.806 registros e PK (id, politico_id). Esta crew evolui o schema via ALTER TABLE ADD COLUMN IF NOT EXISTS — não derruba consumidores existentes.",
+    "Tabela canônica nova é `camara_proposicoes_wide` (PK=id, autores em JSONB).",
+    "Cruzamento autor→politico_id usa `politicos` (não há id_legislativo_camara). Estratégia: match exato (nome_urna+uf+sigla_partido) → fuzzy pg_trgm (nome_completo, sim≥0.85, UF filtra).",
+    "Volume estimado 250k é para PL+PEC+MP+PLP+PRC nas 3 legislaturas. Tempo dominado por rate-limit da API (3 chamadas por proposição: lista, detalhe, autores)."
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "id": "siconfi_universal",
+  "nome": "SICONFI Universal — Execução Fiscal BR",
+  "descricao": "Pipeline universal de execução fiscal (RREO bimestral, RGF quadrimestral, DCA anual) cobrindo 27 estados + 5.570 municípios via API SICONFI/Tesouro Nacional. Substitui a dependência exclusiva do TCE-SP e habilita 'Execução de Verbas' para prefeitos/governadores de qualquer UF.",
+  "icone": "🏛️",
+  "cor": "#00b894",
+  "fase": 2,
+  "fase_nome": "Cobertura Nacional",
+  "tabela_destino": "siconfi_rreo,siconfi_dca,siconfi_rgf",
+  "portal": "Tesouro Nacional — SICONFI",
+  "url_fonte": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/{documento}",
+  "formato_origem": "JSON REST API (ORDS)",
+  "tipo_pipeline": "rest_api_iterativa",
+  "periodo_inicio": 2018,
+  "periodo_fim": 2025,
+  "frequencia_atualizacao": "bimestral (RREO) / quadrimestral (RGF) / anual (DCA)",
+  "dependencias": ["ibge_municipios"],
+  "status": "implementado",
+  "versao": "v1.0",
+  "registros_esperados": {
+    "rreo_capitais_2018_2025": 1500000,
+    "dca_todos_municipios_2018_2024": 6000000,
+    "rgf_estados_2018_2025": 250000
+  },
+  "tempo_estimado_carga_completa": "RREO 27 capitais 2018-2025: ~6h | DCA 5.570 munis 2024: ~24h | DCA full 7 anos: 5-7 dias",
+  "stack": ["psycopg2", "requests", "tenacity", "tqdm", "concurrent.futures"],
+  "rate_limit": {
+    "estrategia": "ThreadPoolExecutor max_workers=3 + time.sleep(2) entre requests por thread",
+    "limite_observado": "10-30 req/min antes de 429",
+    "retry": "tenacity 5 tentativas, exponencial 2-60s, retry em 429/5xx"
+  },
+  "caminhos": {
+    "raw":        "data/siconfi_universal/raw/",
+    "bronze":     "data/siconfi_universal/bronze/",
+    "prata":      "data/siconfi_universal/prata/",
+    "rejeitados": "data/siconfi_universal/rejeitados/"
+  },
+  "particionamento_bronze": {
+    "estado":   "bronze/{documento}/{ano}/{documento}_{ano}_{periodo}_uf-{uf}_bronze.json",
+    "municipio": "bronze/{documento}/{ano}/{documento}_{ano}_{periodo}_mun-{ibge}_bronze.json"
+  },
+  "endpoints_api": {
+    "rreo": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio={ANO}&nr_periodo={PERIODO}&co_tipo_demonstrativo={TIPO}&id_ente={IBGE}",
+    "rgf":  "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rgf?an_exercicio={ANO}&nr_periodo={PERIODO}&co_tipo_demonstrativo={TIPO}&id_ente={IBGE}&co_poder={PODER}",
+    "dca":  "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca/anexo-{ANEXO}?an_exercicio={ANO}&id_ente={IBGE}"
+  },
+  "tipos_demonstrativo": {
+    "RREO": "Relatório Resumido da Execução Orçamentária (anexos 1-14)",
+    "RREO Simplificado": "Versão municipal simplificada (anexos 1-6)",
+    "RGF": "Relatório de Gestão Fiscal (anexos 1-7)",
+    "RGF Simplificado": "Versão simplificada",
+    "DCA": "Declaração de Contas Anuais (anexos I, I-C, I-D, I-E, II, etc.)"
+  },
+  "cobertura_alvo_v1": {
+    "RREO": "27 UFs + 27 capitais, 2018-2025, 6 bimestres/ano",
+    "DCA": "27 UFs + 5.570 municípios, 2018-2024, anexo I-C (receitas/despesas)",
+    "RGF": "27 UFs (executivo), 2018-2025, 3 quadrimestres/ano"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "API SICONFI → Bronze JSON. Itera por ente×ano×período×anexo com retry/rate-limit e paralelismo controlado (3 workers).",
+      "args": [
+        "--documento {RREO|RGF|DCA}",
+        "--ano YYYY",
+        "--ufs SP,RJ,MG",
+        "--entes-tipo {uf|municipio|todos}",
+        "--capitais-only",
+        "--anexo N",
+        "--force"
+      ]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: padroniza colunas (id_ente/uf/ente_tipo/exercicio/periodo/anexo/conta/coluna/valor), calcula raw_hash p/ idempotência.",
+      "args": [
+        "--documento {RREO|RGF|DCA}",
+        "--bronze {arquivo}",
+        "--todos"
+      ]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → siconfi_{rreo|dca|rgf} via INSERT ON CONFLICT (raw_hash) DO NOTHING. Lotes de 500. Registra em etl_log.",
+      "args": [
+        "--documento {RREO|RGF|DCA}",
+        "--prata {arquivo}",
+        "--todos",
+        "--dry-run"
+      ]
+    }
+  ]
+}

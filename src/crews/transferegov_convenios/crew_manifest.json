@@ -1,0 +1,54 @@
+{
+  "id": "transferegov_convenios",
+  "nome": "Transferegov Convenios",
+  "descricao": "Plano de Acao Especial (TransfereGov Emenda PIX) - convenios federais com CNPJ beneficiario, valor, parlamentar e municipio",
+  "icone": "convenio",
+  "cor": "#ff9f0a",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "convenios_federais",
+  "portal": "TransfereGov - API publica (transferenciasespeciais)",
+  "url_fonte": "https://api.transferegov.dth.api.gov.br/transferenciasespeciais/",
+  "formato_origem": "JSON (PostgREST-style)",
+  "tipo_pipeline": "api_rest",
+  "dependencias": [
+    "municipios",
+    "politicos"
+  ],
+  "status": "em_construcao",
+  "versao": "v1.0",
+  "registros_esperados": 100000,
+  "tempo_total_estimado": "30min",
+  "stack": [
+    "requests",
+    "psycopg2",
+    "tenacity"
+  ],
+  "caminhos": {
+    "raw": "data/transferegov_convenios/raw/",
+    "bronze": "data/transferegov_convenios/bronze/",
+    "prata": "data/transferegov_convenios/prata/",
+    "ouro": "data/transferegov_convenios/ouro/",
+    "rejeitados": "data/transferegov_convenios/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "a_coletor",
+      "nome": "Agent A - Coletor",
+      "tipo": "ETL",
+      "arquivo": "agent_a_coletor.py"
+    },
+    {
+      "id": "b_normalizador",
+      "nome": "Agent B - Normalizador",
+      "tipo": "ETL",
+      "arquivo": "agent_b_normalizador.py"
+    },
+    {
+      "id": "c_loader",
+      "nome": "Agent C - Loader",
+      "tipo": "ETL",
+      "arquivo": "agent_c_loader.py"
+    }
+  ]
+}

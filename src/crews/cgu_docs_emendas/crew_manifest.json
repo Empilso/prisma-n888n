@@ -1,0 +1,57 @@
+{
+  "id": "cgu_docs_emendas",
+  "nome": "CGU Execução Orçamentária de Emendas",
+  "descricao": "Execução orçamentária mensal por emenda parlamentar: órgão executor, UF/município destino, função, ação, valores empenhado/liquidado/pago/restos. Fonte: Portal da Transparência — arquivos mensais de Despesas.",
+  "icone": "📊",
+  "cor": "#ff9f0a",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "emendas_execucao_orcamentaria",
+  "portal": "Portal da Transparência — CGU",
+  "url_fonte": "https://portaldatransparencia.gov.br/download-de-dados/despesas-execucao/{AAAA}{MM}",
+  "formato_origem": "ZIP → CSV (latin-1, sep ;, 47 colunas)",
+  "tipo_pipeline": "csv_local_mensal",
+  "dependencias": ["municipios"],
+  "status": "implementada",
+  "versao": "v1.0",
+  "registros_esperados": 50000,
+  "tempo_estimado_carga_completa": "~10 min por ano completo (12 ZIPs)",
+  "stack": ["psycopg2", "tqdm"],
+  "nota_cnpj": "Este dataset NÃO contém CNPJ do favorecido — apenas execução por ação/órgão. Para CNPJs individuais ver crew brasil_io_empresas (Receita Federal) ou dataset separado de Pagamentos do Portal.",
+  "caminhos": {
+    "raw":        "DESPESAS/",
+    "bronze":     "data/cgu_docs_emendas/bronze/",
+    "prata":      "data/cgu_docs_emendas/prata/",
+    "rejeitados": "data/cgu_docs_emendas/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Extrator",
+      "arquivo": "agent_a_extrator.py",
+      "descricao": "Lê ZIPs mensais de DESPESAS/{ANO}/{AAAAMM}_Despesas.zip → filtra linhas com emenda real → Bronze JSON",
+      "args": ["--ano 2025", "--ano 2026", "--todos", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: normaliza valores monetários, resolve município→IBGE, computa id_registro",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → emendas_execucao_orcamentaria via UPSERT ON CONFLICT",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    },
+    {
+      "id": "V",
+      "nome": "Verify",
+      "arquivo": "agent_verify.py",
+      "descricao": "Checks: volume por ano, % emendas individuais vs bancada, municipios resolvidos, duplicatas, valores",
+      "args": ["--strict"]
+    }
+  ]
+}

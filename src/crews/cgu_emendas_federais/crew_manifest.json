@@ -1,0 +1,32 @@
+{
+  "id": "cgu_emendas_federais",
+  "nome": "CGU Emendas Federais",
+  "descricao": "Emendas parlamentares federais com beneficiários e valores pagos",
+  "icone": "💵",
+  "cor": "#ff9f0a",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "emendas_federais",
+  "portal": "Portal da Transparência — CGU",
+  "url_fonte": "https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares",
+  "formato_origem": "CSV anual",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [
+    "politicos",
+    "municipios",
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/cgu_emendas_federais/raw/",
+    "bronze": "data/cgu_emendas_federais/",
+    "prata": "data/cgu_emendas_federais/",
+    "ouro": "data/cgu_emendas_federais/",
+    "rejeitados": "data/cgu_emendas_federais/"
+  },
+  "agentes": []
+}

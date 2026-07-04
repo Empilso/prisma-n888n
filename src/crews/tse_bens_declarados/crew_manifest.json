@@ -1,0 +1,30 @@
+{
+  "id": "tse_bens_declarados",
+  "nome": "TSE Bens Declarados",
+  "descricao": "Bens declarados por candidatos ao TSE no momento da candidatura",
+  "icone": "🏠",
+  "cor": "#30d158",
+  "fase": 0,
+  "fase_nome": "Hub Central",
+  "tabela_destino": "bens_declarados",
+  "portal": "TSE — Bens de Candidatos",
+  "url_fonte": "https://dadosabertos.tse.jus.br/dataset/candidatos",
+  "formato_origem": "CSV compactado (latin-1)",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [
+    "politicos"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/tse_bens_declarados/raw/",
+    "bronze": "data/tse_bens_declarados/",
+    "prata": "data/tse_bens_declarados/",
+    "ouro": "data/tse_bens_declarados/",
+    "rejeitados": "data/tse_bens_declarados/"
+  },
+  "agentes": []
+}

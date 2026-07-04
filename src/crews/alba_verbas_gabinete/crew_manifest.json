@@ -1,0 +1,48 @@
+{
+  "id": "alba_verbas_gabinete",
+  "nome": "ALBA — Verbas de Gabinete",
+  "descricao": "Verbas indenizatórias dos deputados estaduais da Bahia (2015-2026)",
+  "icone": "🏛️",
+  "cor": "#bf5af2",
+  "fase": "1",
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "alba_verbas_gabinete",
+  "portal": "ALBA — Portal de Transparência",
+  "url_fonte": "https://transparencia.alba.ba.gov.br",
+  "formato_origem": "JSON Ouro (já processado)",
+  "tipo_pipeline": "ouro_local",
+  "dependencias": ["politicos"],
+  "status": "ativo",
+  "versao": "v1.0",
+  "caminhos": {
+    "dados_brutos": "data/alba/",
+    "bronze": "data/raw/alba_verbas/bronze/",
+    "prata": "data/raw/alba_verbas/prata/",
+    "ouro": "data/alba/",
+    "rejeitados": "data/raw/alba_verbas/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "agent_loader",
+      "nome": "Loader ALBA",
+      "role": "Carregador de Verbas",
+      "tech": "python",
+      "camada": "ouro",
+      "arquivo": "agent_loader_alba.py",
+      "tempo_estimado": "30s",
+      "missao": "Carrega 12 anos de verbas de gabinete ALBA no PostgreSQL resolvendo politico_id via fuzzy match",
+      "como_funciona": [
+        "Lê arquivos verbas_{ano}_gold_*.json de data/alba/",
+        "Carrega índice de deputados BA do banco (nome_urna → politico_id)",
+        "Resolve parlamentar_id → politico_id via fuzzy match por nome (threshold 75%)",
+        "UPSERT em batches de 500 na tabela alba_verbas_gabinete",
+        "Registra resultado em etl_log"
+      ],
+      "libs": ["psycopg2", "rapidfuzz", "json", "pathlib"],
+      "input": "data/alba/verbas_{ano}_gold_v2.2_*.json",
+      "output": "PostgreSQL: tabela alba_verbas_gabinete",
+      "aviso": "Requer rapidfuzz instalado para fuzzy match de nomes",
+      "tem_periodo": false
+    }
+  ]
+}

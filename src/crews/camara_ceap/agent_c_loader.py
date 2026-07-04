@@ -13,11 +13,23 @@ Execução:
 import json, argparse, psycopg2
 from pathlib import Path
 from datetime import datetime, timezone
+import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+if not DB_PASSWORD:
+    raise RuntimeError("DB_PASSWORD não definido — defina DB_PASSWORD no ambiente ou no .env da raiz do projeto")
+
 
 BASE_DIR  = Path(__file__).resolve().parent.parent.parent.parent
 PRATA_DIR = BASE_DIR / "data/camara_ceap/prata"
 
-DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password='prisma2026')
+DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password=DB_PASSWORD)
 
 UPSERT_SQL = """
 INSERT INTO camara_verbas_ceap (
@@ -26,16 +38,18 @@ INSERT INTO camara_verbas_ceap (
     tipo_despesa, valor_liquido,
     data_emissao, competencia,
     nr_documento, descricao,
-    status_lneg
+    url_documento, status_lneg
 ) VALUES (
     %(id_documento)s, %(politico_id)s,
     %(cnpj_fornecedor)s, %(nome_fornecedor)s,
     %(tipo_despesa)s, %(valor_liquido)s,
     %(data_emissao)s, %(competencia)s,
     %(nr_documento)s, %(descricao)s,
-    %(status_lneg)s
+    %(url_documento)s, %(status_lneg)s
 )
-ON CONFLICT (id_documento) DO NOTHING
+ON CONFLICT (id_documento) DO UPDATE SET
+    url_documento = EXCLUDED.url_documento
+    WHERE camara_verbas_ceap.url_documento IS NULL
 """
 
 ETL_LOG = """
@@ -47,7 +61,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 CAMPOS_INSERT = [
     'id_documento', 'politico_id', 'cnpj_fornecedor', 'nome_fornecedor',
     'tipo_despesa', 'valor_liquido', 'data_emissao', 'competencia',
-    'nr_documento', 'descricao', 'status_lneg',
+    'nr_documento', 'descricao', 'url_documento', 'status_lneg',
 ]
 
 

@@ -1,0 +1,30 @@
+{
+  "id": "alba_servidores",
+  "nome": "ALBA Servidores",
+  "descricao": "Servidores e funcionários da Assembleia Legislativa da Bahia",
+  "icone": "👥",
+  "cor": "#bf5af2",
+  "fase": 1,
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "alba_servidores",
+  "portal": "ALBA — Portal de Transparência",
+  "url_fonte": "https://transparencia.alba.ba.gov.br",
+  "formato_origem": "CSV ou scraping",
+  "tipo_pipeline": "scraping",
+  "dependencias": [
+    "politicos"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/alba_servidores/raw/",
+    "bronze": "data/alba_servidores/",
+    "prata": "data/alba_servidores/",
+    "ouro": "data/alba_servidores/",
+    "rejeitados": "data/alba_servidores/"
+  },
+  "agentes": []
+}

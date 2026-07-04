@@ -1,0 +1,59 @@
+{
+  "id": "senado_proposicoes",
+  "nome": "Senado — Proposições",
+  "descricao": "Proposições legislativas do Senado Federal (PLS, PEC, PRS, PDS, MPV, etc.) com autoria resolvida para politico_id PRISMA",
+  "icone": "📜",
+  "cor": "#0ea5e9",
+  "fase": 2,
+  "fase_nome": "Atividade Legislativa",
+  "tabela_destino": "senado_proposicoes",
+  "portal": "Senado Federal — Dados Abertos",
+  "url_fonte": "https://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista",
+  "formato_origem": "XML (preferencial) / JSON (Accept: application/json)",
+  "tipo_pipeline": "api_rest",
+  "periodo_inicio": 2015,
+  "periodo_fim": 2026,
+  "legislaturas": [55, 56, 57],
+  "frequencia_atualizacao": "semanal",
+  "dependencias": ["politicos"],
+  "status": "implementado",
+  "versao": "v1.0",
+  "registros_esperados": 50000,
+  "tempo_estimado_carga_completa": "30–60 min (download) + 10 min (ETL)",
+  "stack": ["psycopg2", "requests", "xmltodict", "tenacity", "tqdm"],
+  "caminhos": {
+    "raw":        "data/senado_proposicoes/raw/",
+    "bronze":     "data/senado_proposicoes/bronze/",
+    "prata":      "data/senado_proposicoes/prata/",
+    "rejeitados": "data/senado_proposicoes/rejeitados/"
+  },
+  "endpoints_api": {
+    "lista_por_ano":  "GET /materia/pesquisa/lista?ano={ANO}&sigla={SIGLA}",
+    "detalhe":        "GET /materia/{CODIGO}",
+    "autoria":        "GET /materia/{CODIGO}/autoria"
+  },
+  "siglas_cobertas": ["PLS", "PL", "PEC", "PRS", "PDS", "MPV", "PLP", "PLN", "PDL", "PRN"],
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Consulta API Senado por ano+sigla → busca detalhes + autoria → Bronze JSON por ano",
+      "args": ["--ano {ANO}", "--todos", "--force", "--legislatura {N}"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: extrai metadados, resolve autores via politicos (id_legislativo_senado + fuzzy nome/UF/partido)",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → senado_proposicoes via upsert ON CONFLICT (codigo) DO UPDATE",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    }
+  ]
+}

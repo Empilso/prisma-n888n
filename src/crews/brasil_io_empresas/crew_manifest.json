@@ -1,0 +1,28 @@
+{
+  "id": "brasil_io_empresas",
+  "nome": "Brasil.IO Empresas (RF)",
+  "descricao": "Cadastro de empresas da Receita Federal via Brasil.IO — CNPJ completo",
+  "icone": "🏢",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "fornecedores_rf",
+  "portal": "Receita Federal via Brasil.IO",
+  "url_fonte": "https://dadosabertos.rfb.gov.br/CNPJ/",
+  "formato_origem": "CSV gigante (~20GB) — DuckDB",
+  "tipo_pipeline": "multi_fonte",
+  "dependencias": [],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/brasil_io_empresas/raw/",
+    "bronze": "data/brasil_io_empresas/",
+    "prata": "data/brasil_io_empresas/",
+    "ouro": "data/brasil_io_empresas/",
+    "rejeitados": "data/brasil_io_empresas/"
+  },
+  "agentes": []
+}

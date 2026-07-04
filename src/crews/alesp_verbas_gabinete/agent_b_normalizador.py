@@ -20,6 +20,18 @@ import json, re, argparse, hashlib, psycopg2
 from pathlib import Path
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
+import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+if not DB_PASSWORD:
+    raise RuntimeError("DB_PASSWORD não definido — defina DB_PASSWORD no ambiente ou no .env da raiz do projeto")
+
 
 try:
     from rapidfuzz import process, fuzz
@@ -39,7 +51,7 @@ BRONZE_PATH = BRONZE_DIR / "alesp_verbas_bronze.json"
 PRATA_PATH  = PRATA_DIR  / "alesp_verbas_prata.json"
 REJEIT_PATH = REJEIT_DIR / "alesp_verbas_rejeitados.json"
 
-DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password='prisma2026')
+DB = dict(host='localhost', port=5432, dbname='prisma_data', user='postgres', password=DB_PASSWORD)
 
 
 def sha256(s: str) -> str:

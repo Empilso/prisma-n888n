@@ -1,0 +1,30 @@
+{
+  "id": "tce_ba_contratos",
+  "nome": "TCE-BA Contratos Estaduais",
+  "descricao": "Contratos estaduais fiscalizados pelo Tribunal de Contas do Estado da Bahia",
+  "icone": "🔍",
+  "cor": "#5e5ce6",
+  "fase": 4,
+  "fase_nome": "Auditoria Final",
+  "tabela_destino": "contratos_estaduais",
+  "portal": "TCE-BA / Transparência BA",
+  "url_fonte": "https://www.transparencia.ba.gov.br",
+  "formato_origem": "Portal web ou scraping",
+  "tipo_pipeline": "scraping",
+  "dependencias": [
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/tce_ba_contratos/raw/",
+    "bronze": "data/tce_ba_contratos/",
+    "prata": "data/tce_ba_contratos/",
+    "ouro": "data/tce_ba_contratos/",
+    "rejeitados": "data/tce_ba_contratos/"
+  },
+  "agentes": []
+}

@@ -1,0 +1,56 @@
+{
+  "id": "siga_ba_emendas",
+  "nome": "SIGA-BA Emendas Estaduais",
+  "descricao": "Emendas parlamentares estaduais da Bahia — Portal da Transparência BA / SIAFEB",
+  "icone": "💵",
+  "cor": "#ff9f0a",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "emendas_estaduais",
+  "portal": "Portal da Transparência BA / SIAFEB",
+  "url_fonte": "https://www.transparencia.ba.gov.br/resource?type=emendas&ano={ANO}&output=csv",
+  "formato_origem": "CSV (multi-encoding, multi-separador)",
+  "tipo_pipeline": "scraping_csv",
+  "dependencias": ["politicos", "municipios"],
+  "status": "implementada",
+  "versao": "v1.0",
+  "registros_esperados": 5000,
+  "tempo_estimado_carga_completa": "~15 min (11 anos)",
+  "stack": ["psycopg2", "requests", "tenacity"],
+  "caminhos": {
+    "raw":        "data/siga_ba_emendas/raw/",
+    "bronze":     "data/siga_ba_emendas/bronze/",
+    "prata":      "data/siga_ba_emendas/prata/",
+    "rejeitados": "data/siga_ba_emendas/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Tenta múltiplas URLs do Portal BA e SIAFEB por ano → Bronze JSON",
+      "args": ["--ano {ANO}", "--todos", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: mapeamento defensivo, parse_valor BR/US, calcula pct_execucao",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → emendas_estaduais via UPSERT (atualiza valores de execução)",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    },
+    {
+      "id": "V",
+      "nome": "Verify",
+      "arquivo": "agent_verify.py",
+      "descricao": "7 checks: volume, anos, valor, município, duplicatas, total, parlamentares",
+      "args": ["--strict"]
+    }
+  ]
+}

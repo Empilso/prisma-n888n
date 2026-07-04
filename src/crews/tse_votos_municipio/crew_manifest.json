@@ -1,0 +1,31 @@
+{
+  "id": "tse_votos_municipio",
+  "nome": "TSE Votos por Município",
+  "descricao": "Resultados eleitorais agregados por município e candidato",
+  "icone": "🗳️",
+  "cor": "#30d158",
+  "fase": 0,
+  "fase_nome": "Hub Central",
+  "tabela_destino": "votos_municipio",
+  "portal": "TSE — Resultados Eleitorais",
+  "url_fonte": "https://dadosabertos.tse.jus.br/dataset/resultados-2024",
+  "formato_origem": "CSV compactado (latin-1)",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [
+    "politicos",
+    "municipios"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/tse_votos_municipio/raw/",
+    "bronze": "data/tse_votos_municipio/",
+    "prata": "data/tse_votos_municipio/",
+    "ouro": "data/tse_votos_municipio/",
+    "rejeitados": "data/tse_votos_municipio/"
+  },
+  "agentes": []
+}

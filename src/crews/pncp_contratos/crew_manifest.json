@@ -1,0 +1,30 @@
+{
+  "id": "pncp_contratos",
+  "nome": "PNCP Contratos Públicos",
+  "descricao": "Contratos públicos registrados no Portal Nacional de Contratações Públicas",
+  "icone": "📝",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "contratos_pncp",
+  "portal": "PNCP — Portal Nacional de Contratações Públicas",
+  "url_fonte": "https://pncp.gov.br/api/pncp/v1/contratos",
+  "formato_origem": "JSON paginado API REST",
+  "tipo_pipeline": "api_simples",
+  "dependencias": [
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/pncp_contratos/raw/",
+    "bronze": "data/pncp_contratos/",
+    "prata": "data/pncp_contratos/",
+    "ouro": "data/pncp_contratos/",
+    "rejeitados": "data/pncp_contratos/"
+  },
+  "agentes": []
+}

@@ -1,0 +1,103 @@
+{
+  "id": "ibge_municipios",
+  "nome": "IBGE — Municípios",
+  "descricao": "Extrai todos os 5.571 municípios brasileiros da API do IBGE e carrega na tabela municipios. Base territorial de todo o projeto — Foreign Key de todas as outras tabelas.",
+  "icone": "🗺️",
+  "cor": "#30d158",
+  "fase": "0",
+  "fase_nome": "Hub Central",
+  "tabela_destino": "municipios",
+  "portal": "IBGE — Malha Municipal",
+  "url_fonte": "https://servicodados.ibge.gov.br/api/v1/localidades/municipios",
+  "formato_origem": "JSON API REST",
+  "dependencias": [],
+  "status": "ativo",
+  "versao": "v1.0",
+  "registros_esperados": 5571,
+  "tempo_total_estimado": "15s",
+  "stack": ["requests", "tenacity", "psycopg2", "pydantic", "hashlib", "json", "pathlib", "datetime"],
+  "caminhos": {
+    "dados_brutos": "data/raw/ibge/dados_brutos/",
+    "bronze": "data/raw/ibge/bronze/",
+    "prata": "data/raw/ibge/prata/",
+    "ouro": "data/raw/ibge/ouro/",
+    "rejeitados": "data/raw/ibge/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "agent_a",
+      "nome": "Coletor IBGE",
+      "role": "Coletor de API REST",
+      "tech": "python",
+      "cor": "#30d158",
+      "camada": "bronze",
+      "arquivo": "agent_a_coletor.py",
+      "tempo_estimado": "5s",
+      "missao": "Coleta 5.571 municípios da API do IBGE e salva Bronze imutável com SHA256",
+      "descricao": "Faz GET na API do IBGE com retry automático (3 tentativas, backoff 2-10s). Calcula SHA256 do payload para garantir imutabilidade do Bronze. Salva em data/raw/ibge/ com timestamp.",
+      "como_funciona": [
+        "Conecta na API: GET https://servicodados.ibge.gov.br/api/v1/localidades/municipios",
+        "Retry automático: 3 tentativas com backoff exponencial (2s, 4s, 10s)",
+        "Calcula SHA256 do payload para rastreabilidade",
+        "Salva Bronze imutável: data/raw/ibge/municipios_{YYYY-MM-DD}_bronze.json",
+        "Nunca sobrescreve — se já existe arquivo do dia, encerra sem erro"
+      ],
+      "libs": ["requests", "tenacity", "hashlib", "json", "pathlib"],
+      "input": null,
+      "output": "data/ibge/municipios_{YYYY-MM-DD}_bronze.json",
+      "aviso": null,
+      "tem_periodo": false
+    },
+    {
+      "id": "agent_b",
+      "nome": "Normalizador",
+      "role": "Purificador de Dados",
+      "tech": "python",
+      "cor": "#5e5ce6",
+      "camada": "prata",
+      "arquivo": "agent_b_normalizador.py",
+      "tempo_estimado": "3s",
+      "missao": "Normaliza campos do Bronze, valida com Pydantic e separa registros rejeitados",
+      "descricao": "Lê o Bronze mais recente. Normaliza id_ibge para 7 dígitos com zero-padding. Aplica Title Case nos nomes. Valida schema com Pydantic. Registros inválidos vão para rejeitados com motivo.",
+      "como_funciona": [
+        "Lê o Bronze mais recente de data/raw/ibge/",
+        "Normaliza id_ibge: inteiro → string 7 dígitos com zero-padding (ex: 1100015 → '1100015')",
+        "Extrai campos: id_ibge, nome, uf (sigla), regiao (sigla)",
+        "Aplica Title Case nos nomes de municípios",
+        "Valida com Pydantic — campos obrigatórios: id_ibge, nome, uf",
+        "Rejeitados salvos em data/saida/rejeitados/ibge/ com campo 'motivo_rejeicao'",
+        "Salva Prata em data/saida/prata/ibge/municipios_{YYYY-MM-DD}_prata.json"
+      ],
+      "libs": ["pydantic", "json", "pathlib", "datetime"],
+      "input": "data/ibge/municipios_{YYYY-MM-DD}_bronze.json",
+      "output": "data/ibge/municipios_{YYYY-MM-DD}_prata.json",
+      "aviso": null,
+      "tem_periodo": false
+    },
+    {
+      "id": "agent_c",
+      "nome": "Loader PostgreSQL",
+      "role": "Injetor de Banco",
+      "tech": "python",
+      "cor": "#ff9f0a",
+      "camada": "ouro",
+      "arquivo": "agent_c_loader.py",
+      "tempo_estimado": "7s",
+      "missao": "Carrega os municípios normalizados no PostgreSQL via UPSERT idempotente",
+      "descricao": "Lê o Prata mais recente. Conecta no PostgreSQL prisma_data. Executa UPSERT em batches de 500 registros com ON CONFLICT (id_ibge). Registra resultado em etl_log. Suporta --dry-run.",
+      "como_funciona": [
+        "Lê o Prata mais recente de data/saida/prata/ibge/",
+        "Conecta: postgresql://postgres:${DB_PASSWORD}@localhost:5432/prisma_data",
+        "UPSERT em batches de 500: INSERT ... ON CONFLICT (id_ibge) DO UPDATE",
+        "Campos carregados: id_ibge, nome, uf, regiao, created_at",
+        "Registra em etl_log: portal, total, novos, atualizados, rejeitados, duracao_seg",
+        "Flag --dry-run: valida payload sem gravar nada no banco"
+      ],
+      "libs": ["psycopg2", "json", "pathlib", "datetime"],
+      "input": "data/ibge/municipios_{YYYY-MM-DD}_prata.json",
+      "output": "PostgreSQL: tabela municipios (5.571 registros)",
+      "aviso": "Requer PostgreSQL rodando em localhost:5432 com banco prisma_data",
+      "tem_periodo": false
+    }
+  ]
+}

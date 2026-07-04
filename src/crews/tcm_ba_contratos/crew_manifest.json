@@ -1,0 +1,31 @@
+{
+  "id": "tcm_ba_contratos",
+  "nome": "TCM-BA Contratos Municipais",
+  "descricao": "Contratos municipais fiscalizados pelo Tribunal de Contas dos Municípios da Bahia",
+  "icone": "🔍",
+  "cor": "#5e5ce6",
+  "fase": 4,
+  "fase_nome": "Auditoria Final",
+  "tabela_destino": "contratos_municipios",
+  "portal": "TCM-BA — Portal de Consultas",
+  "url_fonte": "https://www.tcm.ba.gov.br/consultas/",
+  "formato_origem": "Scraping ou CSV exportado",
+  "tipo_pipeline": "scraping",
+  "dependencias": [
+    "municipios",
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/tcm_ba_contratos/raw/",
+    "bronze": "data/tcm_ba_contratos/",
+    "prata": "data/tcm_ba_contratos/",
+    "ouro": "data/tcm_ba_contratos/",
+    "rejeitados": "data/tcm_ba_contratos/"
+  },
+  "agentes": []
+}

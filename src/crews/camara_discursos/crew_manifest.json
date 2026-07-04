@@ -1,0 +1,30 @@
+{
+  "id": "camara_discursos",
+  "nome": "Câmara Discursos",
+  "descricao": "Discursos e pronunciamentos dos deputados federais",
+  "icone": "🎙️",
+  "cor": "#bf5af2",
+  "fase": 1,
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "discursos_federais",
+  "portal": "Câmara Federal — Dados Abertos",
+  "url_fonte": "https://dadosabertos.camara.leg.br",
+  "formato_origem": "JSON API REST",
+  "tipo_pipeline": "api_simples",
+  "dependencias": [
+    "politicos"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/camara_discursos/raw/",
+    "bronze": "data/camara_discursos/",
+    "prata": "data/camara_discursos/",
+    "ouro": "data/camara_discursos/",
+    "rejeitados": "data/camara_discursos/"
+  },
+  "agentes": []
+}

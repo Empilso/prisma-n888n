@@ -1,0 +1,30 @@
+{
+  "id": "brasil_io_socios",
+  "nome": "Brasil.IO Sócios (RF)",
+  "descricao": "Quadro societário das empresas da Receita Federal via Brasil.IO",
+  "icone": "👤",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "socios_rf",
+  "portal": "Receita Federal via Brasil.IO",
+  "url_fonte": "https://dadosabertos.rfb.gov.br/CNPJ/",
+  "formato_origem": "CSV gigante — DuckDB",
+  "tipo_pipeline": "multi_fonte",
+  "dependencias": [
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/brasil_io_socios/raw/",
+    "bronze": "data/brasil_io_socios/",
+    "prata": "data/brasil_io_socios/",
+    "ouro": "data/brasil_io_socios/",
+    "rejeitados": "data/brasil_io_socios/"
+  },
+  "agentes": []
+}

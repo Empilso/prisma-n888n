@@ -1,0 +1,28 @@
+{
+  "id": "doe_ba",
+  "nome": "DOE-BA Diário Oficial",
+  "descricao": "Publicações do Diário Oficial do Estado da Bahia para mineração de dados",
+  "icone": "📰",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "doe_publicacoes",
+  "portal": "Diário Oficial do Estado da Bahia",
+  "url_fonte": "https://www.doe.ba.gov.br",
+  "formato_origem": "Scraping + PDF",
+  "tipo_pipeline": "scraping",
+  "dependencias": [],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/doe_ba/raw/",
+    "bronze": "data/doe_ba/",
+    "prata": "data/doe_ba/",
+    "ouro": "data/doe_ba/",
+    "rejeitados": "data/doe_ba/"
+  },
+  "agentes": []
+}

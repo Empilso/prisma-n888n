@@ -1,0 +1,59 @@
+{
+  "id": "senado_votacoes",
+  "nome": "Senado — Votações Nominais",
+  "descricao": "Votações nominais do plenário do Senado Federal com voto individual por senador (SIM/NÃO/OBSTRUÇÃO/ABSTENÇÃO)",
+  "icone": "🗳️",
+  "cor": "#a855f7",
+  "fase": 2,
+  "fase_nome": "Atividade Legislativa",
+  "tabela_destino": "senado_votacoes",
+  "tabela_secundaria": "senado_votos_nominais",
+  "portal": "Senado Federal — Dados Abertos",
+  "url_fonte": "https://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/{ANO}",
+  "formato_origem": "XML (preferencial) / JSON (Accept: application/json)",
+  "tipo_pipeline": "api_rest",
+  "periodo_inicio": 2015,
+  "periodo_fim": 2026,
+  "legislaturas": [55, 56, 57],
+  "frequencia_atualizacao": "semanal",
+  "dependencias": ["politicos", "senado_proposicoes"],
+  "status": "implementado",
+  "versao": "v1.0",
+  "registros_esperados": 12000,
+  "tempo_estimado_carga_completa": "20–40 min (download) + 5 min (ETL)",
+  "stack": ["psycopg2", "requests", "xmltodict", "tenacity", "tqdm"],
+  "caminhos": {
+    "raw":        "data/senado_votacoes/raw/",
+    "bronze":     "data/senado_votacoes/bronze/",
+    "prata":      "data/senado_votacoes/prata/",
+    "rejeitados": "data/senado_votacoes/rejeitados/"
+  },
+  "endpoints_api": {
+    "lista_por_ano": "GET /plenario/lista/votacao/{ANO}",
+    "detalhe":       "GET /votacao/{CODIGO}"
+  },
+  "tipos_voto": ["Sim", "Não", "Obstrução", "Abstenção", "Presidente (art. 51 RISF)", "Ausente"],
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Coletor",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Lista votações nominais do ano → busca detalhes com votos individuais → Bronze JSON por ano",
+      "args": ["--ano {ANO}", "--todos", "--force", "--legislatura {N}"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata: extrai cabeçalho da votação + lista de votos; resolve politico_id por senador",
+      "args": ["--bronze {arquivo}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → senado_votacoes (upsert) + senado_votos_nominais (replace por votacao_codigo)",
+      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+    }
+  ]
+}

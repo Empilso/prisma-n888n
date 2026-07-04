@@ -1,0 +1,28 @@
+{
+  "id": "cnj_processos",
+  "nome": "CNJ Processos Judiciais",
+  "descricao": "Processos judiciais de interesse forense via DataJud do CNJ",
+  "icone": "⚖️",
+  "cor": "#ff3b30",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "processos_judiciais",
+  "portal": "CNJ — DataJud",
+  "url_fonte": "https://www.cnj.jus.br/sistemas/datajud/",
+  "formato_origem": "JSON API REST",
+  "tipo_pipeline": "api_simples",
+  "dependencias": [],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/cnj_processos/raw/",
+    "bronze": "data/cnj_processos/",
+    "prata": "data/cnj_processos/",
+    "ouro": "data/cnj_processos/",
+    "rejeitados": "data/cnj_processos/"
+  },
+  "agentes": []
+}

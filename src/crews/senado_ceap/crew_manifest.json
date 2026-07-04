@@ -1,0 +1,31 @@
+{
+  "id": "senado_ceap",
+  "nome": "Senado CEAP",
+  "descricao": "Cota para Exercício da Atividade Parlamentar dos senadores",
+  "icone": "📋",
+  "cor": "#bf5af2",
+  "fase": 1,
+  "fase_nome": "Dinheiro Direto",
+  "tabela_destino": "senado_verbas_ceap",
+  "portal": "Senado Federal — Dados Abertos",
+  "url_fonte": "https://www12.senado.leg.br/transparencia/dados-abertos-transparencia/dados-abertos-ceaps",
+  "formato_origem": "CSV anual",
+  "tipo_pipeline": "csv_local",
+  "dependencias": [
+    "politicos",
+    "fornecedores_rf"
+  ],
+  "status": "pendente",
+  "versao": "v0.0",
+  "registros_esperados": 0,
+  "tempo_total_estimado": "?",
+  "stack": [],
+  "caminhos": {
+    "raw": "data/senado_ceap/raw/",
+    "bronze": "data/senado_ceap/",
+    "prata": "data/senado_ceap/",
+    "ouro": "data/senado_ceap/",
+    "rejeitados": "data/senado_ceap/"
+  },
+  "agentes": []
+}
