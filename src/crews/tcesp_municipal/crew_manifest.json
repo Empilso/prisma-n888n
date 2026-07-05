@@ -1,0 +1,100 @@
+{
+  "id": "tcesp_municipal",
+  "nome": "TCE-SP — Fiscal Municipal",
+  "descricao": "Fonte canônica de dados fiscais dos municípios paulistas via API oficial do TCE-SP. Fase 1: cadastro slug TCE-SP × código IBGE (tcesp_municipios). Fase 2 (futura): receitas e despesas mensais por município.",
+  "icone": "🏛️",
+  "cor": "#0a84ff",
+  "fase": "1",
+  "fase_nome": "Cadastro de Municípios",
+  "tabela_destino": "tcesp_municipios",
+  "portal": "TCE-SP — Transparência Municipal",
+  "url_fonte": "https://transparencia.tce.sp.gov.br/api/json/municipios",
+  "formato_origem": "JSON API REST",
+  "dependencias": ["ibge_municipios"],
+  "status": "ativo",
+  "versao": "v1.0",
+  "registros_esperados": 644,
+  "tempo_total_estimado": "30s",
+  "stack": ["requests", "psycopg2", "difflib", "hashlib", "json", "pathlib", "datetime"],
+  "caminhos": {
+    "bronze": "data/raw/tcesp/bronze/",
+    "prata": "data/raw/tcesp/prata/",
+    "rejeitados": "data/raw/tcesp/rejeitados/"
+  },
+  "agentes": [
+    {
+      "id": "agent_a",
+      "nome": "Coletor TCE-SP",
+      "role": "Coletor de API REST",
+      "tech": "python",
+      "cor": "#0a84ff",
+      "camada": "bronze",
+      "arquivo": "agent_a_coletor.py",
+      "tempo_estimado": "5s",
+      "missao": "Coleta a lista oficial de municípios fiscalizados pelo TCE-SP e salva Bronze imutável com SHA256",
+      "descricao": "GET em https://transparencia.tce.sp.gov.br/api/json/municipios com retry (3 tentativas, backoff exponencial). A capital São Paulo é fiscalizada pelo TCM-SP e não aparece na lista — exceção documentada.",
+      "como_funciona": [
+        "GET https://transparencia.tce.sp.gov.br/api/json/municipios",
+        "Retry automático: 3 tentativas com backoff exponencial (2s, 4s, 8s)",
+        "Valida payload (lista não vazia) e calcula SHA256",
+        "Salva Bronze imutável: data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
+        "Nunca sobrescreve — se já existe arquivo do dia, encerra sem erro"
+      ],
+      "libs": ["requests", "hashlib", "json", "pathlib"],
+      "input": null,
+      "output": "data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
+      "aviso": null,
+      "tem_periodo": false
+    },
+    {
+      "id": "agent_b",
+      "nome": "Normalizador / Match IBGE",
+      "role": "Purificador de Dados",
+      "tech": "python",
+      "cor": "#5e5ce6",
+      "camada": "prata",
+      "arquivo": "agent_b_normalizador.py",
+      "tempo_estimado": "10s",
+      "missao": "Cruza cada slug do TCE-SP com o código IBGE da tabela municipios e classifica o match",
+      "descricao": "Match exato por slugify(nome IBGE) == slug TCE-SP (confidence 1.0); fallback fuzzy por SequenceMatcher >= 0.90. Sem match confiável, o município vai pra rejeitados — nunca chega ao banco com IBGE errado.",
+      "como_funciona": [
+        "Lê o Bronze mais recente de data/raw/tcesp/bronze/",
+        "Carrega municípios SP da tabela municipios (base IBGE)",
+        "Match exato: slugify(nome IBGE) == slug TCE-SP → confidence 1.0",
+        "Fallback fuzzy: melhor SequenceMatcher >= 0.90 → confidence = ratio (logado no terminal)",
+        "Sem match: rejeitados com motivo + melhor candidato",
+        "Relatório: exato/fuzzy/rejeitados + municípios IBGE-SP ausentes no TCE-SP (ex.: capital → TCM-SP)"
+      ],
+      "libs": ["psycopg2", "difflib", "unicodedata", "json", "pathlib"],
+      "input": "data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
+      "output": "data/raw/tcesp/prata/municipios_{YYYY-MM-DD}_prata.json",
+      "aviso": "Requer crew ibge_municipios já carregada (tabela municipios com uf=SP)",
+      "tem_periodo": false
+    },
+    {
+      "id": "agent_c",
+      "nome": "Loader PostgreSQL",
+      "role": "Injetor de Banco",
+      "tech": "python",
+      "cor": "#ff9f0a",
+      "camada": "ouro",
+      "arquivo": "agent_c_loader.py",
+      "tempo_estimado": "10s",
+      "missao": "Carrega o cadastro em tcesp_municipios via UPSERT idempotente com FK pra municipios",
+      "descricao": "Cria tcesp_municipios se não existir (PK slug_tcesp, FK id_ibge → municipios). UPSERT preserva correções manuais (match_status='manual' nunca é sobrescrito). Registra em etl_log e imprime o estado final da tabela por match_status.",
+      "como_funciona": [
+        "Lê o Prata mais recente de data/raw/tcesp/prata/",
+        "CREATE TABLE IF NOT EXISTS tcesp_municipios (FK id_ibge → municipios)",
+        "UPSERT em batches de 200: ON CONFLICT (slug_tcesp) DO UPDATE",
+        "match_status='manual' é preservado em re-cargas (correção humana vence)",
+        "Registra em etl_log: portal tcesp_municipal, fase_1_cadastro",
+        "Flag --dry-run: valida payload sem gravar nada"
+      ],
+      "libs": ["psycopg2", "json", "pathlib", "datetime"],
+      "input": "data/raw/tcesp/prata/municipios_{YYYY-MM-DD}_prata.json",
+      "output": "PostgreSQL: tabela tcesp_municipios (~644 registros)",
+      "aviso": "Requer PostgreSQL rodando em localhost:5432 com banco prisma_data",
+      "tem_periodo": false
+    }
+  ]
+}
