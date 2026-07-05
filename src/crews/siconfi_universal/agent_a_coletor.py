@@ -454,6 +454,9 @@ def main():
                         default="uf")
     parser.add_argument("--capitais-only", action="store_true",
                         help="Quando entes-tipo inclui municípios, restringe a capitais")
+    parser.add_argument("--ibge", type=str, default=None,
+                        help="Códigos IBGE específicos separados por vírgula (ex.: 3557006). "
+                             "Filtra a lista de entes após a montagem.")
     parser.add_argument("--anexo", type=str, default=None,
                         help="Anexo específico (ex.: 1, 2, I-C). Default: todos do documento")
     parser.add_argument("--periodo", type=int, default=None,
@@ -470,6 +473,13 @@ def main():
     ufs_filtro = [u.strip().upper() for u in args.ufs.split(",")] if args.ufs else None
     entes = carregar_entes(args.entes_tipo, ufs_filtro,
                            capitais_only=args.capitais_only)
+
+    if args.ibge:
+        alvo = {c.strip() for c in args.ibge.split(",") if c.strip()}
+        entes = [e for e in entes if str(e["id_ente"]).strip() in alvo]
+        if not entes:
+            log(f"❌ Nenhum ente casou com --ibge {sorted(alvo)} — confira os códigos")
+            raise SystemExit(1)
 
     # Anexos
     if args.anexo:
