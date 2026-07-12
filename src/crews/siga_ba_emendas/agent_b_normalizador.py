@@ -106,11 +106,14 @@ def normalizar_registro(r: dict) -> dict | None:
         'acao':               objeto,
         'municipio_destino':  None,
         'cod_ibge_municipio': None,
-        'valor_autorizado':   str(val_pago),
-        'valor_empenhado':    str(val_pago),
-        'valor_liquidado':    str(val_pago),
+        # A view do CKAN só publica PAGAMENTOS — autorizado/empenhado/liquidado
+        # são desconhecidos. NULL honesto > cópia forjada (auditoria 2026-07-12:
+        # 15.555/15.557 no banco tinham os 4 valores idênticos e pct fake).
+        'valor_autorizado':   None,
+        'valor_empenhado':    None,
+        'valor_liquidado':    None,
         'valor_pago':         str(val_pago),
-        'pct_execucao':       '100.00' if situacao == 'executado' else None,
+        'pct_execucao':       None,
         'situacao':           situacao,
         'cnpj_favorecido':    None,
         'objeto':             objeto or credor,
@@ -127,9 +130,11 @@ def processar_bronze(bronze_path: Path) -> None:
     records = bronze.get('records', [])
     print(f"📊 {len(records):,} registros brutos")
 
-    validos, rejeitados = [], []
-    ids_vistos = set()
-
+    rejeitados = []
+    # Agregação por empenho/ano: a fonte é uma view de PAGAMENTOS — o mesmo
+    # empenho aparece N vezes (parcelas). Descartar a 2ª+ perdia dinheiro real
+    # (auditoria 2026-07-12: 4.227 parcelas descartadas). Agora SOMA as parcelas.
+    por_empenho: dict = {}
     for r in records:
         norm = normalizar_registro(r)
         if norm is None:
@@ -137,10 +142,17 @@ def processar_bronze(bronze_path: Path) -> None:
         if '_motivo' in norm:
             rejeitados.append(norm)
             continue
-        if norm['id_emenda'] in ids_vistos:
-            continue
-        ids_vistos.add(norm['id_emenda'])
-        validos.append(norm)
+        chave = norm['id_emenda']
+        if chave in por_empenho:
+            base = por_empenho[chave]
+            base['valor_pago'] = str(Decimal(base['valor_pago']) + Decimal(norm['valor_pago']))
+            base['_parcelas'] = base.get('_parcelas', 1) + 1
+            # basta 1 parcela não efetivada pra situação não ser 'executado'
+            if norm['situacao'] != 'executado':
+                base['situacao'] = 'parcial'
+        else:
+            por_empenho[chave] = norm
+    validos = list(por_empenho.values())
 
     stem = bronze_path.stem.replace('_bronze', '')
     prata_path = PRATA_DIR / f"{stem}_prata.json"
@@ -151,7 +163,7 @@ def processar_bronze(bronze_path: Path) -> None:
                 'fonte_bronze':       bronze_path.name,
                 'total_validos':      len(validos),
                 'total_rejeitados':   len(rejeitados),
-                'total_deduplicados': len(records) - len(validos) - len(rejeitados),
+                'total_parcelas_agregadas': len(records) - len(validos) - len(rejeitados),
             },
             'records': validos,
         }, f, ensure_ascii=False)
