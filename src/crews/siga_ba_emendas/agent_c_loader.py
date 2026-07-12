@@ -49,6 +49,10 @@ INSERT INTO emendas_estaduais (
 ON CONFLICT (numero_emenda) DO UPDATE SET
     valor_pago       = EXCLUDED.valor_pago,
     valor_liquidado  = EXCLUDED.valor_liquidado,
+    -- fix 2026-07-12: sem estas 2 colunas o upsert deixava no banco os valores
+    -- FORJADOS da carga antiga (autorizado/empenhado eram cópia de pago)
+    valor_autorizado = EXCLUDED.valor_autorizado,
+    valor_empenhado  = EXCLUDED.valor_empenhado,
     pct_execucao     = EXCLUDED.pct_execucao,
     status_execucao  = EXCLUDED.status_execucao
 """
