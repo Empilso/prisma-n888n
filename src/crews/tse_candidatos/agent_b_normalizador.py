@@ -48,10 +48,39 @@ def carregar_indice_politico_id() -> dict:
     conn.close()
     return idx
 
-def resolver_politico_id(cpf, nome_completo, data_nascimento, uf_nascimento, idx) -> str:
-    if cpf:
-        return hashlib.sha256(cpf.encode()).hexdigest()
+def carregar_indice_cpf_identidade() -> dict:
+    """cpf → set de identidades (nome+nascimento) já vistas no banco.
+
+    Guarda anti-colisão (fix 2026-07-12): o TSE publica o MESMO CPF em pessoas
+    diferentes (bug conhecido, sobretudo municipais 2008-2020). Se o CPF chegar
+    com nome+nascimento divergente do que o banco já conhece, NÃO usar
+    sha256(cpf) — senão duas pessoas fundem no mesmo politico_id (caso
+    Colombo × Brandi, 56k grupos corrigidos na cirurgia de 2026-07-11/12).
+    """
+    conn = psycopg2.connect(**DB)
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT cpf, lower(coalesce(nome_completo,'') || coalesce(data_nascimento::text,''))
+        FROM politicos
+        WHERE cpf IS NOT NULL AND cpf_fonte = 'tse_candidatura'
+    """)
+    idx: dict = {}
+    for cpf, ident in cur.fetchall():
+        idx.setdefault(cpf, set()).add(ident)
+    conn.close()
+    return idx
+
+def resolver_politico_id(cpf, nome_completo, data_nascimento, uf_nascimento, idx, idx_cpf=None) -> str:
     chave = ((nome_completo or '') + (data_nascimento or '') + (uf_nascimento or '')).lower()
+    if cpf:
+        if idx_cpf is not None:
+            identidades = idx_cpf.get(cpf)
+            ident_atual = ((nome_completo or '') + (data_nascimento or '')).lower()
+            if identidades and ident_atual not in identidades:
+                # CPF contestado: banco conhece esse CPF com OUTRA pessoa.
+                # Id escopado por identidade em vez de fundir no hash do CPF.
+                return hashlib.sha256(f"identidade:{chave}".encode()).hexdigest()
+        return hashlib.sha256(cpf.encode()).hexdigest()
     if chave in idx:
         return idx[chave]  # reutiliza hash do CPF se encontrar match
     return hashlib.sha256(chave.encode()).hexdigest()
@@ -109,7 +138,7 @@ def title(v) -> str | None:
     stop = {'de','da','do','das','dos','e','a','o','em','na','no','nas','nos','com','por','para'}
     return ' '.join(w.capitalize() if w.lower() not in stop else w.lower() for w in v.split())
 
-def normalizar(r: dict, idx: dict, idx_politico_id: dict) -> dict:
+def normalizar(r: dict, idx: dict, idx_politico_id: dict, idx_cpf: dict | None = None) -> dict:
     cpf = re.sub(r'\D', '', r.get('NR_CPF_CANDIDATO', '') or '')
     cpf = cpf if len(cpf) == 11 else None
 
@@ -163,7 +192,7 @@ def normalizar(r: dict, idx: dict, idx_politico_id: dict) -> dict:
     norm['politico_id'] = resolver_politico_id(
         norm.get('cpf'), norm.get('nome_completo'),
         norm.get('data_nascimento'), norm.get('uf_nascimento'),
-        idx_politico_id
+        idx_politico_id, idx_cpf
     )
     
     return norm
@@ -200,10 +229,13 @@ def main():
     print("🔗 Carregando índice de politico_id...")
     idx_politico_id = carregar_indice_politico_id()
     print(f"   {len(idx_politico_id)} registros indexados")
+    print("🔗 Carregando índice anti-colisão de CPF...")
+    idx_cpf = carregar_indice_cpf_identidade()
+    print(f"   {len(idx_cpf)} CPFs indexados")
 
     validos, rejeitados, sem_municipio = [], [], 0
     for r in records_brutos:
-        norm = normalizar(r, idx, idx_politico_id)
+        norm = normalizar(r, idx, idx_politico_id, idx_cpf)
         motivo = validar(norm)
         if motivo:
             rejeitados.append({**norm, 'motivo_rejeicao': motivo})
