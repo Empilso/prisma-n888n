@@ -1,31 +1,36 @@
 {
   "id": "tse_votos_municipio",
-  "nome": "TSE Votos por Município",
-  "descricao": "Resultados eleitorais agregados por município e candidato",
+  "nome": "TSE Votos por Seção/Local",
+  "descricao": "Votação por seção eleitoral agregada por (município, zona, local, candidato, turno) — alimenta os mapas eleitorais do Forbes",
   "icone": "🗳️",
   "cor": "#30d158",
   "fase": 0,
   "fase_nome": "Hub Central",
-  "tabela_destino": "votos_municipio",
-  "portal": "TSE — Resultados Eleitorais",
-  "url_fonte": "https://dadosabertos.tse.jus.br/dataset/resultados-2024",
-  "formato_origem": "CSV compactado (latin-1)",
-  "tipo_pipeline": "csv_local",
+  "tabela_destino": "tse_votos_cache",
+  "portal": "TSE — Votação por Seção Eleitoral",
+  "url_fonte": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_{ano}_{uf}.zip",
+  "formato_origem": "CSV compactado (latin-1, ;)",
+  "tipo_pipeline": "zip_cdn",
   "dependencias": [
-    "politicos",
-    "municipios"
+    "tse_locais_votacao"
   ],
-  "status": "pendente",
-  "versao": "v0.0",
-  "registros_esperados": 0,
-  "tempo_total_estimado": "?",
-  "stack": [],
+  "status": "ativo",
+  "versao": "v1.0",
+  "registros_esperados": 6385926,
+  "tempo_total_estimado": "10-40 min por UF (download + agregação + upsert)",
+  "stack": ["requests", "zipfile streaming em disco", "psycopg2 execute_batch"],
   "caminhos": {
     "raw": "data/tse_votos_municipio/raw/",
     "bronze": "data/tse_votos_municipio/",
     "prata": "data/tse_votos_municipio/",
-    "ouro": "data/tse_votos_municipio/",
+    "ouro": "tabela tse_votos_cache (prisma_data)",
     "rejeitados": "data/tse_votos_municipio/"
   },
-  "agentes": []
+  "agentes": ["main.py (coletor+normalizador+loader em 1 passo)"],
+  "notas": [
+    "Mesma tabela/formato do endpoint Forbes POST /api/tse/carregar-votos (backend/src/api/core/tse_locais.py) — os dois convivem, upsert idempotente.",
+    "2024 (7 UFs: BA MG PE PR RJ RS SP) foi carregado pelo endpoint Forbes; anos novos devem usar este crew (ZIP em disco, não em RAM).",
+    "Eleições GERAIS (2022/2018/...) trazem DEPUTADO FEDERAL/ESTADUAL, SENADOR, GOVERNADOR, PRESIDENTE; municipais trazem PREFEITO/VEREADOR.",
+    "Status por UF/ano em tse_votos_cache_status."
+  ]
 }

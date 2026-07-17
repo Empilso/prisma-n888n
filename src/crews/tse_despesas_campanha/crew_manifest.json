@@ -14,11 +14,11 @@
   "dependencias": [
     "politicos"
   ],
-  "status": "pendente",
-  "versao": "v0.0",
+  "status": "implementada_validacao",
+  "versao": "v1.0",
   "registros_esperados": 0,
   "tempo_total_estimado": "?",
-  "stack": [],
+  "stack": ["python", "csv", "gzip", "psycopg2", "postgresql"],
   "caminhos": {
     "raw": "data/tse_despesas_campanha/raw/",
     "bronze": "data/tse_despesas_campanha/",
@@ -26,5 +26,5 @@
     "ouro": "data/tse_despesas_campanha/",
     "rejeitados": "data/tse_despesas_campanha/"
   },
-  "agentes": []
+  "agentes": ["agent_a_coletor", "agent_b_normalizador", "agent_c_loader", "agent_v_verificador", "agent_p_publicador"]
 }

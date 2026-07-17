@@ -41,7 +41,7 @@ INSERT INTO politicos (
     %(nr_federacao)s, %(nm_federacao)s, %(sg_federacao)s,
     %(nm_coligacao)s, %(tp_agremiacao)s, %(email)s
 )
-ON CONFLICT (id_tse) DO UPDATE SET
+ON CONFLICT (id_tse, ano_eleicao, uf) DO UPDATE SET
     politico_id     = CASE 
                         WHEN politicos.cpf IS NOT NULL THEN politicos.politico_id
                         ELSE EXCLUDED.politico_id 
