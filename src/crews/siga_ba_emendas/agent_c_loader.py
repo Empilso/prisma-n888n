@@ -46,7 +46,7 @@ INSERT INTO emendas_estaduais (
     %(pct_execucao)s, %(parlamentar_nome)s,
     %(ano_orcamento)s, %(cnpj_favorecido)s, %(status_execucao)s, %(origem_fonte)s
 )
-ON CONFLICT (numero_emenda) DO UPDATE SET
+ON CONFLICT (numero_emenda, ano_orcamento) DO UPDATE SET
     valor_pago       = EXCLUDED.valor_pago,
     valor_liquidado  = EXCLUDED.valor_liquidado,
     -- fix 2026-07-12: sem estas 2 colunas o upsert deixava no banco os valores
@@ -126,6 +126,8 @@ def carregar_prata(prata_path: Path, dry_run: bool) -> None:
         print(f"🔍 DRY-RUN — {len(rows):,} prontos | Erros: {erros}")
         return
 
+    anos = sorted({int(r['ano_orcamento']) for r in rows if r.get('ano_orcamento')})
+    fase = f"anos_{anos[0]}_{anos[-1]}" if anos else "anos_desconhecidos"
     inicio = datetime.now(timezone.utc)
     conn   = psycopg2.connect(**DB)
     cur    = conn.cursor()
@@ -148,16 +150,16 @@ def carregar_prata(prata_path: Path, dry_run: bool) -> None:
     dur = (fim - inicio).total_seconds()
 
     cur.execute(ETL_LOG, (
-        f'siga_ba_emendas_{ano}', 'fase_2',
+        'siga_ba_emendas', fase,
         'sucesso' if erros == 0 else 'parcial',
-        len(records), novos,
+        len(rows), novos,
         None if erros == 0 else f'{erros} erros',
         round(dur, 2), inicio, fim,
     ))
     conn.commit()
     cur.close()
     conn.close()
-    print(f"✅ {ano}: {novos:,} upserts em {dur:.1f}s | Erros: {erros}")
+    print(f"✅ {fase}: {novos:,} upserts em {dur:.1f}s | Erros: {erros}")
 
 
 def main():

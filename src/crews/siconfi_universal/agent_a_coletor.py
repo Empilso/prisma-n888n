@@ -363,13 +363,15 @@ def coletar_rgf(ente: dict, ano: int, periodo: int, anexo: int,
 
 def coletar_dca(ente: dict, ano: int, anexo: str,
                 force: bool) -> tuple[str, int]:
-    """DCA é anual (sem período). anexo é 'I-C', 'I-D', etc."""
-    path = caminho_bronze("DCA", ano, 0, anexo, ente)
+    """DCA é anual (sem período). O endpoint /dca retorna TODOS os anexos de
+    uma vez (não existe /dca/anexo-{N} — validado manualmente em 2026-07-07,
+    a rota antiga dava 404 em 100% das chamadas). O parâmetro `anexo` só é
+    usado pro nome do arquivo Bronze (mantido como "TODOS")."""
+    path = caminho_bronze("DCA", ano, 0, "TODOS", ente)
     if path.exists() and not force:
         return ("skip", 0)
 
-    # Endpoint: /dca/anexo-{anexo} (lowercase)
-    endpoint = f"{API_BASE}/dca/anexo-{anexo.lower()}"
+    endpoint = f"{API_BASE}/dca"
     params = {
         "an_exercicio": ano,
         "id_ente":      ente["id_ente"],
@@ -377,7 +379,7 @@ def coletar_dca(ente: dict, ano: int, anexo: str,
     try:
         data = get_api(endpoint, params)
     except Exception as e:
-        log(f"  ❌ DCA {ano}/anexo{anexo} ente={ente['id_ente']}: {e}")
+        log(f"  ❌ DCA {ano} ente={ente['id_ente']}: {e}")
         return ("erro", 0)
     finally:
         time.sleep(SLEEP_ENTRE_REQUESTS)
@@ -391,7 +393,7 @@ def coletar_dca(ente: dict, ano: int, anexo: str,
             "documento":        "DCA",
             "ano":              ano,
             "periodo":          0,
-            "anexo":            f"DCA_Anexo_{anexo.replace('-', '_')}",
+            "anexo":            "DCA_TODOS",
             "id_ente":          ente["id_ente"],
             "ente_tipo":        ente["ente_tipo"],
             "ente_uf":          ente["uf"],
@@ -423,9 +425,9 @@ def planejar_tarefas(documento: str, ano: int, entes: list[dict],
                 for a in anexos:
                     tarefas.append(("RGF", ente, ano, p, a))
     elif documento == "DCA":
+        # /dca retorna todos os anexos numa chamada só — 1 tarefa por ente.
         for ente in entes:
-            for a in anexos:
-                tarefas.append(("DCA", ente, ano, 0, a))
+            tarefas.append(("DCA", ente, ano, 0, "TODOS"))
     return tarefas
 
 

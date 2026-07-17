@@ -86,6 +86,20 @@ def c5(cur, strict):
     ok = dups == 0
     return ok, f"{dups} chaves duplicadas", not ok and strict
 
+@check("CHAVE_COMPOSTA", "PK protege numero_emenda+ano_orcamento")
+def c5b(cur, strict):
+    cur.execute("""
+        SELECT COALESCE(array_agg(a.attname ORDER BY k.ord), ARRAY[]::name[])
+        FROM pg_constraint c
+        CROSS JOIN LATERAL unnest(c.conkey) WITH ORDINALITY AS k(attnum, ord)
+        JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = k.attnum
+        WHERE c.conrelid = 'emendas_estaduais'::regclass
+          AND c.contype = 'p'
+    """)
+    cols = list(cur.fetchone()[0] or [])
+    ok = cols == ['numero_emenda', 'ano_orcamento']
+    return ok, f"PK atual: {cols}", not ok
+
 @check("VALOR_TOTAL_RAZOAVEL", "Total pago > R$ 100k")
 def c6(cur, strict):
     cur.execute("SELECT COALESCE(SUM(valor_pago), 0) FROM emendas_estaduais")

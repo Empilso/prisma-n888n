@@ -112,6 +112,14 @@ def normalizar_registro(r: dict, meta: dict) -> dict | None:
     exerc   = int(meta["ano"])
     periodo = int(meta.get("periodo", 0) or 0)
     anexo   = str(meta["anexo"])
+    # DCA: o endpoint /dca retorna todos os anexos numa chamada só, então o meta
+    # traz o placeholder "DCA_TODOS" — o anexo real (ex. "DCA-Anexo I-AB") vem em
+    # cada registro. RREO/RGF mantêm o anexo do meta (formato "RREO_Anexo_N" já
+    # consolidado em 3,9M linhas de siconfi_rreo — não mudar retroativamente).
+    if (meta.get("documento") or "").upper() == "DCA":
+        anexo_rec = get_col(r, COL_ANEXO)
+        if anexo_rec:
+            anexo = str(anexo_rec).strip()
 
     return {
         "id_ente":   id_ente,
