@@ -7,25 +7,40 @@
   "fase": 1,
   "fase_nome": "Dinheiro Direto",
   "tabela_destino": "camara_votacoes",
-  "tabelas_secundarias": ["camara_votos_nominais"],
+  "tabelas_secundarias": [
+    "camara_votos_nominais"
+  ],
   "portal": "Câmara Federal — Dados Abertos",
   "url_fonte": "https://dadosabertos.camara.leg.br/api/v2",
   "formato_origem": "JSON API REST v2",
   "tipo_pipeline": "api_paginada",
   "periodo_inicio": 2015,
   "periodo_fim": 2026,
-  "legislaturas": [55, 56, 57],
+  "legislaturas": [
+    55,
+    56,
+    57
+  ],
   "frequencia_atualizacao": "semanal",
-  "dependencias": ["politicos", "camara_proposicoes"],
+  "dependencias": [
+    "politicos",
+    "camara_proposicoes"
+  ],
   "status": "implementado",
   "versao": "v1.0",
   "registros_esperados": 2500000,
   "tempo_total_estimado": "varia (~30-60 min por legislatura na coleta) + 5-10 min ETL",
-  "stack": ["psycopg2", "requests", "tenacity", "tqdm", "rapidfuzz"],
+  "stack": [
+    "psycopg2",
+    "requests",
+    "tenacity",
+    "tqdm",
+    "rapidfuzz"
+  ],
   "caminhos": {
-    "raw":        "data/camara_votacoes/raw/",
-    "bronze":     "data/camara_votacoes/bronze/",
-    "prata":      "data/camara_votacoes/prata/",
+    "raw": "data/camara_votacoes/raw/",
+    "bronze": "data/camara_votacoes/bronze/",
+    "prata": "data/camara_votacoes/prata/",
     "rejeitados": "data/camara_votacoes/rejeitados/"
   },
   "agentes": [
@@ -34,21 +49,34 @@
       "nome": "Coletor",
       "arquivo": "agent_a_coletor.py",
       "descricao": "API Câmara (paginada mês a mês) → Bronze JSON (votações + votos nominais + orientações)",
-      "args": ["--legislatura {55|56|57}", "--ano {YYYY}", "--todos", "--force"]
+      "args": [
+        "--legislatura {55|56|57}",
+        "--ano {YYYY}",
+        "--todos",
+        "--force"
+      ]
     },
     {
       "id": "B",
       "nome": "Normalizador",
       "arquivo": "agent_b_normalizador.py",
       "descricao": "Bronze → Prata: resolve politico_id (id_legislativo | exato | fuzzy), normaliza tipo_voto, agrega sim/nao/outros/abstencoes",
-      "args": ["--bronze {arquivo}", "--todos"]
+      "args": [
+        "--bronze {arquivo}",
+        "--todos"
+      ]
     },
     {
       "id": "C",
       "nome": "Loader",
       "arquivo": "agent_c_loader.py",
       "descricao": "Prata → camara_votacoes (UPSERT por id) + camara_votos_nominais via COPY → TEMP TABLE → INSERT ... ON CONFLICT DO NOTHING",
-      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+      "args": [
+        "--prata {arquivo}",
+        "--todos",
+        "--dry-run"
+      ]
     }
-  ]
+  ],
+  "frequencia_fonte": "API Dados Abertos da Câmara atualiza continuamente; janela semanal interna"
 }

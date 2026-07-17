@@ -18,7 +18,13 @@
   "versao": "v1.0",
   "registros_esperados": 0,
   "tempo_total_estimado": "?",
-  "stack": ["python", "csv", "gzip", "psycopg2", "postgresql"],
+  "stack": [
+    "python",
+    "csv",
+    "gzip",
+    "psycopg2",
+    "postgresql"
+  ],
   "caminhos": {
     "raw": "data/tse_despesas_campanha/raw/",
     "bronze": "data/tse_despesas_campanha/",
@@ -26,5 +32,13 @@
     "ouro": "data/tse_despesas_campanha/",
     "rejeitados": "data/tse_despesas_campanha/"
   },
-  "agentes": ["agent_a_coletor", "agent_b_normalizador", "agent_c_loader", "agent_v_verificador", "agent_p_publicador"]
+  "agentes": [
+    "agent_a_coletor",
+    "agent_b_normalizador",
+    "agent_c_loader",
+    "agent_v_verificador",
+    "agent_p_publicador"
+  ],
+  "frequencia_atualizacao": "pos_eleicao",
+  "frequencia_fonte": "TSE Dados Abertos publica por eleição (cdn.tse.jus.br/odsele); retificações eventuais após o ciclo"
 }

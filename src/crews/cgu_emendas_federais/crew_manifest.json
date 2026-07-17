@@ -28,5 +28,7 @@
     "ouro": "data/cgu_emendas_federais/",
     "rejeitados": "data/cgu_emendas_federais/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

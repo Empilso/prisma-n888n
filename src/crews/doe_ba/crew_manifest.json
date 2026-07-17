@@ -24,5 +24,7 @@
     "ouro": "data/doe_ba/",
     "rejeitados": "data/doe_ba/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "diaria",
+  "frequencia_fonte": "Diário Oficial publica em dias úteis por definição"
 }

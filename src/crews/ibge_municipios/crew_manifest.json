@@ -15,7 +15,16 @@
   "versao": "v1.0",
   "registros_esperados": 5571,
   "tempo_total_estimado": "15s",
-  "stack": ["requests", "tenacity", "psycopg2", "pydantic", "hashlib", "json", "pathlib", "datetime"],
+  "stack": [
+    "requests",
+    "tenacity",
+    "psycopg2",
+    "pydantic",
+    "hashlib",
+    "json",
+    "pathlib",
+    "datetime"
+  ],
   "caminhos": {
     "dados_brutos": "data/raw/ibge/dados_brutos/",
     "bronze": "data/raw/ibge/bronze/",
@@ -42,7 +51,13 @@
         "Salva Bronze imutável: data/raw/ibge/municipios_{YYYY-MM-DD}_bronze.json",
         "Nunca sobrescreve — se já existe arquivo do dia, encerra sem erro"
       ],
-      "libs": ["requests", "tenacity", "hashlib", "json", "pathlib"],
+      "libs": [
+        "requests",
+        "tenacity",
+        "hashlib",
+        "json",
+        "pathlib"
+      ],
       "input": null,
       "output": "data/ibge/municipios_{YYYY-MM-DD}_bronze.json",
       "aviso": null,
@@ -68,7 +83,12 @@
         "Rejeitados salvos em data/saida/rejeitados/ibge/ com campo 'motivo_rejeicao'",
         "Salva Prata em data/saida/prata/ibge/municipios_{YYYY-MM-DD}_prata.json"
       ],
-      "libs": ["pydantic", "json", "pathlib", "datetime"],
+      "libs": [
+        "pydantic",
+        "json",
+        "pathlib",
+        "datetime"
+      ],
       "input": "data/ibge/municipios_{YYYY-MM-DD}_bronze.json",
       "output": "data/ibge/municipios_{YYYY-MM-DD}_prata.json",
       "aviso": null,
@@ -93,11 +113,18 @@
         "Registra em etl_log: portal, total, novos, atualizados, rejeitados, duracao_seg",
         "Flag --dry-run: valida payload sem gravar nada no banco"
       ],
-      "libs": ["psycopg2", "json", "pathlib", "datetime"],
+      "libs": [
+        "psycopg2",
+        "json",
+        "pathlib",
+        "datetime"
+      ],
       "input": "data/ibge/municipios_{YYYY-MM-DD}_prata.json",
       "output": "PostgreSQL: tabela municipios (5.571 registros)",
       "aviso": "Requer PostgreSQL rodando em localhost:5432 com banco prisma_data",
       "tem_periodo": false
     }
-  ]
+  ],
+  "frequencia_atualizacao": "anual",
+  "frequencia_fonte": "cadastro de municípios IBGE muda raramente (criação/fusão); revisão anual"
 }

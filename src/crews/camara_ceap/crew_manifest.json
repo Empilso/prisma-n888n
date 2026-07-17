@@ -14,16 +14,24 @@
   "periodo_inicio": 2015,
   "periodo_fim": 2025,
   "frequencia_atualizacao": "mensal",
-  "dependencias": ["politicos", "fornecedores_rf"],
+  "dependencias": [
+    "politicos",
+    "fornecedores_rf"
+  ],
   "status": "implementada",
   "versao": "v1.0",
   "registros_esperados": 3700000,
   "tempo_estimado_carga_completa": "60–90 min (download) + 15 min (ETL)",
-  "stack": ["psycopg2", "requests", "tenacity", "tqdm"],
+  "stack": [
+    "psycopg2",
+    "requests",
+    "tenacity",
+    "tqdm"
+  ],
   "caminhos": {
-    "raw":        "data/camara_ceap/raw/",
-    "bronze":     "data/camara_ceap/bronze/",
-    "prata":      "data/camara_ceap/prata/",
+    "raw": "data/camara_ceap/raw/",
+    "bronze": "data/camara_ceap/bronze/",
+    "prata": "data/camara_ceap/prata/",
     "rejeitados": "data/camara_ceap/rejeitados/"
   },
   "agentes": [
@@ -32,28 +40,44 @@
       "nome": "Coletor",
       "arquivo": "agent_a_coletor.py",
       "descricao": "Download do ZIP anual da Câmara → Bronze JSON",
-      "args": ["--ano {ANO}", "--todos", "--force"]
+      "args": [
+        "--ano {ANO}",
+        "--todos",
+        "--force"
+      ]
     },
     {
       "id": "B",
       "nome": "Normalizador",
       "arquivo": "agent_b_normalizador.py",
       "descricao": "Bronze → Prata: mapeia colunas, computa politico_id=SHA256(CPF), id_documento",
-      "args": ["--bronze {arquivo}", "--todos"]
+      "args": [
+        "--bronze {arquivo}",
+        "--todos"
+      ]
     },
     {
       "id": "C",
       "nome": "Loader",
       "arquivo": "agent_c_loader.py",
       "descricao": "Prata → camara_verbas_ceap via upsert ON CONFLICT (id_documento) DO NOTHING",
-      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+      "args": [
+        "--prata {arquivo}",
+        "--todos",
+        "--dry-run"
+      ]
     },
     {
       "id": "V",
       "nome": "Verify (Quality Gate)",
       "arquivo": "agent_verify.py",
       "descricao": "8 checks enterprise: volume, período, deputados, valor, negativos, nulos, duplicatas, categorias",
-      "args": ["--ano {ANO}", "--todos", "--strict"]
+      "args": [
+        "--ano {ANO}",
+        "--todos",
+        "--strict"
+      ]
     }
-  ]
+  ],
+  "frequencia_fonte": "Câmara publica o CSV anual da cota com atualização mensal"
 }

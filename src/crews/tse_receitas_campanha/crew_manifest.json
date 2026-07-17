@@ -10,16 +10,27 @@
   "portal": "TSE — Prestação de Contas Eleitorais",
   "url_fonte": "https://dadosabertos.tse.jus.br/dataset/prestacao-de-contas-eleitorais",
   "formato_origem": "CSV compactado em ZIP (latin-1, separador ;)",
-  "dependencias": ["ibge_municipios", "tse_candidatos"],
+  "dependencias": [
+    "ibge_municipios",
+    "tse_candidatos"
+  ],
   "status": "ativo",
   "versao": "v1.0",
   "registros_esperados": 5000000,
   "tempo_total_estimado": "60min",
-  "stack": ["requests", "tenacity", "tqdm", "pydantic", "psycopg2", "rapidfuzz", "hashlib"],
+  "stack": [
+    "requests",
+    "tenacity",
+    "tqdm",
+    "pydantic",
+    "psycopg2",
+    "rapidfuzz",
+    "hashlib"
+  ],
   "caminhos": {
-    "raw":        "data/tse_receitas_campanha/raw/",
-    "bronze":     "data/tse_receitas_campanha/bronze/",
-    "prata":      "data/tse_receitas_campanha/prata/",
+    "raw": "data/tse_receitas_campanha/raw/",
+    "bronze": "data/tse_receitas_campanha/bronze/",
+    "prata": "data/tse_receitas_campanha/prata/",
     "rejeitados": "data/tse_receitas_campanha/rejeitados/"
   },
   "agentes": [
@@ -97,5 +108,7 @@
       "aviso": "Requer migration 004_add_receitas_campanha.sql aplicada antes",
       "tem_periodo": true
     }
-  ]
+  ],
+  "frequencia_atualizacao": "pos_eleicao",
+  "frequencia_fonte": "TSE Dados Abertos publica por eleição (cdn.tse.jus.br/odsele); retificações eventuais após o ciclo"
 }

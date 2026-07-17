@@ -14,7 +14,9 @@
   "periodo_inicio": 2018,
   "periodo_fim": 2025,
   "frequencia_atualizacao": "bimestral (RREO) / quadrimestral (RGF) / anual (DCA)",
-  "dependencias": ["ibge_municipios"],
+  "dependencias": [
+    "ibge_municipios"
+  ],
   "status": "implementado",
   "versao": "v1.0",
   "registros_esperados": {
@@ -23,26 +25,32 @@
     "rgf_estados_2018_2025": 250000
   },
   "tempo_estimado_carga_completa": "RREO 27 capitais 2018-2025: ~6h | DCA 5.570 munis 2024: ~24h | DCA full 7 anos: 5-7 dias",
-  "stack": ["psycopg2", "requests", "tenacity", "tqdm", "concurrent.futures"],
+  "stack": [
+    "psycopg2",
+    "requests",
+    "tenacity",
+    "tqdm",
+    "concurrent.futures"
+  ],
   "rate_limit": {
     "estrategia": "ThreadPoolExecutor max_workers=3 + time.sleep(2) entre requests por thread",
     "limite_observado": "10-30 req/min antes de 429",
     "retry": "tenacity 5 tentativas, exponencial 2-60s, retry em 429/5xx"
   },
   "caminhos": {
-    "raw":        "data/siconfi_universal/raw/",
-    "bronze":     "data/siconfi_universal/bronze/",
-    "prata":      "data/siconfi_universal/prata/",
+    "raw": "data/siconfi_universal/raw/",
+    "bronze": "data/siconfi_universal/bronze/",
+    "prata": "data/siconfi_universal/prata/",
     "rejeitados": "data/siconfi_universal/rejeitados/"
   },
   "particionamento_bronze": {
-    "estado":   "bronze/{documento}/{ano}/{documento}_{ano}_{periodo}_uf-{uf}_bronze.json",
+    "estado": "bronze/{documento}/{ano}/{documento}_{ano}_{periodo}_uf-{uf}_bronze.json",
     "municipio": "bronze/{documento}/{ano}/{documento}_{ano}_{periodo}_mun-{ibge}_bronze.json"
   },
   "endpoints_api": {
     "rreo": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio={ANO}&nr_periodo={PERIODO}&co_tipo_demonstrativo={TIPO}&id_ente={IBGE}",
-    "rgf":  "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rgf?an_exercicio={ANO}&nr_periodo={PERIODO}&co_tipo_demonstrativo={TIPO}&id_ente={IBGE}&co_poder={PODER}",
-    "dca":  "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca/anexo-{ANEXO}?an_exercicio={ANO}&id_ente={IBGE}"
+    "rgf": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rgf?an_exercicio={ANO}&nr_periodo={PERIODO}&co_tipo_demonstrativo={TIPO}&id_ente={IBGE}&co_poder={PODER}",
+    "dca": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca/anexo-{ANEXO}?an_exercicio={ANO}&id_ente={IBGE}"
   },
   "tipos_demonstrativo": {
     "RREO": "Relatório Resumido da Execução Orçamentária (anexos 1-14)",
@@ -95,5 +103,6 @@
         "--dry-run"
       ]
     }
-  ]
+  ],
+  "frequencia_fonte": "declarada no manifest antes da padronização de 2026-07-17"
 }

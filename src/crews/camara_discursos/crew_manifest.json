@@ -26,5 +26,7 @@
     "ouro": "data/camara_discursos/",
     "rejeitados": "data/camara_discursos/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

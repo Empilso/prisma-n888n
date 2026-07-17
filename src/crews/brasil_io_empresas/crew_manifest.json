@@ -24,5 +24,7 @@
     "ouro": "data/brasil_io_empresas/",
     "rejeitados": "data/brasil_io_empresas/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "mensal",
+  "frequencia_fonte": "Receita Federal publica dumps abertos de CNPJ mensalmente"
 }

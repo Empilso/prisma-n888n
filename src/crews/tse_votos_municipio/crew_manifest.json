@@ -18,7 +18,11 @@
   "versao": "v1.0",
   "registros_esperados": 6385926,
   "tempo_total_estimado": "10-40 min por UF (download + agregação + upsert)",
-  "stack": ["requests", "zipfile streaming em disco", "psycopg2 execute_batch"],
+  "stack": [
+    "requests",
+    "zipfile streaming em disco",
+    "psycopg2 execute_batch"
+  ],
   "caminhos": {
     "raw": "data/tse_votos_municipio/raw/",
     "bronze": "data/tse_votos_municipio/",
@@ -26,11 +30,15 @@
     "ouro": "tabela tse_votos_cache (prisma_data)",
     "rejeitados": "data/tse_votos_municipio/"
   },
-  "agentes": ["main.py (coletor+normalizador+loader em 1 passo)"],
+  "agentes": [
+    "main.py (coletor+normalizador+loader em 1 passo)"
+  ],
   "notas": [
     "Mesma tabela/formato do endpoint Forbes POST /api/tse/carregar-votos (backend/src/api/core/tse_locais.py) — os dois convivem, upsert idempotente.",
     "2024 (7 UFs: BA MG PE PR RJ RS SP) foi carregado pelo endpoint Forbes; anos novos devem usar este crew (ZIP em disco, não em RAM).",
     "Eleições GERAIS (2022/2018/...) trazem DEPUTADO FEDERAL/ESTADUAL, SENADOR, GOVERNADOR, PRESIDENTE; municipais trazem PREFEITO/VEREADOR.",
     "Status por UF/ano em tse_votos_cache_status."
-  ]
+  ],
+  "frequencia_atualizacao": "pos_eleicao",
+  "frequencia_fonte": "TSE Dados Abertos publica por eleição (cdn.tse.jus.br/odsele); retificações eventuais após o ciclo"
 }

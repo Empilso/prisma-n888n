@@ -11,7 +11,9 @@
   "url_fonte": "https://transparencia.alba.ba.gov.br",
   "formato_origem": "JSON Ouro (já processado)",
   "tipo_pipeline": "ouro_local",
-  "dependencias": ["politicos"],
+  "dependencias": [
+    "politicos"
+  ],
   "status": "ativo",
   "versao": "v1.0",
   "caminhos": {
@@ -38,11 +40,18 @@
         "UPSERT em batches de 500 na tabela alba_verbas_gabinete",
         "Registra resultado em etl_log"
       ],
-      "libs": ["psycopg2", "rapidfuzz", "json", "pathlib"],
+      "libs": [
+        "psycopg2",
+        "rapidfuzz",
+        "json",
+        "pathlib"
+      ],
       "input": "data/alba/verbas_{ano}_gold_v2.2_*.json",
       "output": "PostgreSQL: tabela alba_verbas_gabinete",
       "aviso": "Requer rapidfuzz instalado para fuzzy match de nomes",
       "tem_periodo": false
     }
-  ]
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

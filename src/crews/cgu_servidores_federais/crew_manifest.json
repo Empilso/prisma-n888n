@@ -24,5 +24,7 @@
     "ouro": "data/cgu_servidores_federais/",
     "rejeitados": "data/cgu_servidores_federais/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

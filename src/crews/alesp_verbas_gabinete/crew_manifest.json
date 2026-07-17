@@ -14,7 +14,16 @@
     "portal": "ALESP — Assembleia Legislativa do Estado de São Paulo",
     "url": "https://www.al.sp.gov.br/repositorioDados/deputados/despesas_gabinetes.xml",
     "formato": "XML único, ~14 MB, atualizado continuamente",
-    "campos_origem": ["Ano", "Mes", "Matricula", "Deputado", "Tipo", "Fornecedor", "CNPJ", "Valor"]
+    "campos_origem": [
+      "Ano",
+      "Mes",
+      "Matricula",
+      "Deputado",
+      "Tipo",
+      "Fornecedor",
+      "CNPJ",
+      "Valor"
+    ]
   },
   "agentes": [
     {
@@ -23,7 +32,9 @@
       "descricao": "Baixa o XML da ALESP e salva como Bronze JSON",
       "entrada": "URL pública ALESP",
       "saida": "data/alesp_verbas_gabinete/bronze/alesp_verbas_bronze.json",
-      "args": ["--force (re-baixa mesmo se já existe)"]
+      "args": [
+        "--force (re-baixa mesmo se já existe)"
+      ]
     },
     {
       "id": "B",
@@ -31,7 +42,11 @@
       "descricao": "Normaliza Bronze → Prata. Gera id determinístico SHA256(matricula|competencia|cnpj|valor). Faz fuzzy match de nome contra politicos(uf=SP, cargo=DEPUTADO ESTADUAL) para vincular politico_id.",
       "entrada": "data/alesp_verbas_gabinete/bronze/alesp_verbas_bronze.json",
       "saida": "data/alesp_verbas_gabinete/prata/alesp_verbas_prata.json",
-      "rejeicoes": ["valor ausente ou <= 0", "matricula ausente", "ano/mes inválido"]
+      "rejeicoes": [
+        "valor ausente ou <= 0",
+        "matricula ausente",
+        "ano/mes inválido"
+      ]
     },
     {
       "id": "C",
@@ -39,7 +54,9 @@
       "descricao": "Carrega Prata → tabela alesp_verbas_gabinete. ON CONFLICT (id) DO NOTHING — idempotente.",
       "entrada": "data/alesp_verbas_gabinete/prata/alesp_verbas_prata.json",
       "saida": "tabela alesp_verbas_gabinete + etl_log",
-      "args": ["--dry-run (valida sem inserir)"]
+      "args": [
+        "--dry-run (valida sem inserir)"
+      ]
     },
     {
       "id": "V",
@@ -73,12 +90,27 @@
   },
   "schema_tabela": {
     "pk": "id (SHA256[:32])",
-    "campos": ["id", "politico_id", "matricula", "nome_deputado", "cnpj_fornecedor", "nome_fornecedor", "tipo_despesa", "valor", "mes", "ano", "competencia", "status_lneg"]
+    "campos": [
+      "id",
+      "politico_id",
+      "matricula",
+      "nome_deputado",
+      "cnpj_fornecedor",
+      "nome_fornecedor",
+      "tipo_despesa",
+      "valor",
+      "mes",
+      "ano",
+      "competencia",
+      "status_lneg"
+    ]
   },
   "notas": [
     "ALESP usa Matricula (código interno) como identificador, não CPF. Linkagem ao politico_id via fuzzy match de nome (rapidfuzz, threshold 80%).",
     "Cobertura politico_id esperada: ~72% (deputies com nome_urna matchável no TSE).",
     "XML publica histórico completo desde 2002 — não há necessidade de baixar por ano.",
     "Valor no XML está em formato US (ponto como decimal): '200.0', '2850.0'."
-  ]
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

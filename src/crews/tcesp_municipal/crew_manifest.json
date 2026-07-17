@@ -10,12 +10,22 @@
   "portal": "TCE-SP — Transparência Municipal",
   "url_fonte": "https://transparencia.tce.sp.gov.br/api/json/municipios",
   "formato_origem": "JSON API REST",
-  "dependencias": ["ibge_municipios"],
+  "dependencias": [
+    "ibge_municipios"
+  ],
   "status": "ativo",
   "versao": "v1.0",
   "registros_esperados": 644,
   "tempo_total_estimado": "30s",
-  "stack": ["requests", "psycopg2", "difflib", "hashlib", "json", "pathlib", "datetime"],
+  "stack": [
+    "requests",
+    "psycopg2",
+    "difflib",
+    "hashlib",
+    "json",
+    "pathlib",
+    "datetime"
+  ],
   "caminhos": {
     "bronze": "data/raw/tcesp/bronze/",
     "prata": "data/raw/tcesp/prata/",
@@ -40,7 +50,12 @@
         "Salva Bronze imutável: data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
         "Nunca sobrescreve — se já existe arquivo do dia, encerra sem erro"
       ],
-      "libs": ["requests", "hashlib", "json", "pathlib"],
+      "libs": [
+        "requests",
+        "hashlib",
+        "json",
+        "pathlib"
+      ],
       "input": null,
       "output": "data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
       "aviso": null,
@@ -65,7 +80,13 @@
         "Sem match: rejeitados com motivo + melhor candidato",
         "Relatório: exato/fuzzy/rejeitados + municípios IBGE-SP ausentes no TCE-SP (ex.: capital → TCM-SP)"
       ],
-      "libs": ["psycopg2", "difflib", "unicodedata", "json", "pathlib"],
+      "libs": [
+        "psycopg2",
+        "difflib",
+        "unicodedata",
+        "json",
+        "pathlib"
+      ],
       "input": "data/raw/tcesp/bronze/municipios_{YYYY-MM-DD}_bronze.json",
       "output": "data/raw/tcesp/prata/municipios_{YYYY-MM-DD}_prata.json",
       "aviso": "Requer crew ibge_municipios já carregada (tabela municipios com uf=SP)",
@@ -90,11 +111,18 @@
         "Registra em etl_log: portal tcesp_municipal, fase_1_cadastro",
         "Flag --dry-run: valida payload sem gravar nada"
       ],
-      "libs": ["psycopg2", "json", "pathlib", "datetime"],
+      "libs": [
+        "psycopg2",
+        "json",
+        "pathlib",
+        "datetime"
+      ],
       "input": "data/raw/tcesp/prata/municipios_{YYYY-MM-DD}_prata.json",
       "output": "PostgreSQL: tabela tcesp_municipios (~644 registros)",
       "aviso": "Requer PostgreSQL rodando em localhost:5432 com banco prisma_data",
       "tem_periodo": false
     }
-  ]
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

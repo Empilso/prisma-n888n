@@ -10,12 +10,22 @@
   "portal": "TSE — Repositório de Dados Eleitorais",
   "url_fonte": "https://dadosabertos.tse.jus.br/dataset/candidatos",
   "formato_origem": "CSV compactado (latin-1, separador ;)",
-  "dependencias": ["ibge_municipios"],
+  "dependencias": [
+    "ibge_municipios"
+  ],
   "status": "ativo",
   "versao": "v1.0",
   "registros_esperados": 5000000,
   "tempo_total_estimado": "55min",
-  "stack": ["pandas", "chardet", "fuzzywuzzy", "pydantic", "psycopg2", "hashlib", "tenacity"],
+  "stack": [
+    "pandas",
+    "chardet",
+    "fuzzywuzzy",
+    "pydantic",
+    "psycopg2",
+    "hashlib",
+    "tenacity"
+  ],
   "caminhos": {
     "dados_brutos": "data/raw/tse/candidatos/dados_brutos/",
     "bronze": "data/raw/tse/candidatos/bronze/",
@@ -43,7 +53,14 @@
         "Salva Bronze: data/raw/tse/candidatos/candidatos_{ano}_bronze.json",
         "Suporta --ano para processar ano específico ou --todos para 2006-2024"
       ],
-      "libs": ["pandas", "chardet", "hashlib", "json", "pathlib", "argparse"],
+      "libs": [
+        "pandas",
+        "chardet",
+        "hashlib",
+        "json",
+        "pathlib",
+        "argparse"
+      ],
       "input": "data/raw/tse_2024/consulta_cand_*.csv",
       "output": "data/raw/tse/candidatos/candidatos_{ano}_bronze.json",
       "aviso": null,
@@ -69,7 +86,14 @@
         "Rejeitados: salva em data/saida/rejeitados/tse/candidatos/ com motivo_rejeicao",
         "Salva Prata: data/saida/prata/tse/candidatos/candidatos_{ano}_prata.json"
       ],
-      "libs": ["pydantic", "rapidfuzz", "json", "pathlib", "datetime", "re"],
+      "libs": [
+        "pydantic",
+        "rapidfuzz",
+        "json",
+        "pathlib",
+        "datetime",
+        "re"
+      ],
       "input": "data/raw/tse/candidatos/candidatos_{ano}_bronze.json",
       "output": "data/saida/prata/tse/candidatos/candidatos_{ano}_prata.json",
       "aviso": "Requer tabela municipios carregada no PostgreSQL (dependência: ibge_municipios)",
@@ -94,11 +118,19 @@
         "Registra em etl_log: portal, ano, total, novos, atualizados, rejeitados, duracao_seg",
         "Flag --dry-run: valida payload sem gravar nada no banco"
       ],
-      "libs": ["psycopg2", "json", "pathlib", "datetime", "argparse"],
+      "libs": [
+        "psycopg2",
+        "json",
+        "pathlib",
+        "datetime",
+        "argparse"
+      ],
       "input": "data/saida/prata/tse/candidatos/candidatos_{ano}_prata.json",
       "output": "PostgreSQL: tabela politicos",
       "aviso": "Requer PostgreSQL rodando em localhost:5432 com banco prisma_data",
       "tem_periodo": true
     }
-  ]
+  ],
+  "frequencia_atualizacao": "pos_eleicao",
+  "frequencia_fonte": "TSE Dados Abertos publica por eleição (cdn.tse.jus.br/odsele); retificações eventuais após o ciclo"
 }

@@ -27,5 +27,7 @@
     "ouro": "data/seplan_loa_pdf/",
     "rejeitados": "data/seplan_loa_pdf/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "anual",
+  "frequencia_fonte": "LOA é peça orçamentária anual por definição"
 }

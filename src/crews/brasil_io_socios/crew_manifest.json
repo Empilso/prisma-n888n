@@ -26,5 +26,7 @@
     "ouro": "data/brasil_io_socios/",
     "rejeitados": "data/brasil_io_socios/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "mensal",
+  "frequencia_fonte": "Receita Federal publica dumps abertos de QSA mensalmente"
 }

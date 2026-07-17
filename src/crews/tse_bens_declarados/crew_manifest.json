@@ -26,5 +26,7 @@
     "ouro": "data/tse_bens_declarados/",
     "rejeitados": "data/tse_bens_declarados/"
   },
-  "agentes": []
+  "agentes": [],
+  "frequencia_atualizacao": "pos_eleicao",
+  "frequencia_fonte": "TSE Dados Abertos publica por eleição (cdn.tse.jus.br/odsele); retificações eventuais após o ciclo"
 }

@@ -1,0 +1,10 @@
+{
+  "id": "alba_parlamentares",
+  "nome": "ALBA Parlamentares",
+  "descricao": "Deputados estaduais BA ativos (base pra cruzamentos)",
+  "tabela_destino": "alba_parlamentares",
+  "portal": "ALBA — Assembleia Legislativa da Bahia",
+  "status": "implementada",
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
+}

@@ -11,16 +11,23 @@
   "url_fonte": "https://www.transparencia.ba.gov.br/resource?type=emendas&ano={ANO}&output=csv",
   "formato_origem": "CSV (multi-encoding, multi-separador)",
   "tipo_pipeline": "scraping_csv",
-  "dependencias": ["politicos", "municipios"],
+  "dependencias": [
+    "politicos",
+    "municipios"
+  ],
   "status": "implementada",
   "versao": "v1.0",
   "registros_esperados": 5000,
   "tempo_estimado_carga_completa": "~15 min (11 anos)",
-  "stack": ["psycopg2", "requests", "tenacity"],
+  "stack": [
+    "psycopg2",
+    "requests",
+    "tenacity"
+  ],
   "caminhos": {
-    "raw":        "data/siga_ba_emendas/raw/",
-    "bronze":     "data/siga_ba_emendas/bronze/",
-    "prata":      "data/siga_ba_emendas/prata/",
+    "raw": "data/siga_ba_emendas/raw/",
+    "bronze": "data/siga_ba_emendas/bronze/",
+    "prata": "data/siga_ba_emendas/prata/",
     "rejeitados": "data/siga_ba_emendas/rejeitados/"
   },
   "agentes": [
@@ -29,28 +36,43 @@
       "nome": "Coletor",
       "arquivo": "agent_a_coletor.py",
       "descricao": "Tenta múltiplas URLs do Portal BA e SIAFEB por ano → Bronze JSON",
-      "args": ["--ano {ANO}", "--todos", "--force"]
+      "args": [
+        "--ano {ANO}",
+        "--todos",
+        "--force"
+      ]
     },
     {
       "id": "B",
       "nome": "Normalizador",
       "arquivo": "agent_b_normalizador.py",
       "descricao": "Bronze → Prata: mapeamento defensivo, parse_valor BR/US, calcula pct_execucao",
-      "args": ["--bronze {arquivo}", "--todos"]
+      "args": [
+        "--bronze {arquivo}",
+        "--todos"
+      ]
     },
     {
       "id": "C",
       "nome": "Loader",
       "arquivo": "agent_c_loader.py",
       "descricao": "Prata → emendas_estaduais via UPSERT (atualiza valores de execução)",
-      "args": ["--prata {arquivo}", "--todos", "--dry-run"]
+      "args": [
+        "--prata {arquivo}",
+        "--todos",
+        "--dry-run"
+      ]
     },
     {
       "id": "V",
       "nome": "Verify",
       "arquivo": "agent_verify.py",
       "descricao": "7 checks: volume, anos, valor, município, duplicatas, total, parlamentares",
-      "args": ["--strict"]
+      "args": [
+        "--strict"
+      ]
     }
-  ]
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }

@@ -50,5 +50,7 @@
       "tipo": "ETL",
       "arquivo": "agent_c_loader.py"
     }
-  ]
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
 }
