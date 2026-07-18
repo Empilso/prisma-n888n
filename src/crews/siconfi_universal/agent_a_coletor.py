@@ -483,9 +483,12 @@ def main():
             log(f"❌ Nenhum ente casou com --ibge {sorted(alvo)} — confira os códigos")
             raise SystemExit(1)
 
-    # Anexos
+    # Anexos — RREO/RGF usam anexo NUMÉRICO (coletores formatam {anexo:02d});
+    # via CLI chega string e quebrava TODA a coleta com
+    # "Unknown format code 'd' for object of type 'str'" (fila 2026-07-18).
+    # DCA usa letras ("I-C"), então só converte quando for dígito.
     if args.anexo:
-        anexos = [args.anexo]
+        anexos = [int(args.anexo) if str(args.anexo).isdigit() else args.anexo]
     else:
         anexos = {
             "RREO": ANEXOS_RREO_PADRAO,
