@@ -107,12 +107,20 @@ def coletar_proposicoes(force: bool, max_autores: int | None) -> int:
         autores = autores[:max_autores]
     log(f"📊 proposições: coletando por {len(autores)} autor(es) da ALBA (filtro ?autorId)")
 
-    coletadas = 0
+    coletadas, falhas = 0, []
     for i, autor_id in enumerate(autores, 1):
         destino = BRONZE / f"proposicoes_autor{autor_id}.json"
         if destino.exists() and not force:
             continue
-        data = _get(f"{BASE}/proposicao/?autorId={autor_id}&qtd=3000")
+        # Falha persistente de UM autor (500/timeout da API instável da ALBA)
+        # NUNCA aborta a coleta inteira — loga e segue. Re-run preenche o que faltou.
+        try:
+            data = _get(f"{BASE}/proposicao/?autorId={autor_id}&qtd=3000")
+        except Exception as e:
+            falhas.append(autor_id)
+            log(f"  ❌ autor {autor_id} falhou após retries ({str(e)[:60]}) — pulando")
+            time.sleep(SLEEP)
+            continue
         registros = data.get("Data", []) or []
         payload = {
             "meta": {"fonte": "ALBA API /proposicao?autorId", "autor_id": autor_id,
@@ -125,7 +133,9 @@ def coletar_proposicoes(force: bool, max_autores: int | None) -> int:
         if i % 10 == 0 or i == len(autores):
             log(f"  … {i}/{len(autores)} autores ({coletadas:,} proposições)")
         time.sleep(SLEEP)
-    log(f"✅ proposições: {coletadas:,} coletadas de {len(autores)} autores")
+    if falhas:
+        log(f"⚠️ {len(falhas)} autor(es) falharam (re-run preenche): {falhas}")
+    log(f"✅ proposições: {coletadas:,} coletadas de {len(autores) - len(falhas)}/{len(autores)} autores")
     return coletadas
 
 
