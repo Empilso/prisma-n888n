@@ -1,0 +1,12 @@
+{
+  "crew_id": "alba_legislativo",
+  "nome": "ALBA Legislativo",
+  "descricao": "Proposições e comissões dos deputados estaduais da Bahia via API pública oficial da ALBA (NoPaperCloud). Atribuição por autorId + CPF.",
+  "fonte": "https://albalegis.nopapercloud.com.br/api/publico",
+  "portal": "ALBA — Assembleia Legislativa da Bahia",
+  "tabelas_destino": ["alba_proposicoes", "alba_comissoes"],
+  "frequencia_atualizacao": "semanal",
+  "frequencia_fonte": "continua",
+  "agentes": ["agent_a_coletor.py", "agent_b_normalizador.py", "agent_c_loader.py"],
+  "observacoes": "API pagina SÓ por filtro ?autorId (pg ignorado, qtd grande dá timeout). Coleta por autor_id de alba_parlamentares. Frequência/presença por sessão = fase 2 (API não expõe direto)."
+}
