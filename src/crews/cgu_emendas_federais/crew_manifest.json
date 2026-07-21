@@ -8,27 +8,31 @@
   "fase_nome": "Dinheiro Indireto",
   "tabela_destino": "emendas_federais",
   "portal": "Portal da Transparência — CGU",
-  "url_fonte": "https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares",
-  "formato_origem": "CSV anual",
-  "tipo_pipeline": "csv_local",
+  "url_fonte": "https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/emendas-parlamentares/EmendasParlamentares.zip",
+  "formato_origem": "ZIP único com 3 CSVs (histórico completo 2014-2026, sem token)",
+  "tipo_pipeline": "csv_download",
   "dependencias": [
     "politicos",
-    "municipios",
-    "fornecedores_rf"
+    "municipios"
   ],
-  "status": "pendente",
-  "versao": "v0.0",
-  "registros_esperados": 0,
-  "tempo_total_estimado": "?",
-  "stack": [],
+  "status": "implementada",
+  "versao": "v1.0",
+  "registros_esperados": 87000,
+  "tempo_total_estimado": "5-10min (download + parse + load 2014-2026)",
+  "stack": ["requests", "psycopg2", "rapidfuzz"],
   "caminhos": {
     "raw": "data/cgu_emendas_federais/raw/",
-    "bronze": "data/cgu_emendas_federais/",
-    "prata": "data/cgu_emendas_federais/",
+    "bronze": "data/cgu_emendas_federais/bronze/",
+    "prata": "data/cgu_emendas_federais/prata/",
     "ouro": "data/cgu_emendas_federais/",
-    "rejeitados": "data/cgu_emendas_federais/"
+    "rejeitados": "data/cgu_emendas_federais/rejeitados/"
   },
-  "agentes": [],
+  "agentes": [
+    "agent_a_extrator.py",
+    "agent_b_normalizador.py",
+    "agent_c_loader.py",
+    "agent_verify.py"
+  ],
   "frequencia_atualizacao": "a_confirmar",
-  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
+  "frequencia_fonte": "ZIP único acumulativo — cadência de republicação do portal ainda não confirmada; checar hash_sha256 do bronze entre execuções antes de agendar recarga automática"
 }
