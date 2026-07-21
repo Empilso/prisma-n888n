@@ -1,0 +1,37 @@
+{
+  "id": "sapl_generico",
+  "nome": "SAPL Genérico — Câmaras Municipais (Interlegis)",
+  "descricao": "Atividade legislativa de vereadores (cadastro, mandato, partido, projetos de lei) extraída da API pública do sistema SAPL, usado por centenas de câmaras municipais no padrão de domínio sapl.{municipio}.{uf}.leg.br",
+  "icone": "🏛️",
+  "cor": "#34c759",
+  "fase": 3,
+  "fase_nome": "Motor Forense",
+  "tabela_destino": "sapl_parlamentares, sapl_materias, sapl_instancias",
+  "portal": "SAPL (Interlegis/Senado) — instâncias próprias de cada câmara municipal",
+  "url_fonte": "https://sapl.{municipio-sem-acento-sem-espaco}.{uf}.leg.br/api/",
+  "formato_origem": "JSON (API REST pública Django REST Framework, sem login)",
+  "tipo_pipeline": "coleta_publica_multi_instancia",
+  "dependencias": ["politicos", "municipios"],
+  "status": "piloto_validado_local",
+  "versao": "v1.0",
+  "registros_esperados": "desconhecido até Fase 0 completa (~600-1200 câmaras estimadas; piloto de 30 municípios do PR já confirmou 10 ativas = 33%)",
+  "tempo_total_estimado": "Fase 0 (descoberta, 5.570 municípios): horas. Fase 1 completa (todas confirmadas): dias — RODAR NA VPS",
+  "stack": ["requests", "psycopg2", "rapidfuzz"],
+  "caminhos": {
+    "raw": "data/sapl_generico/",
+    "bronze": "data/sapl_generico/bronze/",
+    "prata": "data/sapl_generico/prata/",
+    "ouro": "data/sapl_generico/",
+    "rejeitados": "data/sapl_generico/"
+  },
+  "agentes": [
+    "agent_0_descoberta.py",
+    "agent_a_extrator.py",
+    "agent_b_normalizador.py",
+    "agent_c_loader.py",
+    "agent_verify.py"
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "Cadência de novos projetos de lei varia muito por câmara (semanal em capitais, esporádica em municípios pequenos) — observar antes de definir",
+  "notas": "Piloto validado localmente em 2026-07-21: Agent 0 testado com 30 municípios do PR (10 confirmados ativos), Agent A coletado de 2 câmaras reais (Almirante Tamandaré e Alto Paraíso), Agent B com 62% de match politico_id (índice por cargo=VEREADOR + municipio_ibge, muito mais preciso que o cruzamento por UF usado em emendas federais), Agent C idempotente confirmado (2 rodadas, mesma contagem), Agent Verify 6/6 checks. Fase 0 completa (5.570 municípios) e Fase 1 em escala (todas as câmaras confirmadas) NUNCA rodaram — devem rodar na VPS por causa do volume (potencialmente milhões de linhas de matéria legislativa). Sem endpoint de presença/falta em sessão nem de verba de gabinete confirmado na API padrão — não prometer isso nesta fase. politico_id resolvido só por nome+município (sem CPF disponível no SAPL), taxa de match esperada varia por câmara — nunca acusar sem medir."
+}
