@@ -1,0 +1,64 @@
+{
+  "id": "almt_sigcon_emendas",
+  "nome": "SIGCON Emendas Estaduais MT",
+  "descricao": "Emendas parlamentares estaduais de Mato Grosso, com autoria real por deputado — SIGCON (SEPLAN/SEFAZ MT)",
+  "icone": "💵",
+  "cor": "#0077c8",
+  "fase": 2,
+  "fase_nome": "Dinheiro Indireto",
+  "tabela_destino": "emendas_estaduais (agregado) + emendas_estaduais_aplicacoes (granular)",
+  "portal": "SIGCON — Sistema Gerenciamento de Convênios (SEPLAN/SEFAZ MT)",
+  "url_fonte": "https://transp.sigcon.seplan.mt.gov.br/index_.php?operacao=Manut&serv=convenio&session_tipo_convenio=Repasse&ano_ass={ANO}",
+  "formato_origem": "HTML (scraping autenticado por sessão PHP, sem endpoint JSON/CSV documentado)",
+  "tipo_pipeline": "scraping_html",
+  "dependencias": [
+    "politicos",
+    "municipios"
+  ],
+  "status": "piloto_local_validado",
+  "versao": "v1.0",
+  "registros_esperados": "desconhecido até rodar --todos (2024 sozinho: 192 emendas / 798 aplicações)",
+  "tempo_estimado_carga_completa": "~20 anos × ~15-40s/ano (paginação + cortesia 1s/página) — rodar na VPS, não no PC",
+  "stack": [
+    "requests",
+    "tenacity",
+    "psycopg2",
+    "rapidfuzz"
+  ],
+  "caminhos": {
+    "bronze": "data/almt_sigcon_emendas/bronze/",
+    "prata": "data/almt_sigcon_emendas/prata/"
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "nome": "Extrator",
+      "arquivo": "agent_a_extrator.py",
+      "descricao": "Sessão PHP + scraping HTML por ano (ano_ass, pag_tela=500) → Bronze JSON. Extrai convênio + sub-tabela Nm.Emenda/Parlamentar/Val.Utilizada",
+      "args": ["--ano {ANO}", "--todos", "--force"]
+    },
+    {
+      "id": "B",
+      "nome": "Normalizador",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Bronze → Prata (2 camadas: aplicações granulares + agregado por emenda). Resolve politico_id (DEPUTADO ESTADUAL MT) e municipio_ibge",
+      "args": ["--ano {ANO}", "--todos"]
+    },
+    {
+      "id": "C",
+      "nome": "Loader",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Prata → emendas_estaduais + emendas_estaduais_aplicacoes via UPSERT",
+      "args": ["--ano {ANO}", "--todos", "--dry-run"]
+    },
+    {
+      "id": "V",
+      "nome": "Verify",
+      "arquivo": "agent_verify.py",
+      "descricao": "10 checks: volume, anos, duplicatas de PK, valor pago, atribuição só com autor, match politico_id, soma aplicações==agregado, parlamentares distintos, FK município",
+      "args": ["--strict"]
+    }
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "SIGCON não documenta cadência — Dicionário de Dados do portal cita 'Diária' pra CSV que nem existe pra emendas; medir empiricamente antes de agendar recarga"
+}
