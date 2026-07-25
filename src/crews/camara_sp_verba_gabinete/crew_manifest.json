@@ -1,0 +1,102 @@
+{
+  "crew": "camara_sp_verba_gabinete",
+  "descricao": "Despesas de Gabinete dos Vereadores da Câmara Municipal de São Paulo (piloto — verba de vereador)",
+  "status": "implementada",
+  "versao": "v1.0",
+  "tabela_destino": "camara_sp_verba_gabinete",
+  "registros_esperados": 60000,
+  "periodo": {
+    "inicio": "2015",
+    "fim": "atual",
+    "observacoes": "Cobertura confirmada por teste real: 2015-01 tem dado, 2013-01 retorna vazio. Não há endpoint 'tudo de uma vez' — coleta é paginada por competência (ano+mês)."
+  },
+  "fonte": {
+    "portal": "SisGV Consulta — Câmara Municipal de São Paulo",
+    "url": "https://sisgvconsulta.saopaulo.sp.leg.br/ws/Servicos.asmx/ObterDebitoVereadorJSON",
+    "formato": "Web Service HTTP POST (ano, mes) → JSON, um mês por chamada",
+    "campos_origem": [
+      "CENTROCUSTOSID",
+      "DEPARTAMENTO",
+      "VEREADOR",
+      "ANO",
+      "MES",
+      "DESPESA",
+      "CNPJ",
+      "FORNECEDOR",
+      "VALOR"
+    ],
+    "escopo": "Só GABINETE DE VEREADOR (débito). Fora de escopo: ObterCreditoVereadorJSON (verba mensal alocada, não é gasto) e ObterDebito/CreditoLiderancaJSON (verba de bancada partidária, não é individual)."
+  },
+  "agentes": [
+    {
+      "id": "A",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Itera ano×mês (2015→atual) chamando o Web Service da Câmara SP, salva Bronze JSON consolidado.",
+      "entrada": "https://sisgvconsulta.saopaulo.sp.leg.br/ws/Servicos.asmx/ObterDebitoVereadorJSON",
+      "saida": "data/camara_sp_verba_gabinete/bronze/camara_sp_verba_bronze.json",
+      "args": ["--ano-inicio", "--ano-fim", "--force (re-baixa mesmo se já existe)"]
+    },
+    {
+      "id": "B",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Normaliza Bronze → Prata. Gera id determinístico SHA256(centro_custos_id|competencia|cnpj|despesa|valor). Faz fuzzy match de VEREADOR contra politicos(municipio_ibge=3550308, cargo=VEREADOR) para vincular politico_id.",
+      "entrada": "data/camara_sp_verba_gabinete/bronze/camara_sp_verba_bronze.json",
+      "saida": "data/camara_sp_verba_gabinete/prata/camara_sp_verba_prata.json",
+      "rejeicoes": ["centro_custos_id ausente", "valor ausente ou <= 0", "ano/mes inválido"]
+    },
+    {
+      "id": "C",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Carrega Prata → tabela camara_sp_verba_gabinete (DDL idempotente embutido). ON CONFLICT (id) DO NOTHING — idempotente.",
+      "entrada": "data/camara_sp_verba_gabinete/prata/camara_sp_verba_prata.json",
+      "saida": "tabela camara_sp_verba_gabinete + etl_log",
+      "args": ["--dry-run (valida sem inserir)"]
+    },
+    {
+      "id": "V",
+      "arquivo": "agent_verify.py",
+      "descricao": "Quality Gate com 8 verificações. Usa --strict para CI (exit 1 se falhar).",
+      "checks": [
+        "[1] Volume >= 5.000 registros (crítico)",
+        "[2] Período: ano_min <= 2016, ano_max >= 2024 (crítico)",
+        "[3] Vereadores únicos: 40–250 (crítico, histórico multi-legislatura)",
+        "[4] Valor total R$ 5M–R$ 1B (crítico)",
+        "[5] Zero valores <= 0 (crítico)",
+        "[6] Cobertura politico_id >= 40% (aviso)",
+        "[7] Zero duplicatas de id (crítico)",
+        "[8] Categorias distintas >= 5 (aviso)"
+      ]
+    }
+  ],
+  "execucao": {
+    "primeira_vez": [
+      "python agent_a_coletor.py",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py --strict"
+    ],
+    "atualizacao_mensal": [
+      "python agent_a_coletor.py --force",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py --strict"
+    ]
+  },
+  "schema_tabela": {
+    "pk": "id (SHA256[:32])",
+    "campos": [
+      "id", "politico_id", "centro_custos_id", "vereador_nome",
+      "cnpj_fornecedor", "nome_fornecedor", "tipo_despesa",
+      "valor", "mes", "ano", "competencia", "status_lneg"
+    ]
+  },
+  "notas": [
+    "Piloto de verba de vereador (município). Diferente de ALESP/ALBA (estadual) — não existe fonte nacional/estadual pra gasto de vereador, é 1 portal por câmara municipal.",
+    "SP capital escolhida como piloto por ter portal estruturado com Web Service JSON real (raro entre câmaras municipais — a maioria só publica PDF ou nada).",
+    "Cobertura politico_id esperada mais baixa que ALESP — nome de urna de vereador tem mais variação (apelidos, títulos tipo 'Dr.'/'Pastor') e câmara não usa matrícula pública como chave.",
+    "Web Service não é 'tudo de uma vez' como ALESP — 1 chamada por ano×mês, ~130 chamadas pro histórico completo 2015→atual. Agent A tem sleep(0.3s) entre chamadas por educação com o servidor da fonte.",
+    "Investigado via curl em 25/07/2026, testado com dado real (2025-06 retornou 499 registros, 2013-01 retornou vazio confirmando início em 2015)."
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "cadência do portal ainda não confirmada — verificar na fonte antes de agendar recarga"
+}
