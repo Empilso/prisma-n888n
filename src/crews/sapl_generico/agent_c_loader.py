@@ -94,7 +94,16 @@ def _data(v):
     return v or None
 
 
+def _dedupe(rows: list[dict]) -> list[dict]:
+    """Mantém só a última ocorrência de cada (dominio, id_sapl) — o Postgres
+    rejeita ON CONFLICT DO UPDATE afetando a mesma linha 2x num único INSERT,
+    e a Agent B pode gerar duplicata dentro do mesmo domínio (paginação
+    sobreposta na fonte)."""
+    return list({(r["dominio"], r["id_sapl"]): r for r in rows}.values())
+
+
 def carregar_parlamentares(cur, rows: list[dict]) -> None:
+    rows = _dedupe(rows)
     linhas = [(
         r["dominio"], r["id_sapl"], r["municipio_ibge"], r["nome_completo"], r["nome_parlamentar"],
         r["ativo"], r["email"], r["legislatura"], _data(r["data_inicio_mandato"]), _data(r["data_fim_mandato"]),
@@ -124,6 +133,7 @@ def carregar_parlamentares(cur, rows: list[dict]) -> None:
 
 
 def carregar_materias(cur, rows: list[dict]) -> None:
+    rows = _dedupe(rows)
     linhas = [(
         r["dominio"], r["id_sapl"], r["municipio_ibge"], r["numero"], r["ano"], r["tipo"],
         r["ementa"], _data(r["data_apresentacao"]), r["em_tramitacao"],
