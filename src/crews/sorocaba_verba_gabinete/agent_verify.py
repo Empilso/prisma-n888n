@@ -9,7 +9,13 @@ o volume observado divergir muito do esperado):
       × categorias parcialmente preenchidas)
   [2] Período (2005 até o ano atual — achado real: a fonte cobre bem mais
       histórico do que a navegação manual sugeria antes de rodar o crew)
-  [3] Vereadores únicos (esperado 15–60, histórico multi-legislatura)
+  [3] Vereadores únicos (esperado 50–110 — recalibrado após carga real:
+      21 anos/~6 legislaturas dá bem mais gente que os 11 anos de SP capital;
+      valor bruto real observado foi 133, caiu pra 84 depois de corrigir
+      nome com marcador de rodapé grudado (achado real, ver
+      limpar_nome_vereador no Agent B); ~10 pares residuais ainda divergem só
+      por acento entre documentos de épocas diferentes — politico_id resolve
+      a identidade real corretamente mesmo nesses casos, confirmado no banco)
   [4] Valor total dentro de faixa plausível (R$500k–R$50M)
   [5] Zero valores <= 0 (célula vazia/"-" nunca devia ter virado linha)
   [6] Cobertura politico_id (aviso, não crítico)
@@ -65,8 +71,8 @@ def main():
 
     cur.execute("SELECT COUNT(DISTINCT vereador_nome) FROM sorocaba_verba_gabinete")
     vereadores = cur.fetchone()[0]
-    check("[3] Vereadores únicos", 15 <= vereadores <= 60,
-          f"{vereadores} (esperado 15–60 — histórico multi-legislatura)", critico=True)
+    check("[3] Vereadores únicos", 50 <= vereadores <= 110,
+          f"{vereadores} (esperado 50–110 — histórico multi-legislatura, 21 anos)", critico=True)
 
     cur.execute("SELECT SUM(valor::numeric) FROM sorocaba_verba_gabinete")
     soma = float(cur.fetchone()[0] or 0)
