@@ -65,6 +65,18 @@ def log(m: str) -> None:
     print(f"[{datetime.now():%H:%M:%S}] {m}", flush=True)
 
 
+# 2026-07-26: tentei detectar as bordas objeto/município/valor dinamicamente
+# pelo x0 do cabeçalho de cada PDF (a posição varia de ano pra ano — 2024/2025
+# têm layout diferente de 2023/2026, o que zerava o município resolvido nesses
+# 2 anos com os limites fixos abaixo). REVERTIDO: o texto de "Objeto" é uma
+# coluna de descrição livre cujo conteúdo real não fica confinado perto do x0
+# do próprio rótulo do cabeçalho — usar ponto médio entre cabeçalhos piorou
+# TODOS os anos (2023 caiu de 83,3% pra 5,1% de município resolvido). Manter
+# os limites fixos (calibrados no recon 2026-07-20, layout de 2023) até uma
+# correção mais cuidadosa — ela precisaria olhar a distribuição real de x0 dos
+# dados por ano, não só a posição do rótulo do cabeçalho. Município continua
+# ruim especificamente em 2024/2025 (~0%) — gap conhecido, documentado, não
+# escondido.
 def _col_for(x0: float) -> str:
     for name, lo, hi in COLS:
         if lo <= x0 < hi:
