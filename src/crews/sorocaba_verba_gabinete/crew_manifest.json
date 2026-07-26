@@ -1,0 +1,106 @@
+{
+  "crew": "sorocaba_verba_gabinete",
+  "descricao": "Despesas de Gabinete dos Vereadores da Câmara Municipal de Sorocaba (2ª cidade de SP após a capital)",
+  "status": "implementada",
+  "versao": "v1.0",
+  "tabela_destino": "sorocaba_verba_gabinete",
+  "registros_esperados": 8000,
+  "periodo": {
+    "inicio": "2016",
+    "fim": "atual",
+    "observacoes": "Pasta pública tem 11 anos (2016→2026), 1 arquivo consolidado por mês (não por vereador). Confirmado por navegação real 26/07/2026, não por chute de padrão de URL."
+  },
+  "fonte": {
+    "portal": "Câmara Municipal de Sorocaba — Arquivos Públicos / Prestação de Contas - Vereadores",
+    "url": "https://www.camarasorocaba.sp.gov.br/arquivos_publicos.html?id=5e3f0dc905d7040f28b44e0e",
+    "formato": "HTML server-side (árvore pasta-ano > arquivo-mês) + arquivo final em PDF (recente) ou Excel exportado como HTML (mais antigo) — detecção sempre por magic bytes, nunca por extensão/Content-Type",
+    "campos_origem": [
+      "VEREADORES",
+      "ALUGUEL DE MÁQUINA REPROGRÁFICA",
+      "COMBUSTÍVEL",
+      "MATERIAL DE ESCRITÓRIO",
+      "POSTAGEM",
+      "TOTAL",
+      "REEMBOLSO (fora de escopo v1)"
+    ],
+    "escopo": "Só despesas por categoria agregada por vereador por mês. SEM CNPJ/fornecedor/nota individual (diferente de camara_sp_verba_gabinete, que tem granularidade de item). REEMBOLSO fora de escopo (é devolução, não despesa)."
+  },
+  "diferenca_vs_camara_sp_verba_gabinete": [
+    "Fonte é HTML server-side + arquivo (PDF/Excel-HTML) por mês, não Web Service JSON paginado.",
+    "Granularidade: vereador × mês × categoria (agregado). Não existe nota fiscal individual nesta fonte — sem CNPJ, sem cruzamento possível com lista negra por CNPJ.",
+    "Formato do arquivo mudou ao longo do tempo (Excel-HTML nos anos antigos, PDF nos recentes) — Agent B trata os dois.",
+    "Base legal também mudou (Resolução 304/2005 e 312/2006 nos anos antigos; Resolução 447/2017 nos recentes) — não afeta o schema, só o texto do documento."
+  ],
+  "agentes": [
+    {
+      "id": "A",
+      "arquivo": "agent_a_coletor.py",
+      "descricao": "Navega a árvore de pastas (raiz → ano → mês), baixa cada arquivo-mês bruto. Detecta formato por magic bytes. Idempotente por competência (pula se já baixado, --force rebaixa).",
+      "entrada": "https://www.camarasorocaba.sp.gov.br/arquivos_publicos.html?id=5e3f0dc905d7040f28b44e0e",
+      "saida": "data/sorocaba_verba_gabinete/bronze/<competencia>.raw + sorocaba_verba_bronze_index.json",
+      "args": ["--force (rebaixa mesmo se já existe)"]
+    },
+    {
+      "id": "B",
+      "arquivo": "agent_b_normalizador.py",
+      "descricao": "Parseia PDF (pdfplumber) ou Excel-HTML (BeautifulSoup) de cada competência, extrai tabela 'Despesas dos Gabinetes', 1 linha por vereador×categoria. Gera id determinístico SHA256(vereador_nome|competencia|categoria). Fuzzy match contra politicos(municipio_ibge=3552205, cargo=VEREADOR).",
+      "entrada": "data/sorocaba_verba_gabinete/bronze/sorocaba_verba_bronze_index.json",
+      "saida": "data/sorocaba_verba_gabinete/prata/sorocaba_verba_prata.json",
+      "rejeicoes": ["linha sem nome de vereador reconhecível", "valor vazio ou <= 0 (célula '-')", "ano/mes fora de faixa", "tabela 'VEREADORES' não encontrada no arquivo", "formato desconhecido"]
+    },
+    {
+      "id": "C",
+      "arquivo": "agent_c_loader.py",
+      "descricao": "Carrega Prata → tabela sorocaba_verba_gabinete (DDL idempotente embutido). ON CONFLICT (id) DO NOTHING.",
+      "entrada": "data/sorocaba_verba_gabinete/prata/sorocaba_verba_prata.json",
+      "saida": "tabela sorocaba_verba_gabinete + etl_log",
+      "args": ["--dry-run (valida sem inserir)"]
+    },
+    {
+      "id": "V",
+      "arquivo": "agent_verify.py",
+      "descricao": "Quality Gate com 8 verificações, limiares provisórios (recalibrar após a 1ª carga real).",
+      "checks": [
+        "[1] Volume >= 2.000 registros (crítico)",
+        "[2] Período: ano_min <= 2017, ano_max >= 2024 (crítico)",
+        "[3] Vereadores únicos: 15–60 (crítico, histórico multi-legislatura)",
+        "[4] Valor total R$500k–R$50M (crítico)",
+        "[5] Zero valores <= 0 (crítico)",
+        "[6] Cobertura politico_id >= 40% (aviso)",
+        "[7] Zero duplicatas de id (crítico)",
+        "[8] Exatamente 4 categorias distintas (aviso — 5ª categoria = bug de mapeamento)"
+      ]
+    }
+  ],
+  "execucao": {
+    "primeira_vez": [
+      "python agent_a_coletor.py",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py --strict"
+    ],
+    "atualizacao_mensal": [
+      "python agent_a_coletor.py",
+      "python agent_b_normalizador.py",
+      "python agent_c_loader.py",
+      "python agent_verify.py --strict"
+    ]
+  },
+  "schema_tabela": {
+    "pk": "id (SHA256[:32] de vereador_nome|competencia|categoria)",
+    "campos": [
+      "id", "politico_id", "vereador_nome", "categoria",
+      "valor", "mes", "ano", "competencia", "status_lneg", "fonte_arquivo"
+    ]
+  },
+  "notas": [
+    "Investigado via curl com headers realistas de navegador em 26/07/2026 — uma tentativa inicial sem esses headers pareceu (erradamente) exigir JS/browser; confirmado depois que era falso alarme, o portal é 100% HTML server-side.",
+    "Amostra real inspecionada: março/2025 (PDF, 25 vereadores, R$26.914,06 no mês) e janeiro/2016 (Excel-HTML, ~24 vereadores, resolução antiga 304/2005+312/2006).",
+    "status_lneg sempre NULL nesta fonte — sem CNPJ, não há como cruzar com lista negra.",
+    "fonte_arquivo guarda o file_id do portal — rastreabilidade até o documento original em caso de auditoria.",
+    "REEMBOLSO deixado fora do v1 de propósito (mesmo princípio de escopo do camara_sp_verba_gabinete, que deixou crédito de fora) — pode virar v2 se pedido.",
+    "Cidade escolhida como 2º piloto de verba de vereador municipal (após SP capital), como parte da expansão 'todos os municípios de SP' decidida em 25/07/2026."
+  ],
+  "frequencia_atualizacao": "a_confirmar",
+  "frequencia_fonte": "mensal (prestação de contas publicada mês a mês, com atraso de algumas semanas em relação à competência)"
+}
