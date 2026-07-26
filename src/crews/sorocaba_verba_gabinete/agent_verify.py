@@ -7,7 +7,8 @@ manualmente antes de escrever este crew; recalibrar após a 1ª carga real se
 o volume observado divergir muito do esperado):
   [1] Volume total (>= 2.000 registros — ~130 competências × ~25 vereadores
       × categorias parcialmente preenchidas)
-  [2] Período (2016 até o ano atual)
+  [2] Período (2005 até o ano atual — achado real: a fonte cobre bem mais
+      histórico do que a navegação manual sugeria antes de rodar o crew)
   [3] Vereadores únicos (esperado 15–60, histórico multi-legislatura)
   [4] Valor total dentro de faixa plausível (R$500k–R$50M)
   [5] Zero valores <= 0 (célula vazia/"-" nunca devia ter virado linha)
@@ -59,7 +60,7 @@ def main():
 
     cur.execute("SELECT MIN(ano), MAX(ano) FROM sorocaba_verba_gabinete")
     ano_min, ano_max = cur.fetchone()
-    check("[2] Período", (ano_min or 9999) <= 2017 and (ano_max or 0) >= 2024,
+    check("[2] Período", (ano_min or 9999) <= 2006 and (ano_max or 0) >= 2024,
           f"{ano_min} → {ano_max}", critico=True)
 
     cur.execute("SELECT COUNT(DISTINCT vereador_nome) FROM sorocaba_verba_gabinete")

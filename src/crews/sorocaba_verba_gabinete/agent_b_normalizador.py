@@ -244,7 +244,7 @@ def processar_arquivo(meta_arquivo: dict, idx: dict) -> tuple[list[dict], list[d
     ano, mes, competencia = meta_arquivo["ano"], meta_arquivo["mes"], meta_arquivo["competencia"]
     formato = meta_arquivo["formato"]
 
-    if not (2010 <= ano <= 2030 and 1 <= mes <= 12):
+    if not (2000 <= ano <= 2030 and 1 <= mes <= 12):
         return [], [{"_motivo": f"ano/mes fora de faixa: {ano}/{mes}", **meta_arquivo}]
 
     try:

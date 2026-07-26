@@ -6,9 +6,9 @@
   "tabela_destino": "sorocaba_verba_gabinete",
   "registros_esperados": 8000,
   "periodo": {
-    "inicio": "2016",
+    "inicio": "2005",
     "fim": "atual",
-    "observacoes": "Pasta pública tem 11 anos (2016→2026), 1 arquivo consolidado por mês (não por vereador). Confirmado por navegação real 26/07/2026, não por chute de padrão de URL."
+    "observacoes": "Pasta pública tem 22 anos (2005→2026), 1 arquivo consolidado por mês (não por vereador). Achado real ao RODAR o Agent A na VPS (26/07/2026): a navegação manual anterior só tinha explorado até 2016 (visão truncada do menu do navegador); a árvore real vai até 2005. Isso também expôs um bug real no Agent B — o range de validação ano/mes estava copiado do padrão de SP capital (2010-2030) e rejeitava 55 competências 2005-2009 legítimas; corrigido para 2000-2030."
   },
   "fonte": {
     "portal": "Câmara Municipal de Sorocaba — Arquivos Públicos / Prestação de Contas - Vereadores",
