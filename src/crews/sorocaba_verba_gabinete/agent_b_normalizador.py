@@ -156,6 +156,26 @@ def _mapear_categoria(header: str) -> str | None:
     return None
 
 
+FOOTNOTE_CHARS = "¹²³⁴⁵⁶⁷⁸⁹⁰*"
+
+
+def limpar_nome_vereador(nome: str) -> str:
+    """Remove marcador de rodapé grudado no nome (ex.: 'FULANO ¹', 'FULANO*',
+    'FULANO**') e uniformiza pra maiúsculas.
+
+    Achado real ao rodar a carga completa (26/07/2026): o mesmo vereador
+    aparecia como 'ANSELMO ROLIM NETO' em 139 competências e 'ANSELMO ROLIM
+    NETO ¹' em 1 competência (2021) — footnote de rodapé (ex.: "assumiu em
+    tal data") virou parte do nome no parsing bruto, inflando artificialmente
+    o COUNT(DISTINCT vereador_nome) de 133 pra um número bem menor. Mesma
+    causa para variação de maiúsculas/minúsculas entre documentos de épocas
+    diferentes (2005-2008 vinham em Title Case, o resto em CAIXA ALTA)."""
+    n = (nome or "").strip()
+    while n and n[-1] in FOOTNOTE_CHARS:
+        n = n[:-1].rstrip()
+    return n.upper()
+
+
 def _eh_linha_ignoravel(nome: str) -> bool:
     n = _normalizar_header(nome)
     if not n:
@@ -277,7 +297,7 @@ def processar_arquivo(meta_arquivo: dict, idx: dict) -> tuple[list[dict], list[d
     for row in dados:
         if not row or not row[0]:
             continue
-        vereador = re.sub(r"\s+", " ", row[0]).strip()
+        vereador = limpar_nome_vereador(re.sub(r"\s+", " ", row[0]))
         if _eh_linha_ignoravel(vereador):
             continue
 
