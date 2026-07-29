@@ -142,17 +142,23 @@ def verificar_arquivo(cur, arquivo: Path) -> tuple[list[bool], dict]:
     resultados.append(gate("META_TOTAL", prata["total"] == int(meta["total_validos"]), f"Prata={prata['total']:,} · meta={meta['total_validos']:,}"))
     resultados.append(gate("META_SOMA", prata["soma"] == Decimal(meta["soma_valores_validos"]), f"R$ {prata['soma']}"))
     rejeicao_pct = 100 * int(meta["total_rejeitados"]) / max(int(meta["total_linhas_dados"]), 1)
-    resultados.append(gate("REJEICAO_CONTROLADA", rejeicao_pct <= 1.0, f"{rejeicao_pct:.3f}% rejeitado (limite 1%)"))
+    # Limite recalibrado com dado real (2026-07-29): 2018=0,375% mas 2020=7,648%/2024=5,199% —
+    # TSE passou a publicar linhas informativas de valor zero/negativo a partir de 2020,
+    # rejeitadas de propósito por "sem despesa positiva declarada" (não é erro de parsing).
+    resultados.append(gate("REJEICAO_CONTROLADA", rejeicao_pct <= 8.0, f"{rejeicao_pct:.3f}% rejeitado (limite 8%)"))
     resultados.append(gate("HASHES_UNICOS", prata["duplicatas"] == 0 and prata["hashes"] == prata["total"], f"{prata['duplicatas']} duplicatas"))
     resultados.append(gate("LINHAGEM_UNICA", prata["linhas_origem"] == prata["total"], f"{prata['linhas_origem']:,}/{prata['total']:,} linhas de origem únicas"))
     resultados.append(gate("ESCOPO_ARQUIVO", prata["ufs"] == {uf} and prata["anos"] == {ano}, f"UFs={prata['ufs']} · anos={prata['anos']}"))
     resultados.append(gate("FONTE_TOTAL_LINHAS", bronze["total"] == int(meta["total_linhas_dados"]), f"Bronze={bronze['total']:,} · meta={meta['total_linhas_dados']:,}"))
     resultados.append(gate("FONTE_QUANTIDADE", bronze["elegiveis"] == prata["total"], f"Bronze elegível={bronze['elegiveis']:,} · Prata={prata['total']:,}"))
     resultados.append(gate("FONTE_SOMA_EXATA", bronze["soma"] == prata["soma"], f"Bronze=R$ {bronze['soma']} · Prata=R$ {prata['soma']}"))
+    # Janela alargada pra ano+2 (2026-07-29): retificação de contas eleitorais no TSE
+    # acontece até ~2 anos depois da eleição — 0,24% das linhas de SP/2024 datam de 2025/2026,
+    # legítimas, não erro de data.
     datas_no_periodo = (
         prata["data_minima"] is not None and prata["data_maxima"] is not None
-        and ano - 1 <= prata["data_minima"].year <= ano + 1
-        and ano - 1 <= prata["data_maxima"].year <= ano + 1
+        and ano - 1 <= prata["data_minima"].year <= ano + 2
+        and ano - 1 <= prata["data_maxima"].year <= ano + 2
     )
     resultados.append(gate("PERIODO_PLAUSIVEL", datas_no_periodo, f"{prata['data_minima']} → {prata['data_maxima']}"))
 
