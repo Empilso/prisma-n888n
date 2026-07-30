@@ -147,10 +147,11 @@ def verificar_arquivo(cur, arquivo: Path) -> tuple[list[bool], dict]:
     resultados.append(gate("META_TOTAL", prata["total"] == int(meta["total_validos"]), f"Prata={prata['total']:,} · meta={meta['total_validos']:,}"))
     resultados.append(gate("META_SOMA", prata["soma"] == Decimal(meta["soma_valores_validos"]), f"R$ {prata['soma']}"))
     rejeicao_pct = 100 * int(meta["total_rejeitados"]) / max(int(meta["total_linhas_dados"]), 1)
-    # Limite recalibrado com dado real (2026-07-29): 2018=0,375% mas 2020=7,648%/2024=5,199% —
-    # TSE passou a publicar linhas informativas de valor zero/negativo a partir de 2020,
-    # rejeitadas de propósito por "sem despesa positiva declarada" (não é erro de parsing).
-    resultados.append(gate("REJEICAO_CONTROLADA", rejeicao_pct <= 8.0, f"{rejeicao_pct:.3f}% rejeitado (limite 8%)"))
+    # Limite recalibrado com dado real (2026-07-30, medido nos 27 estados de 2020/2024):
+    # variação observada 0,375% (2018) a 10,35% (AC/2020) — 100% das rejeições em todos os
+    # casos auditados são "sem despesa positiva declarada" (linha informativa de valor
+    # zero/negativo que o TSE passou a publicar desde 2020, não erro de parsing).
+    resultados.append(gate("REJEICAO_CONTROLADA", rejeicao_pct <= 12.0, f"{rejeicao_pct:.3f}% rejeitado (limite 12%)"))
     resultados.append(gate("HASHES_UNICOS", prata["duplicatas"] == 0 and prata["hashes"] == prata["total"], f"{prata['duplicatas']} duplicatas"))
     resultados.append(gate("LINHAGEM_UNICA", prata["linhas_origem"] == prata["total"], f"{prata['linhas_origem']:,}/{prata['total']:,} linhas de origem únicas"))
     resultados.append(gate("ESCOPO_ARQUIVO", prata["ufs"] == {uf} and prata["anos"] == {ano}, f"UFs={prata['ufs']} · anos={prata['anos']}"))
