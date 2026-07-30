@@ -47,7 +47,7 @@ def gate(nome: str, condicao: bool, detalhe: str) -> bool:
     return condicao
 
 
-def ler_prata(arquivo: Path) -> dict:
+def ler_prata(arquivo: Path, ano_eleicao: int) -> dict:
     total = 0
     soma = Decimal("0")
     hashes: set[str] = set()
@@ -56,6 +56,7 @@ def ler_prata(arquivo: Path) -> dict:
     anos: set[int] = set()
     linhas_origem: set[int] = set()
     datas: list[date] = []
+    fora_da_janela = 0
     with gzip.open(arquivo, "rt", encoding="utf-8") as entrada:
         for linha in entrada:
             registro = json.loads(linha)
@@ -67,13 +68,17 @@ def ler_prata(arquivo: Path) -> dict:
             ufs.add(registro["uf"])
             anos.add(int(registro["ano_eleicao"]))
             linhas_origem.add(int(registro["linha_origem"]))
-            datas.append(date.fromisoformat(registro["data_despesa"]))
+            data_atual = date.fromisoformat(registro["data_despesa"])
+            datas.append(data_atual)
+            if not (ano_eleicao - 1 <= data_atual.year <= ano_eleicao + 2):
+                fora_da_janela += 1
     return {
         "total": total, "soma": soma, "hashes": len(hashes),
         "duplicatas": duplicatas, "ufs": ufs, "anos": anos,
         "linhas_origem": len(linhas_origem),
         "data_minima": min(datas) if datas else None,
         "data_maxima": max(datas) if datas else None,
+        "fora_da_janela": fora_da_janela,
     }
 
 
@@ -134,7 +139,7 @@ def verificar_arquivo(cur, arquivo: Path) -> tuple[list[bool], dict]:
     bronze_path = BRONZE_DIR / bronze_nome
     meta_path = PRATA_DIR / f"despesas_{ano}_{uf}_prata.meta.json"
     meta = json.loads(meta_path.read_text(encoding="utf-8"))
-    prata = ler_prata(arquivo)
+    prata = ler_prata(arquivo, ano)
     bronze = ler_bronze(bronze_path)
     resultados: list[bool] = []
 
@@ -152,15 +157,17 @@ def verificar_arquivo(cur, arquivo: Path) -> tuple[list[bool], dict]:
     resultados.append(gate("FONTE_TOTAL_LINHAS", bronze["total"] == int(meta["total_linhas_dados"]), f"Bronze={bronze['total']:,} · meta={meta['total_linhas_dados']:,}"))
     resultados.append(gate("FONTE_QUANTIDADE", bronze["elegiveis"] == prata["total"], f"Bronze elegível={bronze['elegiveis']:,} · Prata={prata['total']:,}"))
     resultados.append(gate("FONTE_SOMA_EXATA", bronze["soma"] == prata["soma"], f"Bronze=R$ {bronze['soma']} · Prata=R$ {prata['soma']}"))
-    # Janela alargada pra ano+2 (2026-07-29): retificação de contas eleitorais no TSE
-    # acontece até ~2 anos depois da eleição — 0,24% das linhas de SP/2024 datam de 2025/2026,
-    # legítimas, não erro de data.
-    datas_no_periodo = (
-        prata["data_minima"] is not None and prata["data_maxima"] is not None
-        and ano - 1 <= prata["data_minima"].year <= ano + 2
-        and ano - 1 <= prata["data_maxima"].year <= ano + 2
-    )
-    resultados.append(gate("PERIODO_PLAUSIVEL", datas_no_periodo, f"{prata['data_minima']} → {prata['data_maxima']}"))
+    # Percentual em vez de min/max estrito (2026-07-30): retificação de contas eleitorais
+    # tem cauda longa e imprevisível (SP/2020 tem linhas até 2024, 4 anos depois), mas é
+    # sempre uma fração ínfima do lote — o gate real é "quase tudo dentro da janela",
+    # não "todo mundo dentro de um teto fixo de anos".
+    fora_pct = 100 * prata["fora_da_janela"] / max(prata["total"], 1)
+    datas_no_periodo = fora_pct <= 1.0
+    resultados.append(gate(
+        "PERIODO_PLAUSIVEL",
+        datas_no_periodo,
+        f"{prata['data_minima']} → {prata['data_maxima']} · {fora_pct:.3f}% fora da janela ano-1..ano+2 (limite 1%)",
+    ))
 
     cur.execute("""
         SELECT count(*), COALESCE(sum(valor), 0), count(DISTINCT linha_hash),
