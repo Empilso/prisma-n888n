@@ -1,0 +1,35 @@
+# ===== PRISMA 888 — automacao das crews n888n (instalado 2026-08-19) =====
+# Cada linha roda run_crew.sh, que ja loga em /var/log/prisma-etl/ e
+# detecta falha mascarada (ver crew_suspeitas.log). Escalonado pra nunca
+# rodar tudo junto. So crews PROVADAS seguras hoje (ver checklist no repo);
+# as que estouram mesmo escopadas (camara_votacoes/proposicoes, pncp,
+# siconfi, sapl --todos) ficam de fora ate ganharem escopo incremental
+# no proprio codigo -- agendar elas hoje so geraria falha previsivel.
+RUNNER=/opt/prisma-n888n/automacao/run_crew.sh
+
+# --- semanal, segunda-feira, janela 03h ---
+0 3 * * 1 bash $RUNNER senado_proposicoes
+5 3 * * 1 bash $RUNNER alba_legislativo
+10 3 * * 1 bash $RUNNER alba_parlamentares
+15 3 * * 1 bash $RUNNER alba_biografias
+20 3 * * 1 bash $RUNNER doe_ba
+
+# --- mensal, dia 1, janela 04h (lista_negra ja tem job proprio, mais completo) ---
+0 4 1 * * bash $RUNNER alesp_verbas_gabinete
+5 4 1 * * bash $RUNNER alesp_emendas_impositivas
+10 4 1 * * bash $RUNNER tcesp_municipal
+15 4 1 * * bash $RUNNER camara_sp_verba_gabinete
+20 4 1 * * bash $RUNNER sorocaba_verba_gabinete
+25 4 1 * * bash $RUNNER cgu_emendas_federais
+30 4 1 * * bash $RUNNER cgu_docs_emendas
+35 4 1 * * bash $RUNNER tse_bens_declarados
+40 4 1 * * bash $RUNNER camara_ceap
+45 4 1 * * bash $RUNNER seplan_loa_pdf
+50 4 1 * * bash $RUNNER siga_ba_emendas
+55 4 1 * * bash $RUNNER almt_sigcon_emendas
+
+# --- anual, 2 de janeiro, 06h ---
+0 6 2 1 * bash $RUNNER ibge_municipios
+
+# --- resumo diario de falhas/suspeitas, 07h (nunca deixa passar batido) ---
+0 7 * * * /opt/prisma-n888n/automacao/digest_diario.sh

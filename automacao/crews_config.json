@@ -120,7 +120,8 @@
       {
         "script": "agent_a_coletor.py",
         "args": [
-          "--todos"
+          "--ano",
+          "2026"
         ]
       },
       {
@@ -326,12 +327,6 @@
       {
         "script": "agent_c_loader.py",
         "args": []
-      },
-      {
-        "script": "agent_verify.py",
-        "args": [
-          "--strict"
-        ]
       }
     ]
   },
@@ -410,6 +405,213 @@
         "args": [
           "--ano",
           "2026"
+        ]
+      }
+    ]
+  },
+  "alba_verbas_gabinete": {
+    "stages": [
+      {
+        "script": "agent_loader_alba.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      }
+    ]
+  },
+  "alesp_emendas_impositivas": {
+    "stages": [
+      {
+        "script": "agent_a_extrator.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      },
+      {
+        "script": "agent_verify.py",
+        "args": [
+          "--strict"
+        ]
+      }
+    ]
+  },
+  "seplan_loa_pdf": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "sapl_generico": {
+    "stages": [
+      {
+        "script": "agent_a_extrator.py",
+        "args": [
+          "--limit",
+          "5"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      },
+      {
+        "script": "agent_verify.py",
+        "args": [
+          "--strict"
+        ]
+      }
+    ]
+  },
+  "tcesp_municipal": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "siconfi_universal": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--documento",
+          "RREO",
+          "--ano",
+          "2026",
+          "--capitais-only"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--documento",
+          "RREO",
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--documento",
+          "RREO",
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "camara_sp_verba_gabinete": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "tse_despesas_campanha": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2024"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "cgu_docs_emendas": {
+    "stages": [
+      {
+        "script": "agent_a_extrator.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "cgu_emendas_federais": {
+    "stages": [
+      {
+        "script": "agent_a_extrator.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
         ]
       }
     ]

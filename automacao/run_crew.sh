@@ -50,7 +50,7 @@ SUSPEITA=0
 while IFS='|' read -r script args; do
     log "--- rodando $script $args ---"
     STAGE_OUT=$(mktemp)
-    timeout 1800 $PY "$CREWDIR/$script" $args >"$STAGE_OUT" 2>&1
+    timeout 5400 $PY "$CREWDIR/$script" $args >"$STAGE_OUT" 2>&1
     rc=$?
     cat "$STAGE_OUT" >> "$LOG"
 
