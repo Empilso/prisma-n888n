@@ -64,7 +64,7 @@ while IFS='|' read -r script args; do
 
     # Checagem de conteudo: exit 0 nao significa que funcionou de verdade.
     N_FALHAS=$(grep -c "❌" "$STAGE_OUT" 2>/dev/null)
-    VAZIO=$(grep -cE "Nenhum (Bronze|Prata) encontrado" "$STAGE_OUT" 2>/dev/null)
+    VAZIO=$(grep -ciE "Nenhum (Bronze|Prata|arquivo) encontrado|\\[VAZIO\\]|Total bronze: 0|0 upserts|0 registros" "$STAGE_OUT" 2>/dev/null)
     if [ "$VAZIO" -gt 0 ] || [ "$N_FALHAS" -ge 3 ]; then
         log "⚠️  SUSPEITA em $script: exit=0 mas $N_FALHAS marcador(es) de falha / vazio=$VAZIO — ver $SUSPEITALOG"
         echo "$(date -Iseconds) | $CREW | $script | falhas_no_conteudo=$N_FALHAS | vazio=$VAZIO | log=$LOG" >> "$SUSPEITALOG"

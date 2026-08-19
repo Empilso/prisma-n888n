@@ -143,8 +143,8 @@
       {
         "script": "agent_a_coletor.py",
         "args": [
-          "--legislatura",
-          "57"
+          "--ano",
+          "2026"
         ]
       },
       {
@@ -296,8 +296,10 @@
       {
         "script": "agent_a_coletor.py",
         "args": [
-          "--ano",
-          "2026"
+          "--data-inicio",
+          "20260801",
+          "--data-fim",
+          "20260819"
         ]
       },
       {
