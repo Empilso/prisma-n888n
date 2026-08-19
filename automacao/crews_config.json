@@ -1,0 +1,417 @@
+{
+  "_comentario": "Config de invocacao real por crew, verificada linha a linha contra o argparse de cada agente em 2026-08-19. NUNCA adicionar crew aqui sem checar o argparse real primeiro — cgu_lista_negra exige --fonte (obrigatorio), diferente do --todos padrao das outras.",
+  "camara_proposicoes": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--legislatura",
+          "57"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "senado_proposicoes": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "cgu_lista_negra": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--fonte",
+          "todos"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_verify.py",
+        "args": [
+          "--strict"
+        ]
+      }
+    ]
+  },
+  "doe_ba": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "alba_legislativo": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--recurso",
+          "todos"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--recurso",
+          "todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--recurso",
+          "todos"
+        ]
+      }
+    ]
+  },
+  "camara_ceap": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "camara_votacoes": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--legislatura",
+          "57"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "senado_votacoes": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "ibge_municipios": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "alba_parlamentares": {
+    "stages": [
+      {
+        "script": "agent_importer.py",
+        "args": []
+      }
+    ]
+  },
+  "alesp_verbas_gabinete": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      },
+      {
+        "script": "agent_verify.py",
+        "args": [
+          "--strict"
+        ]
+      }
+    ]
+  },
+  "tse_bens_declarados": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "tse_locais_votacao": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      }
+    ]
+  },
+  "tse_receitas_campanha": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "pncp_contratos": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "sorocaba_verba_gabinete": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": []
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": []
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": []
+      },
+      {
+        "script": "agent_verify.py",
+        "args": [
+          "--strict"
+        ]
+      }
+    ]
+  },
+  "alba_biografias": {
+    "stages": [
+      {
+        "script": "agent_importer.py",
+        "args": []
+      }
+    ]
+  },
+  "transferegov_convenios": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "siga_ba_emendas": {
+    "stages": [
+      {
+        "script": "agent_a_coletor.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--todos"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--todos"
+        ]
+      }
+    ]
+  },
+  "almt_sigcon_emendas": {
+    "stages": [
+      {
+        "script": "agent_a_extrator.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_b_normalizador.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      },
+      {
+        "script": "agent_c_loader.py",
+        "args": [
+          "--ano",
+          "2026"
+        ]
+      }
+    ]
+  }
+}
