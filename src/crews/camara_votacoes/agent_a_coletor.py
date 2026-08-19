@@ -95,10 +95,14 @@ def listar_votacoes_janela(data_ini: date, data_fim: date,
                             id_legislatura: int) -> list[dict]:
     """Lista todas as votações em uma janela de datas (paginação seguida)."""
     out: list[dict] = []
+    # `idLegislatura` combinado com dataInicio/dataFim quebra a API da Camara
+    # com 400 "Parametro(s) invalido(s)" -- confirmado ao vivo em 2026-08-19.
+    # O intervalo de datas ja escopa a consulta o suficiente (cada legislatura
+    # corresponde a um periodo de anos conhecido), entao o parametro e
+    # redundante e foi removido.
     params = {
         "dataInicio":     data_ini.isoformat(),
         "dataFim":        data_fim.isoformat(),
-        "idLegislatura":  id_legislatura,
         "itens":          100,
         "ordem":          "ASC",
         "ordenarPor":     "dataHoraRegistro",
