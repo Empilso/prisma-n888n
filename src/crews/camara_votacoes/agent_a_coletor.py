@@ -251,9 +251,15 @@ def meses_da_legislatura(legislatura: int) -> list[tuple[int, int]]:
 
 
 def meses_de_ano(ano: int) -> list[tuple[int, int]]:
+    # Ordem INVERTIDA (mais recente primeiro) desde 2026-08-19. Achado real
+    # em producao: no ritmo observado (~1 mes processado por ciclo de 90min,
+    # por causa de HTTPError frequente por-voto na API da Camara), a ordem
+    # cronologica antiga (jan->dez) nunca alcancava o mes atual -- toda
+    # automacao mensal ficava presa reprocessando o passado enquanto o mes
+    # corrente (o que importa pra produto de inteligencia) nunca era tocado.
     hoje = date.today()
     ult_mes = hoje.month if ano == hoje.year else 12
-    return [(ano, m) for m in range(1, ult_mes + 1)]
+    return [(ano, m) for m in range(ult_mes, 0, -1)]
 
 
 def descobrir_legislatura(ano: int) -> int:
