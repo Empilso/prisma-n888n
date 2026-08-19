@@ -54,7 +54,7 @@ def _fetch_page(session: requests.Session, data_ini: str, data_fim: str, pagina:
         "dataFinal":    data_fim,
         "pagina":       pagina,
         "tamanhoPagina": PAGE_SIZE,
-    }, timeout=30)
+    }, timeout=60)  # 30s era curto demais pra API do PNCP (achado 2026-08-19)
     if r.status_code == 429:
         time.sleep(30)
         raise requests.ConnectionError("rate-limit 429")
@@ -77,8 +77,13 @@ def coletar(data_ini: str, data_fim: str, uf_filter: str | None = None) -> int:
     try:
         first = _fetch_page(session, data_ini, data_fim, 1)
     except Exception as e:
-        print(f"[ERRO] Falha na primeira página: {e}", file=sys.stderr)
-        return 0
+        # ANTES: "return 0" fazia o crew inteiro reportar SUCESSO com zero
+        # dado quando a pagina 1 falhava apos esgotar os 5 retries (achado
+        # real em producao, 2026-08-19: timeout de leitura do PNCP e maior
+        # que os 30s configurados). Falha na pagina 1, apos retry, e falha
+        # de verdade -- nunca deve ser confundida com "periodo sem contrato".
+        print(f"[ERRO] Falha na primeira página, apos retries: {e}", file=sys.stderr)
+        raise RuntimeError(f"PNCP: falha ao buscar pagina 1 de {data_ini}-{data_fim}") from e
 
     total_elements = first.get("totalRegistros") or first.get("total") or 0
     items_p1 = first.get("data") or first.get("itens") or []
