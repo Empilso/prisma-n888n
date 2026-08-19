@@ -19,9 +19,12 @@ from datetime import datetime, timezone
 # ── Configurações ─────────────────────────────────────────────────────────────
 VERSAO = "v1.0"
 # Caminho absoluto para o arquivo de origem
-ARQUIVO_ORIGEM = Path("/home/carneiro888/Documentos/zikualdo/Prisma888/PRISMA-DADOS2/docs/dados originais/CONSULTA_CAND/municipios.json")
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+# Fonte unificada em 2026-08-19: era caminho absoluto da maquina local
+# apontando pro projeto descontinuado PRISMA-DADOS2 (quebrava em qualquer
+# outra maquina, inclusive o VPS). Copiado pra dentro da propria crew,
+# seguindo a mesma convencao de BASE_DIR que o resto do arquivo ja usa.
+ARQUIVO_ORIGEM = BASE_DIR / "data/ibge_municipios/dados_brutos/municipios.json"
 BRONZE_DIR = BASE_DIR / "data/raw/ibge/bronze"
 BRONZE_DIR.mkdir(parents=True, exist_ok=True)
 

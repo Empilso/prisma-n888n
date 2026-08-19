@@ -10,6 +10,9 @@ from rapidfuzz import fuzz, process
 import argparse
 from datetime import datetime, timezone
 import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 try:
     from dotenv import load_dotenv
@@ -89,8 +92,11 @@ def main():
     print("=" * 70)
     
     # Carregar dados ALBA
-    alba_file = "/home/carneiro888/Documentos/zikualdo/Prisma888/BACK UP/n888n-prisma (copiar 1)/data/parlamentares/parlamentares_ids.json"
-    alba_data = json.load(open(alba_file))
+    # Fonte unificada em 2026-08-19: era caminho absoluto de uma pasta de
+    # BACKUP pessoal na maquina local (quebrava em qualquer outra maquina,
+    # inclusive o VPS). Copiado pra dentro da propria crew.
+    alba_file = BASE_DIR / "data/alba_parlamentares/dados_brutos/parlamentares_ids.json"
+    alba_data = json.load(open(alba_file, encoding="utf-8"))
     deputados_alba = alba_data['records']
     
     print(f"\n📂 Carregados {len(deputados_alba)} deputados ALBA")
