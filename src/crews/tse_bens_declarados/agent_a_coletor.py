@@ -26,7 +26,10 @@ BRONZE_DIR = DATA_DIR / "bronze"
 for d in (RAW_DIR, BRONZE_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
-ANOS_DISPONIVEIS = [2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024]
+ANOS_DISPONIVEIS = [2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024, 2026]
+# 2026 adicionado em 2026-08-19 -- eleicao geral, arquivo confirmado ao vivo
+# em cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip
+# (75.186 registros verificados em 18/08).
 URL_TPL = "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_{ano}.zip"
 
 
