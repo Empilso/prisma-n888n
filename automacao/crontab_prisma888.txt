@@ -1,10 +1,16 @@
+0 4 1 * * /opt/prisma888/scripts/refresh_lista_negra.sh
+17 * * * * cd /opt/prisma888/backend && set -a && . ./.env && set +a && .venv/bin/python scripts/sync_coverage_catalog.py --artifacts-root /opt/prisma-n888n/data/tse_despesas_campanha --apply >> /var/log/prisma-etl/sync_coverage.log 2>&1
+*/10 * * * * bash /opt/prisma-n888n/status_sapl_generico.sh
 # ===== PRISMA 888 — automacao das crews n888n (instalado 2026-08-19) =====
 # Cada linha roda run_crew.sh, que ja loga em /var/log/prisma-etl/ e
 # detecta falha mascarada (ver crew_suspeitas.log). Escalonado pra nunca
 # rodar tudo junto. So crews PROVADAS seguras hoje (ver checklist no repo);
-# as que estouram mesmo escopadas (camara_votacoes/proposicoes, pncp,
-# siconfi, sapl --todos) ficam de fora ate ganharem escopo incremental
-# no proprio codigo -- agendar elas hoje so geraria falha previsivel.
+# camara_votacoes e pncp_contratos ganharam escopo incremental em 19/08
+# (--ano e janela de 35 dias) e ja entraram abaixo. Ainda de fora:
+# camara_proposicoes (bronze e por legislatura inteira, precisa refatorar
+# estrutura de arquivo), siconfi_universal (2.268 requisicoes mesmo so
+# capitais) e sapl_generico --todos (5.570 municipios, horas) -- todos
+# precisam de trabalho de codigo proprio antes de entrar aqui.
 RUNNER=/opt/prisma-n888n/automacao/run_crew.sh
 
 # --- semanal, segunda-feira, janela 03h ---
@@ -27,6 +33,8 @@ RUNNER=/opt/prisma-n888n/automacao/run_crew.sh
 45 4 1 * * bash $RUNNER seplan_loa_pdf
 50 4 1 * * bash $RUNNER siga_ba_emendas
 55 4 1 * * bash $RUNNER almt_sigcon_emendas
+0 5 1 * *  bash $RUNNER camara_votacoes
+30 5 1 * * bash /opt/prisma-n888n/automacao/run_pncp_monthly.sh
 
 # --- anual, 2 de janeiro, 06h ---
 0 6 2 1 * bash $RUNNER ibge_municipios
